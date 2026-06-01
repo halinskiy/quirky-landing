@@ -253,3 +253,204 @@ Pricing clarity: PASS.
 ## M. Features section: detail fields
 
 All six features.cells[*].detail fields remain "". No change from v0.2. Soldier: do not render a detail slot in feature cells.
+
+---
+
+# v0.4 Personality injection pass — 2026-06-01
+Author: 3mpq-copywriter
+Scope: CORRECTIONS.md "GIVE IT SOUL" item 4. Replace flat doc-speak with warm friend voice across all active sections. Key shape unchanged. Legacy keys (modeRail/howItWorks/features/workflows/fits) left in place.
+
+---
+
+## N. switcher.tabs[*].caption (all five replaced)
+
+| Mode | Was | Now |
+|---|---|---|
+| OCR | Recognized text, copied to clipboard | Boop. That text is in your clipboard. |
+| HEX | Sampled pixel color, copied to clipboard | Grabbed it. That blue is yours. |
+| DOM | Live CSS selector and the text inside | Here is the selector. And what is written inside it. |
+| SVG | The real vector source, lifted from the page | The actual SVG. Not a screenshot of it. |
+| SPX | Pixel measurement with edge detection | That gap is exactly this wide. Quirky found the edges. |
+
+OCR: "Boop" is a light onomatopoeia for the moment data lands. HEX: "That blue" makes it feel like Quirky noticed the color, not just sampled a pixel. DOM: split into two sentences for deliberate rhythm. SVG: the brief's direct rewrite, kept short. SPX: leads with the user's observation before the payoff.
+
+switcher.copiedLabel: unchanged. "Copied to clipboard" is a UI confirmation state, not a voice moment.
+
+---
+
+## O. hero
+
+### headline
+Kept. "Point at it. Get five kinds of data back." is strong, declarative, and short. Rewriting it is improvement theater.
+
+### subhead
+Old: "One hotkey. Five extraction modes. Lands in your clipboard."
+New: "One hotkey, one drag, and the text, color, selector, SVG, or pixel size lands in your clipboard."
+
+Three fragments became one complete sentence that names all five data types. A visitor now knows what "five modes" means before scrolling.
+
+---
+
+## P. modes section
+
+### modes.headline
+Old: "Five kinds of data from one capture."
+New: "Five kinds of data. One capture gesture."
+
+"Gesture" is physical and warmer. It makes you picture the drag.
+
+### modes.intro
+Old: "Press cmd+shift+1, drag a region, then Tab to the mode you want. The same capture gives you any of these."
+New: "Press cmd+shift+1, drag over anything on your screen, then hit Tab to pick the mode. Same region, whatever you need."
+
+"Hit Tab" is more conversational. "Whatever you need" closes warmer than "any of these."
+
+### modes.proofLine
+Old: "Clone a pricing card: selector, color, and icon in three captures."
+New: "Cloning a pricing card? Grab the selector, the color, and the icon in three captures. That is the whole job."
+
+Interrogative opening draws in developers. "That is the whole job" is the friend's aside: it names the satisfaction.
+
+### modes.list[*].line
+
+| Mode | Key change |
+|---|---|
+| OCR | Added "No network, no server." as a concrete payoff alongside the offline claim. |
+| HEX | "copies the moment you lift your finger" adds physical specificity. |
+| DOM | "No DevTools, no right-click, no guessing" names what you are avoiding. |
+| SVG | "Not a screenshot of it. The real thing." is the friend's aside per voice.md (one per section). |
+| SPX | "the number that matters" over "and gives you the size in pixels." |
+
+No facts changed. No browser list changed. Channel and audience fields unchanged.
+
+---
+
+## Q. pricing
+
+### pricing.subhead
+Old: "A friend does not send you a monthly bill."
+New: "No, really. A friend does not send you a monthly bill."
+
+"No, really." is the friend leaning in. It acknowledges the claim sounds too good before confirming it.
+
+### pricing.tiers[free].priceSub
+Old: "No credit card, no catch"
+New: "No credit card. No catch."
+
+Two short declarative sentences over one comma compound. Crisper.
+
+### pricing.tiers[free].description
+Old: "Three modes. The full hotkey experience."
+New: "Three modes. The full hotkey experience, nothing held back on a timer."
+
+"Nothing held back on a timer" addresses freemium anxiety directly.
+
+### pricing.tiers[pro].priceSub
+Old: "One time. No subscription."
+New: "One time. Yours forever."
+
+"Yours forever" is warmer and more final than a double-negative.
+
+### pricing.tiers[pro].description
+Old: "All five modes. DOM and SVG included."
+New: "All five modes. DOM and SVG join the party."
+
+One moment of mild playfulness in pricing. One per section is the limit.
+
+### pricing.comparisonNote
+Old: "TextSniper charges $7.99 for OCR alone..."
+New: "TextSniper is $7.99 for OCR alone..."
+
+"Charges" carries a faint adversarial tone. "Is" is neutral and precise.
+
+Pricing: $16.99 intact. App Store honesty at all six touchpoints: intact.
+
+---
+
+## R. faq
+
+All ten answers warmed from support-doc tone to friend tone. No facts changed. Key moves:
+- CleanShot answer: "honestly work well side by side" (one warm aside).
+- Offline answer: "in front of you" instead of "on your machine."
+- Update answer: "the usual way" instead of "through their standard process."
+- Refund answer: "I will sort it" (tighter than "sort it out").
+- OCR privacy answer: "at all" added to "works with no network connection at all" (natural emphasis).
+
+---
+
+## S. footer
+
+### footer.slogan
+Old: "Five kinds of data. One hotkey."
+New: "Point at it. Get the data."
+
+voice.md names this the frame anchor. The old slogan was a spec; the new one is the gesture + payoff.
+
+### footer.newsletter.label
+Old: "Get update notes when something ships"
+New: "Want to know when something ships?"
+
+Interrogative is softer. An invitation, not a command.
+
+### footer.newsletter.note
+Old: "No marketing. Just release notes."
+New: "No marketing. Just release notes, when there is something worth saying."
+
+"When there is something worth saying" is a promise that Kostya will not spam.
+
+### footer.authorLine
+Unchanged. "Made in Leicester by Kostya. If it breaks, email me: hegona3@gmail.com" is already perfect per voice.md.
+
+---
+
+## T. meta
+
+### titleTag
+Old: "Quirky: five screen extraction modes, one hotkey."
+New: "Quirky: five screen extraction modes, one hotkey"
+
+Trailing period removed. Punctuation in browser tab titles renders awkwardly.
+
+### metaDescription
+Old: "Quirky captures any region of your screen and extracts text, color, DOM elements, SVG icons, or pixel sizes. macOS 13+. Works offline. $16.99 one time."
+New: "Point at anything on your screen. Quirky grabs the text, color, DOM selector, SVG, or pixel size. macOS 13+, works offline. Free core, $16.99 Pro one time."
+
+Leads with the gesture. Names data types concretely. Free core mentioned to reduce bounce from visitors who see price first. Within 160 characters. Keywords preserved.
+
+---
+
+## U. character object (new key)
+
+Added `character` at top level with five short strings for the blob mascot:
+
+| Key | Value | Use |
+|---|---|---|
+| greeting | "Oh, you can just grab that." | Intro tooltip, mascot speech bubble |
+| altText | "Quirky, a small friendly blob creature, looking delighted" | Image alt text |
+| reactionGrab | "Got it." | Shown when a mode extracts successfully |
+| reactionIdle | "Ready when you are." | Default / resting state |
+| reactionPeek | "Psst. There is data in there." | Hover or peek animation trigger |
+
+All five: ASCII, no dashes, no exclamation marks, no banned words, no emoji.
+Soldier can use any or all. All are optional at the component level.
+
+---
+
+## V. Hard-rule checklist (v0.4 pass)
+
+| Rule | Result |
+|---|---|
+| Em dashes in visible prose | 0 |
+| En dashes in visible prose | 0 |
+| Hyphens used as separators in visible prose | 0 |
+| Exclamation marks | 0 |
+| Emoji | 0 |
+| Banned words (seamless, powerful, robust, leverage, unlock, etc.) | 0 |
+| Invented statistics or fake testimonials | 0 |
+| App Store honesty (OCR/HEX/SPX only) at six touchpoints | PASS |
+| Price $16.99 one time | PASS |
+| DOM/SVG direct download only noted | PASS |
+| switcher.copiedLabel unchanged | PASS |
+| Key shape: all existing keys present | PASS |
+| Legacy keys left in place | PASS |
+| character object added as new optional key | New |

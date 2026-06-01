@@ -1,29 +1,35 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { useMotionOff } from "@/components/motion/useMotionOff";
 import { EASE_OUT } from "@/lib/motion";
 
 /**
- * ModeSwitcher — the interactive centerpiece. ONE realistic capture scene with a
- * dashed capture rectangle over a region, plus a row of real <button> tabs
- * (OCR / HEX / DOM / SVG / SPX). Clicking a tab updates the OUTPUT PANEL live to
- * show that mode's real result from the SAME capture. The visitor DRIVES it, so
- * they immediately understand: one capture, five kinds of data.
+ * ModeSwitcher — the LIVING hero demo. ONE realistic capture scene with a dashed
+ * capture rectangle over a region, plus a row of real <button> tabs
+ * (OCR / HEX / DOM / SVG / SPX). The output panel updates live to show that
+ * mode's real result from the SAME capture.
  *
- * Accessibility (load-bearing):
- *  - Tabs are a real WAI-ARIA tablist: role="tablist", each tab role="tab",
- *    aria-selected, roving tabindex, ArrowLeft/Right/Home/End keyboard nav.
- *  - The output panel is role="tabpanel" labelled by the active tab.
- *  - Default state resolves the FIRST tab (OCR) so the panel is NEVER blank with
- *    ?motion=0 / reduced-motion / no-JS-yet. The state is initialised to the
- *    first tab, not null, so the very first render shows a real output.
- *  - Switching works by click even with motion off (just without the cross-fade).
+ * SOUL PASS (CORRECTIONS "GIVE IT SOUL" #2): the demo no longer sits dead waiting
+ * for a click.
+ *  - AUTOPLAY: on mount a friendly cursor glides in, the dashed capture rect
+ *    draws itself, and the data result appears. The tabs then AUTO-CYCLE
+ *    OCR -> HEX -> DOM -> SVG -> SPX on a ~2.6s pneumatic timer.
+ *  - GRAB CONTROL: clicking a tab or keyboard-navigating PAUSES autoplay and
+ *    shows the visitor's choice. After ~7s of no interaction autoplay resumes.
+ *  - Each cycle/grab fires onGrab(index) so the parent (Hero) can make the
+ *    Quirky character react with delight and aim its eyes at the demo.
  *
- * Motion: output transitions are opacity/y cross-fades on the pneumatic ease
- * (no bounce). With reduced-motion / motion=0 the panel swaps instantly.
+ * Accessibility (load-bearing, unchanged):
+ *  - Real WAI-ARIA tablist: role="tablist", role="tab", aria-selected, roving
+ *    tabindex, ArrowLeft/Right/Up/Down/Home/End keyboard nav.
+ *  - Output panel role="tabpanel" labelled by the active tab.
+ *  - Default state resolves the FIRST tab (OCR) so the panel is NEVER blank.
+ *
+ * Motion-off / reduced-motion (load-bearing): NO autoplay, NO cursor animation,
+ * NO cross-fade. Static resolved OCR state, fully clickable. Never blank.
  */
 
 export type SwitcherTab = {
@@ -41,7 +47,14 @@ type ModeSwitcherProps = {
   copiedLabel: string;
   className?: string;
   dataSource?: string;
+  /** Fired whenever the active mode changes (autoplay tick OR a visitor grab). */
+  onGrab?: (index: number, viaInteraction: boolean) => void;
+  /** Fired with the active index on every change, for parents that only track it. */
+  onActiveChange?: (index: number) => void;
 };
+
+const CYCLE_MS = 2600;
+const RESUME_AFTER_MS = 7000;
 
 export function ModeSwitcher({
   tabs,
@@ -49,6 +62,8 @@ export function ModeSwitcher({
   copiedLabel,
   className,
   dataSource = "src/components/sections/ModeSwitcher.tsx",
+  onGrab,
+  onActiveChange,
 }: ModeSwitcherProps) {
   const reduce = useReducedMotion();
   const motionOff = useMotionOff();
@@ -56,14 +71,73 @@ export function ModeSwitcher({
 
   // Initialise to the FIRST tab so the panel is never blank (load-bearing rule).
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  // The capture rect "draws" once on first reveal, then stays drawn.
+  const [drawn, setDrawn] = useState(false);
   const baseId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const tab = tabs[active];
 
+  const goTo = useCallback(
+    (next: number, viaInteraction: boolean) => {
+      const i = (next + tabs.length) % tabs.length;
+      setActive(i);
+      onActiveChange?.(i);
+      onGrab?.(i, viaInteraction);
+    },
+    [tabs.length, onActiveChange, onGrab],
+  );
+
+  // Visitor took control: pause, then schedule a resume after inactivity.
+  const takeControl = useCallback(() => {
+    if (staticMode) return;
+    setPaused(true);
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    resumeTimer.current = setTimeout(() => setPaused(false), RESUME_AFTER_MS);
+  }, [staticMode]);
+
+  // First-reveal: draw the capture rect (and fire the first grab) shortly after
+  // mount so the cursor + rect animation reads as "Quirky is capturing".
+  useEffect(() => {
+    if (staticMode) {
+      setDrawn(true);
+      return;
+    }
+    const t = setTimeout(() => {
+      setDrawn(true);
+      onGrab?.(0, false);
+    }, 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staticMode]);
+
+  // Autoplay cycle. Runs only when not static and not paused and after the rect
+  // has drawn. Advances through the tabs on a comfortable pneumatic timer.
+  useEffect(() => {
+    if (staticMode || paused || !drawn) return;
+    const t = setTimeout(() => {
+      goTo(active + 1, false);
+    }, CYCLE_MS);
+    return () => clearTimeout(t);
+  }, [staticMode, paused, drawn, active, goTo]);
+
+  useEffect(() => {
+    return () => {
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    };
+  }, []);
+
+  function selectTab(i: number) {
+    takeControl();
+    goTo(i, true);
+  }
+
   function focusTab(i: number) {
     const next = (i + tabs.length) % tabs.length;
-    setActive(next);
+    takeControl();
+    goTo(next, true);
     tabRefs.current[next]?.focus();
   }
 
@@ -101,8 +175,9 @@ export function ModeSwitcher({
         className="dark-scope dot-grid-dark overflow-hidden rounded-window border border-white/10 p-5 sm:p-7"
         style={{ background: "var(--color-ink-surface)" }}
       >
-        {/* Capture scene: a stylized browser window with a dashed capture rect */}
-        <CaptureScene alt={sceneAlt} />
+        {/* Capture scene: a stylized browser window with a dashed capture rect
+            that draws itself, plus an animated cursor on first reveal. */}
+        <CaptureScene alt={sceneAlt} drawn={drawn} staticMode={staticMode} />
 
         {/* Tabs */}
         <div
@@ -125,19 +200,43 @@ export function ModeSwitcher({
                 aria-selected={selected}
                 aria-controls={`${baseId}-panel`}
                 tabIndex={selected ? 0 : -1}
-                onClick={() => setActive(i)}
+                onClick={() => selectTab(i)}
+                onFocus={() => takeControl()}
+                onMouseEnter={() => takeControl()}
                 className={[
-                  "rounded-full border px-4 py-2 text-[1rem] font-semibold leading-none transition-colors duration-150 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#160c0a]",
+                  "relative rounded-full border px-4 py-2 text-[1rem] font-semibold leading-none transition-colors duration-150 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#160c0a]",
                   selected
                     ? "border-accent bg-accent text-paper"
                     : "border-white/15 bg-white/5 text-on-dark/70 hover:border-white/30 hover:text-on-dark",
                 ].join(" ")}
               >
                 {t.label}
+                {/* Autoplay progress ring under the active tab: a thin underline
+                    that wipes left-to-right over the cycle so the visitor SEES
+                    the demo is alive and moving on its own. */}
+                {selected && !staticMode && !paused && drawn && (
+                  <motion.span
+                    key={`prog-${active}`}
+                    aria-hidden="true"
+                    className="absolute inset-x-2 bottom-1 h-[2px] origin-left rounded-full bg-paper/70"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: CYCLE_MS / 1000, ease: "linear" }}
+                  />
+                )}
               </button>
             );
           })}
         </div>
+
+        {/* A tiny live hint: autoplaying vs paused. Body-size, friendly. */}
+        <p className="mt-3 text-[1rem] text-on-dark/50" aria-live="polite">
+          {staticMode
+            ? "Tap a mode to see its data."
+            : paused
+              ? "You are driving. It picks back up in a moment."
+              : "Watch it cycle, or grab a mode yourself."}
+        </p>
 
         {/* Output panel. role=tabpanel, labelled by the active tab. Default = OCR
             resolved so it is never blank. */}
@@ -145,7 +244,7 @@ export function ModeSwitcher({
           role="tabpanel"
           id={`${baseId}-panel`}
           aria-labelledby={`${baseId}-tab-${tab.id}`}
-          className="mt-4 min-h-[148px] rounded-card border border-white/10 bg-white/[0.03] p-5"
+          className="mt-3 min-h-[148px] rounded-card border border-white/10 bg-white/[0.03] p-5"
         >
           {staticMode ? (
             <OutputBody tab={tab} copiedLabel={copiedLabel} />
@@ -170,16 +269,22 @@ export function ModeSwitcher({
 
 /* ---------------------------------------------------------------------------
  * The capture scene: a small browser surface with a dashed capture rectangle
- * over the "Get started" button region. Static, inline SVG, no photo.
+ * over the "Get started" button region. The rect draws itself on first reveal
+ * (strokeDashoffset wipe) and a friendly cursor glides to the corner.
  * ------------------------------------------------------------------------- */
-function CaptureScene({ alt }: { alt: string }) {
+function CaptureScene({
+  alt,
+  drawn,
+  staticMode,
+}: {
+  alt: string;
+  drawn: boolean;
+  staticMode: boolean;
+}) {
+  // Rect perimeter for the draw-on animation (approx 204+68 *2 sides + arcs).
+  const PERIM = 540;
   return (
-    <svg
-      viewBox="0 0 520 260"
-      role="img"
-      aria-label={alt}
-      className="h-auto w-full"
-    >
+    <svg viewBox="0 0 520 260" role="img" aria-label={alt} className="h-auto w-full">
       {/* browser window */}
       <rect x="16" y="16" width="488" height="228" rx="16" fill="var(--color-ink-raised)" stroke="rgba(253,252,250,0.12)" strokeWidth="1.5" />
       {/* title bar */}
@@ -200,7 +305,7 @@ function CaptureScene({ alt }: { alt: string }) {
         Get started
       </text>
 
-      {/* dashed capture rectangle over the button region */}
+      {/* dashed capture rectangle over the button region. Draws itself once. */}
       <rect
         x="38"
         y="146"
@@ -210,16 +315,61 @@ function CaptureScene({ alt }: { alt: string }) {
         fill="none"
         stroke="var(--color-accent)"
         strokeWidth="2.5"
-        strokeDasharray="8 6"
+        strokeDasharray={staticMode ? "8 6" : `${PERIM}`}
+        strokeDashoffset={staticMode || drawn ? 0 : PERIM}
         strokeLinecap="round"
+        style={{
+          transition: staticMode ? undefined : "stroke-dashoffset 700ms cubic-bezier(0.16,1,0.3,1)",
+        }}
       />
+      {/* When fully drawn, swap to the friendly dashed look via a second overlay
+          rect so the marching-dash style reads (the draw-on used a solid line). */}
+      {(staticMode || drawn) && (
+        <rect
+          x="38"
+          y="146"
+          width="204"
+          height="68"
+          rx="14"
+          fill="none"
+          stroke="var(--color-accent)"
+          strokeWidth="2.5"
+          strokeDasharray="8 6"
+          strokeLinecap="round"
+          opacity={staticMode ? 1 : 0.0001}
+        >
+          {!staticMode && (
+            <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.65s" fill="freeze" />
+          )}
+        </rect>
+      )}
       {/* corner handles */}
-      <g fill="var(--color-accent)">
+      <g fill="var(--color-accent)" opacity={staticMode || drawn ? 1 : 0} style={{ transition: staticMode ? undefined : "opacity 300ms ease" }}>
         <circle cx="38" cy="146" r="3.5" />
         <circle cx="242" cy="146" r="3.5" />
         <circle cx="38" cy="214" r="3.5" />
         <circle cx="242" cy="214" r="3.5" />
       </g>
+
+      {/* Friendly cursor that glides to the bottom-right handle on first reveal. */}
+      {!staticMode && (
+        <motion.g
+          initial={{ x: 120, y: -40, opacity: 0 }}
+          animate={{ x: 0, y: 0, opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 1.2, times: [0, 0.2, 0.8, 1], ease: EASE_OUT }}
+          style={{ originX: "242px", originY: "214px" }}
+        >
+          <g transform="translate(242 214)">
+            <path
+              d="M0 0 L0 18 L4.5 13.5 L8 21 L11 19.5 L7.5 12 L13 12 Z"
+              fill="var(--color-paper)"
+              stroke="var(--color-ink)"
+              strokeWidth="1.2"
+              strokeLinejoin="round"
+            />
+          </g>
+        </motion.g>
+      )}
     </svg>
   );
 }
@@ -232,9 +382,7 @@ function OutputBody({ tab, copiedLabel }: { tab: SwitcherTab; copiedLabel: strin
     <div className="flex h-full flex-col gap-3">
       {tab.kind === "text" && (
         <div className="flex flex-col gap-2">
-          <code className="font-mono text-[1.25rem] font-medium text-on-dark">
-            {tab.value}
-          </code>
+          <code className="font-mono text-[1.25rem] font-medium text-on-dark">{tab.value}</code>
           <CopiedRow label={copiedLabel} />
         </div>
       )}
@@ -247,9 +395,7 @@ function OutputBody({ tab, copiedLabel }: { tab: SwitcherTab; copiedLabel: strin
             aria-hidden="true"
           />
           <div className="flex flex-col gap-1">
-            <code className="font-mono text-[1.5rem] font-semibold text-on-dark">
-              {tab.value}
-            </code>
+            <code className="font-mono text-[1.5rem] font-semibold text-on-dark">{tab.value}</code>
             <CopiedRow label={copiedLabel} />
           </div>
         </div>
@@ -261,18 +407,14 @@ function OutputBody({ tab, copiedLabel }: { tab: SwitcherTab; copiedLabel: strin
             {tab.selector}
           </span>
           <p className="text-[1rem] text-on-dark/70">
-            Inner text:{" "}
-            <code className="font-mono text-on-dark">{tab.value}</code>
+            Inner text: <code className="font-mono text-on-dark">{tab.value}</code>
           </p>
         </div>
       )}
 
       {tab.kind === "svg" && (
         <div className="flex items-center gap-4">
-          <span
-            className="grid h-14 w-14 shrink-0 place-items-center rounded-card border border-white/15 bg-white/5"
-            aria-hidden="true"
-          >
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-card border border-white/15 bg-white/5" aria-hidden="true">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 2.5l2.6 5.7 6.2.6-4.7 4.1 1.4 6.1L12 16.9 6.5 19l1.4-6.1L3.2 8.8l6.2-.6L12 2.5z"
@@ -284,9 +426,7 @@ function OutputBody({ tab, copiedLabel }: { tab: SwitcherTab; copiedLabel: strin
             </svg>
           </span>
           <div className="flex flex-col gap-1">
-            <code className="font-mono text-[1.25rem] font-medium text-on-dark">
-              {tab.value}
-            </code>
+            <code className="font-mono text-[1.25rem] font-medium text-on-dark">{tab.value}</code>
             <span className="text-[1rem] text-on-dark/70">Vector source extracted</span>
           </div>
         </div>
@@ -301,9 +441,7 @@ function OutputBody({ tab, copiedLabel }: { tab: SwitcherTab; copiedLabel: strin
               <line x1="50" y1="7" x2="50" y2="21" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </span>
-          <code className="font-mono text-[1.75rem] font-semibold text-on-dark">
-            {tab.value}
-          </code>
+          <code className="font-mono text-[1.75rem] font-semibold text-on-dark">{tab.value}</code>
         </div>
       )}
 
@@ -317,14 +455,7 @@ function CopiedRow({ label }: { label: string }) {
     <span className="inline-flex w-fit items-center gap-1.5 text-[1rem] text-on-dark/70">
       <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" className="text-accent">
         <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <polyline
-          points="5,8.4 7.2,10.6 11,5.8"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
+        <polyline points="5,8.4 7.2,10.6 11,5.8" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       {label}
     </span>

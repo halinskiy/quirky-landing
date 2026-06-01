@@ -1,5 +1,34 @@
 # quirky-landing — Handoff (Webflow rebuild)
 
+## SOUL PASS (2026-06-01) — character + living demo + scroll delight
+
+Structure unchanged (HEADER + 3 sections + FOOTER). What the Webflow dev needs to
+know about the new life:
+
+- **Quirky character (`[data-component="Quirky"]`).** Three instances: hero demo
+  corner, Modes top-right edge (peek), Pricing Pro card. It is an inline SVG with
+  JS-driven eyes (cursor tracking) + a CSS blink. In Webflow IX2 this is hard to
+  replicate 1:1. Recommended Webflow approach: a static friendly SVG pose for the
+  three placements, then OPTIONAL light IX2 (blink = a 2-state interaction on a
+  loop; a mouse-move interaction that nudges the pupils). The cursor tracking and
+  the on-grab "happy + Got it." reaction are the parts IX2 cannot do cleanly. If
+  the studio wants the full living character in Webflow, flag as a **custom code
+  embed** (port `Quirky.tsx`); otherwise ship the static pose. It is decorative
+  and the page reads fully without it (proven by the `?motion=0` static state).
+- **Living ModeSwitcher autoplay.** The auto-cycle (OCR -> HEX -> DOM -> SVG ->
+  SPX) + progress underline + pause-on-interaction is a small state machine.
+  Webflow native: build the tablist with IX2 tab states; the AUTOPLAY loop needs
+  a custom code embed (a `setInterval` advancing the active tab, cleared on
+  click/focus). The static resolved OCR state must be the default so it is never
+  blank if the embed is disabled.
+- **Scroll delight.** The giant "5" parallax in Modes = an IX2 scroll interaction
+  (move on scroll, small range, ease out, no bounce). The hero blob drift = a
+  slow looped IX2 move (or just leave static; it is pure atmosphere). The Reveal
+  blur-up on sections = the existing IX2 scroll-into-view pattern. All of it must
+  degrade to the static final layout (the page never depends on scroll for
+  content; CLS 0).
+- **Easing everywhere stays `cubic-bezier(0.16, 1, 0.3, 1)`. Nothing bounces.**
+
 The Webflow developer rebuilds this in Webflow IX2. This file tracks section
 order, native-vs-custom flags, and animation notes. Use the dev-only Inspector
 (Cmd+click any element) to map a visual element back to its source file + tokens.

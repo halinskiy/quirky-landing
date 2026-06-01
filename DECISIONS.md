@@ -1,5 +1,36 @@
 # Quirky — Decisions log
 
+## 2026-06-01 — SOUL PASS (3mpq-soldier)
+
+- **Personality without structural change.** The user called the clean rebuild
+  "скучно" but the structure was right. Decision: add a character, a living demo,
+  bold scale, and scroll delight ON TOP of the existing HEADER + 3 sections +
+  FOOTER, rather than redesigning the layout again. The structure stays; only the
+  warmth changes. Rejected: another full re-layout (this is the 4th direction;
+  re-laying out would risk re-introducing solved bugs and the user did not ask for
+  it).
+- **Character is a FRIEND, not Clippy.** Decision: the mascot reacts (blink, look,
+  delight on grab, peek at one section edge) but never nags, never blocks content,
+  never floats over copy. It lives at edges and corners, is `hidden sm:block` in
+  the two scroll spots so it cannot crowd mobile, and is fully decorative
+  (aria-hidden where it carries no info; the page reads identically with it gone).
+- **Living demo autoplays AND yields control.** Decision: the switcher auto-cycles
+  so it is never a dead "click me", but any interaction immediately pauses it and
+  a visible hint says "You are driving." This keeps the demo lively for passive
+  visitors and honest for active ones. Resume after idle (7s) rather than staying
+  paused forever, so a visitor who clicked once still sees the other modes.
+- **Static integrity is non-negotiable.** Decision: every new motion (autoplay,
+  cursor, blink, tracking, parallax, blob drift) has a motion-off branch that
+  renders the final/static state, gated on `useReducedMotion` + `?motion=0`. The
+  demo's static default stays the resolved OCR output so it is never blank. No
+  content depends on scroll. Verified by CDP at `?motion=0` on all 7 routes.
+- **Promote the portable shell, keep the project wrapper.** Decision: the reusable
+  blob+eyes+blink+tracking shape goes to `ui-kit/components/brand/Mascot.tsx`
+  (token-driven, dependency-free); the Quirky-specific reactions + speech bubble +
+  fixed-point look stay project-local in `Quirky.tsx`. Same two-file pattern as
+  the existing project-local `Reveal` / `BlobObject` / FAQ (standalone repo, kit
+  copied not symlinked).
+
 ## 2026-06-01 — CAPITAL REBUILD (3mpq-soldier)
 
 - **Morph removed, not re-timed.** The user rejected the flying morph twice over

@@ -76,6 +76,47 @@ KEEP (still locked):
 - Deployable: Next.js static export, basePath /quirky-landing, favicon
   /quirky-landing/icon.svg, build green.
 
+## GIVE IT SOUL (user, 2026-06-01, 4th round) — "скучно"
+The 3-section rebuild is structurally right but STERILE. The user said "скучно".
+The original brief was Quirky = a FRIEND: toy-like, playful, blobby, warm, fun.
+The clean rebuild scrubbed that personality out. Bring it BACK, keeping the
+header + 3 sections + footer structure and the interactive switcher. The user
+asked for ALL of these at once (keep structure, add life):
+
+1. **A Quirky CHARACTER / mascot.** Give Quirky a face and personality: a small
+   friendly blob creature (single accent + neutral, soft rounded, ONE consistent
+   design) that lives on the page and REACTS: blinks, looks toward the cursor or
+   the active element, looks delighted when you grab data (e.g. when you switch a
+   mode in the demo it reacts), peeks in at section edges. It is a friend, not a
+   corporate logo. Keep it tasteful and on-brand (not a clippy nuisance): subtle,
+   charming, reduced-motion-safe (a calm static pose when motion is off).
+2. **A LIVING hero demo.** The mode switcher must not sit dead waiting for a
+   click. It should auto-play / breathe: a cursor visibly draws the capture
+   rectangle, data flies out with delight, it auto-cycles OCR -> HEX -> DOM ->
+   SVG -> SPX, AND the visitor can still grab control by clicking/keyboard (when
+   they interact, auto-cycle pauses). The character reacts to each grab. Motion
+   off = static resolved OCR state as today.
+3. **Bold visual + scale.** Louder typography, confident scale, soft blob shapes,
+   a bit of asymmetry and playfulness in layout. Stop looking like a dev-tool
+   template. Warm, friendly, a little surprising. (One accent #E63E2E still; one
+   dark moment is fine.)
+4. **Living, friendly COPY with personality and a little humor.** Replace flat
+   doc-speak ("Recognized text, copied to clipboard") with warm friend voice
+   ("Boop. The text is already in your clipboard."). Quirky talks like a delighted
+   friend showing you a trick. Still: ASCII only, NO dashes (no em/en/hyphen-as-
+   separator/compound), no banned words, no exclamation marks (find energy without
+   them), App-Store honesty + facts intact, pricing one time $16.99. Keep it tight.
+5. **Surprising scroll.** Add tasteful scroll-driven delight: elements that
+   reveal/parallax/assemble as you scroll, the character peeking or following,
+   playful but MEANINGFUL motion (shows the product or rewards scrolling), never
+   bounce, pneumatic ease only. Not the old confusing flying morph block: this is
+   per-section scroll delight, legible and purposeful. Must degrade to static
+   under ?motion=0 / reduced-motion (no blank, no scroll-trap), CLS 0, perf sane.
+
+Hard guardrails unchanged: one accent #E63E2E, 16px min body, pneumatic easing no
+bounce, no dashes, App-Store honesty, deployable static export, ?motion=0 static
+on all routes, no horizontal overflow at 390. Make it fun WITHOUT breaking these.
+
 ## REDESIGN DIRECTIVE (user, 2026-06-01) — contrast + scale + cut text
 User feedback on the v0.1 live site: "всего слишком много, выглядит несуразно,
 читается тяжело, нужно больше контраста, скучно, много текста, нет масштаба чтоб

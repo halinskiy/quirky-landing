@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
 import { Section, SectionHeader } from "@/components/section/Section";
+import { Quirky } from "@/components/character/Quirky";
 import { useMotionOff } from "@/components/motion/useMotionOff";
 import { copy } from "@/content/copy";
 import { EASE_OUT } from "@/lib/motion";
@@ -58,6 +59,13 @@ export function Pricing() {
                   <span className="absolute right-6 top-6 inline-flex items-center rounded-full bg-accent px-3 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.062em] text-paper">
                     All five modes
                   </span>
+                )}
+                {/* Quirky perches happily on the Pro card corner: it knows this is
+                    the good one. Static-safe (rests when motion is off). */}
+                {highlight && (
+                  <div className="pointer-events-none absolute -left-3 -top-10 z-10 hidden sm:block">
+                    <Quirky size={64} mood="happy" lookAt={null} label="Quirky, delighted, next to the Pro plan" />
+                  </div>
                 )}
 
                 <div className="flex flex-col gap-2">

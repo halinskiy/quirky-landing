@@ -1,5 +1,16 @@
 # Quirky — Components
 
+## SOUL PASS (2026-06-01, 4th direction) — new + changed + promoted
+
+| Component | Path | Purpose | Status |
+|---|---|---|---|
+| `Quirky` | `src/components/character/Quirky.tsx` | The mascot. Friendly blob creature (accent-soft body, ink hairline, paper eyes with cursor-tracking pupils, blink loop, smile + cheek blush on the happy reaction) plus a tiny optional bordered speech bubble. Props: `size`, `mood` (`idle`/`happy`/`peek`), `lookAt` (`"pointer"` \| fixed `{x,y}` \| `null`), `say`, `bubbleSide`, `decorative`, `label`. Reads reduced-motion + `?motion=0` (via `useReducedMotion` + `useMotionOff`) for a calm STATIC pose (no blink/track/bubble-anim). Disables pupil tracking on coarse (touch) pointers. | NEW (project-local: wires Quirky tokens + reactions + fixed-point look + speech bubble). |
+| `Mascot` (kit) | `ui-kit/components/brand/Mascot.tsx` | The portable, token-driven, dependency-free shell of the character (blob + eyes + blink + cursor tracking + 3 moods, all colours as CSS vars, `still` prop for static). The project `Quirky` is the Quirky-specific wrapper around this shape; they are intentionally two files (standalone repo: kit is not symlinked here, same pattern as `Reveal` / `BlobObject` / FAQ). | NEW, PROMOTED to ui-kit + INDEX row + index.ts export, same session. |
+| `ModeSwitcher` | `src/components/sections/ModeSwitcher.tsx` | REWRITTEN to be ALIVE: cursor glides in + capture rect draws itself on reveal, then tabs AUTO-CYCLE on a ~2.6s pneumatic timer with a progress underline. Pauses on click/keyboard/hover, resumes after ~7s idle. New `onGrab(index, viaInteraction)` + `onActiveChange(index)` callbacks so the parent drives the character reaction. WAI-ARIA tablist + roving tabindex + Arrow/Home/End kept. Static (reduced-motion / `?motion=0`): no autoplay, no cursor, resolved OCR state, clickable, never blank. | CHANGED (living-demo rewrite; output bodies + a11y unchanged). |
+| `Hero` | `src/components/sections/Hero.tsx` | Louder typography (clamp to 5.5rem), bigger subhead, soft drifting accent-soft blob backdrop (`HeroBlobs`, motion-off static, pointer-events-none, clipped), asymmetric grid. Mounts `Quirky` on the demo card corner and wires `handleGrab` so the character pops happy + shows `reactionGrab` on each demo grab, settling to `greeting`. | CHANGED. |
+| `Modes` | `src/components/sections/Modes.tsx` | Added an oversize decorative parallaxing "5" behind the header (`useScroll`/`useTransform`, static when motion off), a `hidden sm:block` peeking `Quirky` (`mood="peek"`, `reactionPeek`), a row hover wash, larger mode headings, and the `proofLine` rendered. | CHANGED. |
+| `Pricing` | `src/components/sections/Pricing.tsx` | Added a `hidden sm:block` happy `Quirky` perched on the highlighted Pro card. Tiers/FAQ/download band unchanged. | CHANGED. |
+
 ## CAPITAL REBUILD (2026-06-01, third round) — new + changed + removed
 
 | Component | Path | Purpose | Status |

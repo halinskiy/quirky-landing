@@ -1,5 +1,13 @@
 # Review — Quirky landing (first-pass full QA)
 
+> SOUL PASS S1 RESOLVED 2026-06-01 (main-loop): the SOUL PASS REVIEW's single
+> blocker (visible hyphen-compounds right-click + mid-capture) is fixed in
+> copy.json (right-click -> digging, mid-capture -> while capturing). Independent
+> re-verification: visible-text hyphen-compound sweep across all 7 rendered routes
+> returns ZERO; 0 exclamation marks in visible prose; JSON valid; clean build
+> green. Everything else in the SOUL PASS REVIEW already measured PASS. Cleared
+> for redeploy.
+
 > REDESIGN ISSUE #1 RESOLVED 2026-06-01 (main-loop): the V0.4 REDESIGN REVIEW's
 > single blocker (hyphen-as-dash compounds in visible prose: on-device,
 > click-through, reverse-engineer x2, mid-capture) is fixed in copy.json.
@@ -788,3 +796,210 @@ interactive ModeSwitcher hero (CORRECTIONS.md "CAPITAL REBUILD" spec).
 - /tmp/quirky-cdp/driver2.mjs (ArrowRight full settle + App-Store section location +
   interactive states + pricing completeness)
 - /tmp/quirky-cdp/shot.mjs (screenshots)
+
+---
+
+# SOUL PASS REVIEW 2026-06-01
+
+**Reviewer:** 3mpq-judge
+**Scope:** the SOUL PASS (CORRECTIONS "GIVE IT SOUL", 4th direction): a Quirky
+character/mascot, a living auto-playing hero demo, bold visuals, and per-section
+scroll delight added to the existing HEADER + 3 sections + FOOTER. Verified as a
+finished pass (the soldier's connection dropped before returning a report; the work
+is on disk and builds green).
+**Method (my own, independent):** two clean `rm -rf .next out && npm run build`
+(both EXIT 0, 0 `<Html>`, all 7 routes), `tsc --noEmit` clean, static `out/` served
+under the `/quirky-landing` basePath, headless Chrome 148 over CDP at 1440 + 390,
+motion ON and `?motion=0` + reduced-motion, plus source + rendered-HTML greps.
+Screenshots non-zero this pass.
+
+## VERDICT: ISSUES (1 FAIL)
+
+The soul pass DELIVERS what the user asked for and every soul-specific behaviour
+measures clean: the character is present, reacts under motion-on, and falls back to
+a calm static pose under motion-off; the hero demo autoplays, pauses on interaction,
+and is non-blank under motion-off on all routes at 1440 AND 390; scroll delight is
+real and degrades to static; accent is clean; build is green; no 390 overflow; no
+exclamation marks; App-Store honesty + $16.99 intact. The user's "make it not
+boring" ask is met without breaking the structural or motion guardrails.
+
+The single blocker is the **no-dashes guardrail**: two hyphen-compounds are visibly
+rendered in prose (`right-click`, `mid-capture`). The prompt names "no dashes in
+visible prose (... hyphen-compound)" as a hard PASSED condition, and the prior V0.4
+REDESIGN REVIEW blocked PASSED on this exact class of issue (`on-device`,
+`click-through`, `reverse-engineer`). Consistency requires the same bar. These are
+NOT soul-pass regressions (they predate this pass, in `modes.list[dom].line` and
+`pricing.tiers[pro].features`, and were missed by the CAPITAL REBUILD review which
+reported the home hyphen-compound sweep as empty), but they ARE live and visible, so
+the guardrail is not met. Fix is one word each, then rebuild + re-grep, and this
+flips to PASSED. No layout, color, motion, character, or structure work is required.
+
+**Gate before redeploy: HOLD.** Clear Issue S1, re-run the visible-text grep clean,
+and this is PASSED.
+
+## Requested answers (headline)
+
+- **VERDICT:** ISSUES (1 FAIL).
+- **Section count:** exactly 3 content sections. `page.tsx` = Nav + main(Hero,
+  Modes, Pricing) + Footer. Morph functional refs = ZERO (`grep morph|data-morph|
+  MorphJourney|MorphMount|MorphForms|morph-handoff src/` returns only 3 descriptive
+  comment lines; no `src/components/morph/` dir; runtime `morphElements` = 0 on every
+  route/viewport). No extra heavy sections, no flying block.
+- **Character motion-ON vs motion-OFF:** motion ON the mascot blinks, tracks the
+  cursor/active element, pops to a delighted "happy" reaction with a speech bubble on
+  every demo grab (autoplay tick OR click), and peeks over the Modes edge; 3
+  instances live (hero, Modes peek, Pricing Pro), all `pointer-events: none` (cannot
+  block content). Motion OFF / reduced-motion the SVG renders with `transform: none`,
+  pupils centred (cx 38/62, looking straight ahead), no blink, no tracking, no bubble
+  animation: a calm static pose, present and charming, not blank.
+- **Demo autoplay + motion-off non-blank:** motion ON the tabs auto-cycle
+  OCR -> HEX -> DOM -> SVG (measured distinct tabs advancing on the ~2.6s timer);
+  clicking SPX pauses autoplay (still SPX after 3.2s, longer than one cycle) with the
+  live hint "You are driving. It picks back up in a moment."; pneumatic ease
+  `cubic-bezier(0.16,1,0.3,1)`, no bounce. WAI-ARIA tablist + roving tabindex +
+  ArrowRight moves selection AND focus to HEX with the panel updating. Motion OFF:
+  NO autoplay, panel resolves OCR by default, non-blank at **1440 (len 67)** AND
+  **390 (len 67)**: "Get started / Copied to clipboard / Boop. That text is in your
+  clipboard.", tabs still clickable, no JS error.
+- **Per-route motion=0 (all 7, 1440 + 390):** overflow 0 (scrollWidth==clientWidth),
+  sub-16 body 0 (only 12px uppercase eyebrows remain), 0 blank, morphElements 0,
+  body content present on every route. Table below.
+- **Dash + exclamation grep:** rendered visible text, all 7 routes: **0 exclamation
+  marks, 0 unicode dash/bullet/middle-dot/ellipsis, 0 spaced hyphens**. copy.json
+  same. **2 visible hyphen-compounds** (`right-click`, `mid-capture`) — the FAIL.
+- **Accent clean:** computed `--color-accent: #e63e2e`; old coral
+  (#FF7059/#F25742/#DB4733/#FFE9E4/#FFF4F1) = ZERO in src AND in rendered
+  HTML/CSS/JS; `#3D9DF2` retained only as the sampled HEX demo value. One accent.
+
+## Per-route motion=0 (CDP, my own, ?motion=0)
+
+| route | 1440 overflow | 390 overflow | sub-16 body | blank | morphEl | bodyLen |
+|---|---|---|---|---|---|---|
+| `/` | 0 | 0 | 0 | 0 | 0 | 14093 |
+| `/install/` | 0 | 0 | 0 | 0 | 0 | 14143 |
+| `/privacy-policy/` | 0 | 0 | 0 | 0 | 0 | 15985 |
+| `/terms/` | 0 | 0 | 0 | 0 | 0 | 14452 |
+| `/refunds/` | 0 | 0 | 0 | 0 | 0 | 13134 |
+| `/thanks/` | 0 | 0 | 0 | 0 | 0 | 12004 |
+| `/404.html` + `/404/` | 0 | 0 | 0 | 0 | 0 | 12132 |
+
+Hero demo panel at `?motion=0` (1440 AND 390): OCR resolved, textContent len 67,
+never blank. Quirky present on home (3), static pose. (404 sets `data-motion=null`
+because the static error doc does not run the param hook, but every guardrail metric
+is clean and content is present.)
+
+## Soul-pass checklist
+
+### Structure intact (CRITICAL) — PASS
+- [x] 3 content sections (Nav + Hero + Modes + Pricing + Footer). No morph, no extra
+  heavy section. Morph functional refs = 0 (comments only), no morph dir, 0 runtime
+  morph elements on every route.
+
+### Quirky character — PASS
+- [x] Single consistent blob mascot (accent-soft body + ink hairline + accent tummy +
+  cheek blush), ONE design, `src/components/character/Quirky.tsx`.
+- [x] Motion ON shows life: randomized blink, cursor/element pupil tracking, "happy"
+  squish + blush + wider smile + "Got it." bubble on demo grab, "peek" tilt at the
+  Modes edge. Greeting/peek bubbles live ("Oh, you can just grab that.", "Psst.
+  There is data in there.").
+- [x] Motion OFF + reduced-motion: calm STATIC pose (transform none, pupils centred,
+  no blink/track/bubble anim), present, not blank, not broken.
+- [x] Does NOT block content or cause overflow: all 3 instances `pointer-events:
+  none`; peek/Pro characters `hidden sm:`; overflow 0 at 390. Charming, subtle, does
+  not cover text (verified on screenshot).
+- [x] Promoted to `ui-kit/components/brand/Mascot.tsx` (token-driven, dependency-free)
+  + INDEX.md row + `index.ts` export + types, same session.
+
+### Living hero demo (ModeSwitcher) — PASS
+- [x] Motion ON: auto-cycles OCR -> HEX -> DOM -> SVG -> SPX on the ~2.6s timer with a
+  progress underline; output panel updates each cycle; pneumatic ease, no bounce.
+- [x] Interacting (click / keyboard) PAUSES autoplay and shows the chosen mode (SPX
+  held > one cycle); resumes after inactivity; live hint reflects "you are driving".
+- [x] Real WAI-ARIA tablist: role tablist/tab/tabpanel, aria-selected, roving
+  tabindex, ArrowLeft/Right/Up/Down/Home/End (ArrowRight moves selection + focus +
+  panel to HEX, measured).
+- [x] Motion OFF + reduced-motion: NO autoplay, panel = OCR resolved (never blank,
+  len 67 at 1440 AND 390), tabs still clickable, no JS error.
+
+### Scroll delight — PASS
+- [x] Per-section scroll-driven motion is real and meaningful (not the old morph):
+  the giant "5" parallaxes (transform 24.28 -> -17.29 across scroll), Quirky peeks in
+  at the Modes edge, rows assemble via staggered Reveal.
+- [x] Degrades to static under motion=0/reduced-motion: sections fully readable,
+  top-anchored content present at load, no scroll dependency, no scroll-trap,
+  overflow 0. (Per-section CLS was clean in the prior pass; this pass measured 0
+  overflow + full content at load on all routes, no layout depends on scroll.)
+
+### Bold visual + copy voice — PASS
+- [x] Warmer copy live: "Boop. That text is in your clipboard.", hero subhead names
+  the five data types, mode captions re-voiced ("Grabbed it. That blue is yours.").
+- [x] Bold scale: clamp headline to 5.5rem, oversize "5", soft drifting blobs,
+  asymmetric grid, one dark demo panel. Friendly without breaking the rules.
+
+### Guardrails — mostly PASS, 1 FAIL
+- [x] PASS — `?motion=0` over all 7 routes: full content, 0 blank, 0 sub-16 body
+  (12px uppercase eyebrows only), scrollWidth==clientWidth at 390 AND 1440. Character
+  static, demo OCR resolved.
+- [x] PASS — one accent computed `#e63e2e`; old coral 5 hexes = 0 in src + rendered
+  HTML/CSS/JS; `#3D9DF2` only as the sampled HEX value.
+- [x] PASS — NO exclamation marks: 0 in copy.json AND 0 in rendered visible text on
+  all 7 routes.
+- [x] PASS — no em/en-dash, middle-dot, bullet, ellipsis, spaced hyphen in rendered
+  prose on all 7 routes; 0 ASCII ` -- ` in copy.json.
+- [ ] **FAIL** — visible hyphen-compounds in prose: `right-click` (Modes DOM line,
+  visible) and `mid-capture` (Pricing Pro feature, visible). See Issue S1.
+- [x] PASS — 16px min body; pneumatic easing `cubic-bezier(0.16,1,0.3,1)` on tabs/
+  FAQ, no bounce; App-Store honesty visible (6 mentions, OCR/HEX/SPX honest note,
+  "DOM and SVG require the direct download"); pricing one time $16.99.
+- [x] PASS — build green: two clean `rm -rf .next out && npm run build` EXIT 0, 0
+  `<Html>`, all 7 routes export; basePath `/quirky-landing/_next` + favicon
+  `/quirky-landing/icon.svg` intact; `tsc --noEmit` clean.
+- [x] PASS — mobile 390 clean, character causes no horizontal overflow (peek/Pro
+  hidden < sm, pupil tracking off on coarse pointer), tabs usable.
+
+### Dark demo panel contrast (composited over #160C0A, computed)
+- Demo caption (on-dark/60): composited rgb(161,156,154), contrast **7.09** — AA body PASS.
+- Live hint (on-dark/50): composited rgb(138,132,130), contrast **5.23** — AA body PASS.
+- Active tab label white on accent #e63e2e: 4.02 — AA large/UI PASS (16px semibold pill).
+
+## Issues requiring fix
+
+| # | Severity | What | Spec | Evidence (measured) | Fix |
+|---|---|---|---|---|---|
+| S1 | **FAIL** | Two hyphen-compounds rendered in VISIBLE prose | Prompt guardrail + CORRECTIONS REFINEMENT item 4: "no hyphen used as a separator or as a dash; rewrite rather than hyphenate"; PASSED requires "no dashes" | `innerText` of `/` contains `right-click` ("No DevTools, no right-click, no guessing.") from `content/copy.json` modes.list[dom].line (L133) AND `mid-capture` ("active and switchable mid-capture") from pricing.tiers[pro].features (L320). Both confirmed visible (not aria-hidden) via `document.body.innerText`. | Copywriter edits copy.json: `right-click` -> `right click`; `mid-capture` -> `mid capture`. Then `rm -rf .next out && npm run build` and re-grep `document.body.innerText` for `[a-z]+-[a-z]+` = only slugs. |
+
+## Single most important issue
+
+**Issue S1** — the no-dash guardrail is violated by two visible hyphen-compounds
+(`right-click`, `mid-capture`). It is the only thing between this soul pass and
+PASSED, it is a one-word-each copy.json fix plus a rebuild, and it requires no
+layout/color/motion/character/structure change.
+
+## Notes (non-blocking)
+
+- NOTE — the cookie consent card overlays the lower hero on first visit; that is the
+  strict-opt-in gate behaving as designed, not a layout defect.
+- NOTE — `/404.html` reports `data-motion=null` (the static error document does not
+  run the `?motion=0` hook); all guardrail metrics on it are still clean. No action.
+- NOTE — WARN #3/#4/#5/#6 from the first-pass review (self-host fonts or confirm CI
+  Google Fonts; `npm rm lucide-react`; Inspector dev-only `#ffffff`; launch
+  placeholders) remain non-blocking devops/launch tasks.
+
+## Screenshots (own, non-zero this pass)
+
+- /tmp/aisoldier-judge/quirky-soul/hero-1440-motion-on.png (Quirky + bubble, living
+  demo, OCR resolved, dark panel)
+- /tmp/aisoldier-judge/quirky-soul/hero-390-motion-off.png (390 single column, no
+  overflow, static)
+
+## CDP harness (this review)
+
+- /tmp/qk-cdp/drive.mjs (CDP WebSocket driver, Chrome 148)
+- /tmp/qk-cdp/test-motionoff.mjs (7-route motion=0 guardrails + panel non-blank)
+- /tmp/qk-cdp/test-motionon.mjs (autoplay cycle + pause-on-grab + character + kbd)
+- /tmp/qk-cdp/test-kbd.mjs (ArrowRight selection+focus+panel)
+- /tmp/qk-cdp/test-static-contrast.mjs (static character pose + dark contrast + 404)
+- /tmp/qk-cdp/test-final.mjs (App-Store honesty + $16.99 + parallax + pointer-events)
+- /tmp/qk-cdp/test-hyphen.mjs (innerText hyphen-compound visibility)
+- /tmp/qk-cdp/shot.mjs (screenshots)
+- Build logs: /tmp/qk-soul-build1.log, /tmp/qk-soul-build2.log (EXIT 0, 0 Html, 7 routes)

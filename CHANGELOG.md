@@ -1,5 +1,60 @@
 # Quirky — Changelog
 
+## 2026-06-01 — Fix soul-pass S1: two hyphen-compounds in visible prose
+
+Judge SOUL PASS REVIEW: one blocking FAIL. Two hyphen-as-compound words rendered
+in visible prose (no-dash rule): "right-click" (Modes DOM line) and "mid-capture"
+(Pricing Pro feature), both pre-existing, missed by the CAPITAL REBUILD review.
+Reworded in copy.json: right-click -> "digging", mid-capture -> "while capturing".
+Verified: visible-text hyphen-compound sweep across all 7 rendered routes returns
+ZERO; 0 exclamation marks in visible prose; JSON valid; clean build green. Clears
+the soul pass's only blocker.
+
+## 2026-06-01 — SOUL PASS: character, living demo, scroll delight (4th direction)
+
+The user said the clean 3-section rebuild was "скучно" (boring): structurally
+right but sterile, it scrubbed out the Quirky = FRIEND personality. This pass
+brings the personality back WITHOUT changing the structure (still HEADER + 3
+sections + FOOTER + the interactive switcher). Re-voiced copy was already wired by
+the copywriter (copy.json `character` object + warmer switcher captions).
+
+Added:
+- **Quirky CHARACTER / mascot** (`src/components/character/Quirky.tsx`). One small
+  friendly blob creature: accent-soft body, ink hairline, two big eyes with
+  cursor-tracking pupils, a smile that widens + cheek blush on the happy reaction,
+  randomized blinking, and an optional tiny bordered speech bubble. Three moods:
+  `idle` / `happy` / `peek`. Lives in three spots: perched on the hero demo card
+  (tracks cursor, reacts on every grab with `character.reactionGrab` "Got it." then
+  settles to `character.greeting`), peeking over the Modes section top edge
+  (`character.reactionPeek` "Psst. There is data in there."), and happy on the
+  Pricing Pro card. The portable shell is PROMOTED to
+  `ui-kit/components/brand/Mascot.tsx` (token-driven, dependency-free) + INDEX row
+  + index.ts export, same session.
+- **LIVING hero demo** (`ModeSwitcher.tsx` rewrite). On reveal a friendly cursor
+  glides in and the dashed capture rect draws itself; the tabs then AUTO-CYCLE
+  OCR -> HEX -> DOM -> SVG -> SPX on a ~2.6s pneumatic timer with a thin progress
+  underline under the active tab. Clicking a tab or keyboard-navigating PAUSES
+  autoplay (hint: "You are driving. It picks back up in a moment.") and resumes
+  after ~7s of no interaction. Each cycle/grab fires `onGrab` so the character
+  reacts. WAI-ARIA tablist + roving tabindex + Arrow/Home/End nav kept intact.
+- **Bold visuals + scale.** Louder hero headline (clamp up to 5.5rem, tighter
+  leading), larger subhead, soft drifting accent-soft blob backdrop behind the
+  hero, an oversize parallaxing "5" behind the Modes header, asymmetric hero grid
+  (1.05fr / 0.95fr), row hover wash on the mode list.
+- **Surprising, MEANINGFUL scroll delight.** Modes: the giant "5" parallaxes and
+  Quirky peeks in as you arrive; the five rows assemble with a staggered Reveal.
+  Pricing: the Pro card arrives via Reveal with Quirky perched on it. All motion
+  shows the product or rewards scrolling; pneumatic ease, no bounce.
+
+Motion-off / reduced-motion (load-bearing, verified): NO autoplay, NO cursor
+animation, NO blink/tracking, NO parallax. Demo shows the resolved OCR state,
+Quirky holds a calm static centred-eye pose, the giant "5" sits still, every
+section renders final state. CDP: 0 sub-16 body, scrollWidth==clientWidth at 390
+AND 1440 across all 7 routes, 0 blank sections, CLS 0.0000 (motion-off) / 0.0015
+(motion-on). Clean build x2 green, tsc clean. On touch (coarse pointer) the
+character drops pupil tracking and the peek/pricing characters are `hidden sm:`
+so they never cause overflow at 390.
+
 ## 2026-06-01 — CAPITAL REBUILD: morph removed, three-section page, interactive ModeSwitcher
 
 Third direction change (CORRECTIONS.md "CAPITAL REBUILD"). The user rejected the
