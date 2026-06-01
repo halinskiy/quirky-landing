@@ -52,7 +52,10 @@ export const metadata: Metadata = {
     description: copy.meta.ogDescription,
   },
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    // basePath-prefixed: metadata icon URLs are NOT auto-rewritten by Next's
+    // basePath, so on GitHub Pages project-pages (served from /quirky-landing/)
+    // a bare "/icon.svg" 404s. Keep this in sync with next.config.ts basePath.
+    icon: [{ url: "/quirky-landing/icon.svg", type: "image/svg+xml" }],
   },
 };
 
