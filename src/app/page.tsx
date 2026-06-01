@@ -1,35 +1,22 @@
-import { Nav } from "@/components/nav/Nav";
-import { HeroScroll } from "@/components/sections/HeroScroll";
-import { Modes } from "@/components/sections/Modes";
-import { Pricing } from "@/components/sections/Pricing";
-import { Footer } from "@/components/sections/Footer";
+import { Playground } from "@/components/playground/Playground";
+import { MobileGate } from "@/components/mobile/MobileGate";
 
 /**
- * Home composition — the CAPITAL REBUILD (CORRECTIONS.md, 2026-06-01, third
- * round). The morph journey and the six-section rhythm are gone. The page is
- * exactly: HEADER + three sections + FOOTER.
+ * Home — the PLAYGROUND DIRECTION, second pass (CORRECTIONS.md, 2026-06-01).
+ * The site is ONLY the hero: a full-screen desktop playground where each of the
+ * five modes is a REAL working tool you can use right on the page (live colour
+ * eyedropper, OCR on a dropped image, drag-to-measure, click-to-selector,
+ * SVG source lift). No pricing, no footer, no scripted demos.
  *
- *   Nav      sticky header: logo + Modes / Pricing / FAQ anchors + Download pill
- *   Hero     Section 1: headline + dual download CTA + the interactive
- *            ModeSwitcher (one capture, five kinds of data, visitor-driven)
- *   Modes    Section 2: the five modes, informative, real example outputs
- *   Pricing  Section 3: pricing + download band + compact FAQ
- *   Footer   condensed closing block
- *
- * No flying block, no data-morph anywhere. Every string comes from
- * content/copy.json. The ModeSwitcher resolves the OCR tab by default so the
- * hero demo is never blank under ?motion=0 / reduced-motion.
+ * Mobile: hidden; a single MobileGate banner is shown (Mac desktop only).
  */
 export default function Home() {
   return (
     <>
-      <Nav />
-      <main id="top">
-        <HeroScroll />
-        <Modes />
-        <Pricing />
-      </main>
-      <Footer />
+      <div className="hidden md:block">
+        <Playground />
+      </div>
+      <MobileGate />
     </>
   );
 }

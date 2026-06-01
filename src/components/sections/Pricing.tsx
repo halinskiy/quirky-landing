@@ -51,11 +51,11 @@ export function Pricing() {
       tokens="paper,ink,accent,accent-soft,gray-200"
     >
       <Reveal>
-        <div className="flex flex-col gap-4">
-          <span className="font-mono text-[0.8125rem] font-semibold uppercase tracking-[0.14em] text-accent-pressed">
-            03 / {c.eyebrow}
+        <div className="flex flex-col gap-3">
+          <span className="font-mono text-[0.8125rem] font-semibold uppercase tracking-[0.14em] text-gray-400">
+            {c.eyebrow}
           </span>
-          <h2 className="max-w-3xl text-[clamp(2rem,4.4vw,3.5rem)] font-extrabold leading-[1.04] tracking-tight text-ink">
+          <h2 className="max-w-2xl text-[clamp(1.75rem,3.2vw,2.5rem)] font-bold leading-[1.1] tracking-tight text-ink">
             {c.headline}
           </h2>
         </div>
@@ -68,15 +68,13 @@ export function Pricing() {
             <div key={tier.id} className={`st-reveal st-reveal-${i + 1} h-full`}>
               <article
                 className={[
-                  "relative flex h-full flex-col gap-6 rounded-window border p-7 md:p-8",
-                  highlight
-                    ? "border-accent bg-accent-soft"
-                    : "border-gray-200 bg-paper",
+                  "relative flex h-full flex-col gap-6 rounded-window border bg-paper p-7 md:p-8",
+                  highlight ? "border-gray-300" : "border-gray-200",
                 ].join(" ")}
               >
                 {highlight && (
-                  <span className="absolute right-6 top-6 inline-flex items-center rounded-full bg-accent px-3 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.062em] text-paper">
-                    All five
+                  <span className="absolute right-6 top-6 font-mono text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-gray-400">
+                    all five
                   </span>
                 )}
 
@@ -85,11 +83,9 @@ export function Pricing() {
                     {tier.name}
                   </h3>
                   <div className="flex items-baseline gap-3">
-                    <PriceCapture capture={highlight}>
-                      <span className="text-[clamp(2.75rem,5.4vw,4.25rem)] font-extrabold leading-none tracking-tight text-ink">
-                        {tier.price}
-                      </span>
-                    </PriceCapture>
+                    <span className="text-[clamp(2.5rem,4.6vw,3.5rem)] font-bold leading-none tracking-tight text-ink">
+                      {tier.price}
+                    </span>
                     {tier.priceSub && (
                       <span className="font-mono text-[1rem] text-gray-500">
                         {tier.priceSub}
@@ -98,7 +94,7 @@ export function Pricing() {
                   </div>
                 </div>
 
-                {/* Mode chips: lit = included. Shows the difference visually. */}
+                {/* Mode chips: filled = included. Restrained palette (no accent). */}
                 <div className="flex flex-wrap gap-2">
                   {MODE_ORDER.map((m) => {
                     const on = tier.modes.includes(m.id);
@@ -106,10 +102,10 @@ export function Pricing() {
                       <span
                         key={m.id}
                         className={[
-                          "inline-flex items-center rounded-button border px-3 py-1.5 font-mono text-[1rem] font-semibold transition-colors duration-150",
+                          "inline-flex items-center rounded-button border px-3 py-1.5 font-mono text-[1rem] font-semibold",
                           on
-                            ? "border-accent bg-paper text-accent-pressed"
-                            : "border-gray-200 text-gray-400",
+                            ? "border-gray-300 bg-gray-50 text-ink"
+                            : "border-gray-200 text-gray-300",
                         ].join(" ")}
                       >
                         {m.label}
@@ -124,7 +120,7 @@ export function Pricing() {
                       key={feature}
                       className="flex items-start gap-2.5 text-[1rem] leading-relaxed text-ink/80"
                     >
-                      <Check highlight={highlight} />
+                      <Check />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -269,59 +265,13 @@ function CompactFaq({ pairs }: { pairs: { q: string; a: string }[] }) {
   );
 }
 
-/* The Pro price gets "captured": four corner ticks snap around it, the way the
- * cursor brackets an element. Static-safe (ticks rest in place under motion-off). */
-function PriceCapture({
-  capture,
-  children,
-}: {
-  capture: boolean;
-  children: React.ReactNode;
-}) {
-  const reduce = useReducedMotion();
-  const motionOff = useMotionOff();
-  const staticMode = Boolean(reduce) || motionOff;
-
-  if (!capture) return <>{children}</>;
-
-  const ticks = [
-    "left-0 top-0 border-r-0 border-b-0",
-    "right-0 top-0 border-l-0 border-b-0",
-    "left-0 bottom-0 border-r-0 border-t-0",
-    "right-0 bottom-0 border-l-0 border-t-0",
-  ];
-
+function Check() {
   return (
-    <span className="relative inline-flex px-3 py-1.5">
-      {children}
-      {ticks.map((pos, i) => (
-        <motion.span
-          key={i}
-          aria-hidden="true"
-          className={`pointer-events-none absolute h-3.5 w-3.5 border-2 border-accent ${pos}`}
-          initial={staticMode ? false : { opacity: 0, scale: 1.6 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-10%" }}
-          transition={{ duration: 0.4, delay: 0.15 + i * 0.07, ease: EASE_OUT }}
-        />
-      ))}
-    </span>
-  );
-}
-
-function Check({ highlight }: { highlight: boolean }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" className="mt-0.5 shrink-0">
-      <circle
-        cx="10"
-        cy="10"
-        r="9"
-        fill={highlight ? "var(--color-accent)" : "var(--color-accent-soft)"}
-      />
+    <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" className="mt-0.5 shrink-0">
       <polyline
-        points="6,10.5 9,13.5 14,7"
+        points="4,10.5 8.5,15 16,5"
         fill="none"
-        stroke={highlight ? "var(--color-paper)" : "var(--color-accent-pressed)"}
+        stroke="var(--color-gray-500)"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"

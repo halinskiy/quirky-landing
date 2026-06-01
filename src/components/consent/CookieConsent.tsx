@@ -55,7 +55,7 @@ export function CookieConsent({
       data-component="CookieConsent"
       data-source="src/components/consent/CookieConsent.tsx"
       data-tokens="paper,ink,gray-200,gray-500,accent,radius-window"
-      className="fixed bottom-5 left-5 z-[9000] w-[calc(100vw-2.5rem)] max-w-[360px] outline-none"
+      className="fixed bottom-5 left-5 z-[9000] hidden w-[calc(100vw-2.5rem)] max-w-[360px] outline-none md:block"
     >
       <div className="rounded-window border border-gray-200 bg-paper p-5 shadow-[0_16px_40px_-12px_rgba(26,22,20,0.18)]">
         <div className="mb-2 text-[1rem] font-bold tracking-tight text-ink">
