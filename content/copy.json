@@ -2,12 +2,55 @@
   "nav": {
     "logoAlt": "Quirky",
     "links": [
-      { "label": "How it works", "href": "#how-it-works" },
-      { "label": "Features", "href": "#features" },
+      { "label": "Modes", "href": "#modes" },
       { "label": "Pricing", "href": "#pricing" },
       { "label": "FAQ", "href": "#faq" }
     ],
     "ctaPill": "Download free"
+  },
+
+  "switcher": {
+    "intro": "One capture. Tab to the data you need.",
+    "sceneAlt": "A stylized browser window with a dashed capture rectangle over a button labelled Get started",
+    "tabs": [
+      {
+        "id": "ocr",
+        "label": "OCR",
+        "kind": "text",
+        "value": "Get started",
+        "caption": "Recognized text, copied to clipboard"
+      },
+      {
+        "id": "hex",
+        "label": "HEX",
+        "kind": "color",
+        "value": "#3D9DF2",
+        "caption": "Sampled pixel color, copied to clipboard"
+      },
+      {
+        "id": "dom",
+        "label": "DOM",
+        "kind": "dom",
+        "selector": "button.cta",
+        "value": "Get started",
+        "caption": "Live CSS selector and the text inside"
+      },
+      {
+        "id": "svg",
+        "label": "SVG",
+        "kind": "svg",
+        "value": "icon.svg",
+        "caption": "The real vector source, lifted from the page"
+      },
+      {
+        "id": "spx",
+        "label": "SPX",
+        "kind": "measure",
+        "value": "184 x 48",
+        "caption": "Pixel measurement with edge detection"
+      }
+    ],
+    "copiedLabel": "Copied to clipboard"
   },
 
   "hero": {
@@ -61,7 +104,62 @@
   },
 
   "modes": {
-    "proofLine": "Clone a pricing card: selector, color, and icon in three captures."
+    "eyebrow": "Five modes, one hotkey",
+    "headline": "Five kinds of data from one capture.",
+    "intro": "Press cmd+shift+1, drag a region, then Tab to the mode you want. The same capture gives you any of these.",
+    "proofLine": "Clone a pricing card: selector, color, and icon in three captures.",
+    "list": [
+      {
+        "id": "ocr",
+        "name": "OCR",
+        "line": "Drag over a screenshot, a PDF, or a UI tooltip. Apple Vision reads the text on your Mac and copies it to your clipboard.",
+        "example": "Get started",
+        "exampleKind": "text",
+        "audience": "Works offline. In the free build.",
+        "channel": "free"
+      },
+      {
+        "id": "hex",
+        "name": "HEX",
+        "line": "Point at any pixel. Quirky grabs the exact color and copies the hex value.",
+        "example": "#3D9DF2",
+        "exampleKind": "color",
+        "audience": "Works offline. In the free build.",
+        "channel": "free"
+      },
+      {
+        "id": "dom",
+        "name": "DOM",
+        "line": "Click any element in your browser. Quirky reads the live page and hands you the CSS selector and the text inside.",
+        "example": "button.cta",
+        "exampleKind": "selector",
+        "audience": "Safari, Chrome, Arc, Brave, Edge, Comet, Vivaldi, Opera. Direct download only.",
+        "channel": "pro"
+      },
+      {
+        "id": "svg",
+        "name": "SVG",
+        "line": "Grab an icon from a page and get its real vector source, ready to paste into Figma or code.",
+        "example": "icon.svg",
+        "exampleKind": "svg",
+        "audience": "For designers and developers. Direct download only.",
+        "channel": "pro"
+      },
+      {
+        "id": "spx",
+        "name": "SPX",
+        "line": "Draw over a gap or an element. Edge detection snaps to the boundaries and gives you the size in pixels.",
+        "example": "184 x 48",
+        "exampleKind": "measure",
+        "audience": "Works offline. In the free build.",
+        "channel": "free"
+      }
+    ],
+    "steps": [
+      "Press cmd+shift+1",
+      "Drag a region",
+      "Tab to the mode"
+    ]
   },
 
   "howItWorks": {
@@ -307,18 +405,10 @@
       {
         "heading": "Product",
         "links": [
-          { "label": "How it works", "href": "#how-it-works" },
-          { "label": "Features", "href": "#features" },
+          { "label": "Modes", "href": "#modes" },
           { "label": "Pricing", "href": "#pricing" },
+          { "label": "Download", "href": "#download" },
           { "label": "FAQ", "href": "#faq" }
-        ]
-      },
-      {
-        "heading": "Download",
-        "links": [
-          { "label": "Direct download (all 5 modes)", "href": "#download" },
-          { "label": "Mac App Store (OCR, HEX, SPX)", "href": "https://apps.apple.com" },
-          { "label": "What is in each build", "href": "#pricing" }
         ]
       },
       {

@@ -11,62 +11,67 @@ order, native-vs-custom flags, and animation notes. Use the dev-only Inspector
   surface = warm near-black `#160C0A` with paper-white text `#FDFCFA`. Manrope
   (the only font; mono only inside keycaps / code-like values).
 
-## Section order (home, top to bottom) — v0.4 redesign, light/dark rhythm
-1. Nav — sticky, transparent to paper/85 + blur at scrollY > 8. Mobile: a
-   disclosure panel under the bar (not a fixed overlay). LIGHT.
-2. Hero (#top) — Capture Fan device, dual download CTA, honest App-Store note.
-   LIGHT, dot-grid.
-3. ModesShowcase (#modes) — DARK full-bleed centerpiece. Giant red "5" + five
-   oversize panels (verb-phrase heading + an animated demo of each mode) + the
-   modes.proofLine. NO chips, NO captions. Merges the old ModeRail + Features.
-4. HowItWorks (#how-it-works) — LIGHT. 3 steps, big red step numbers, literal
-   keycaps (cmd+shift+1 / Tab).
-5. TrustStrip — LIGHT thin one-line band (fits.strip): offline / no account /
-   notarized / App Store vs Direct honesty. Replaces the old 6-card Fits grid.
-6. Pricing (#pricing) — LIGHT. 2 tiers, Pro highlighted, one-time $16.99.
-7. FAQ (#faq) — LIGHT accordion (holds all the detail trimmed from sections).
-8. FinalCTA (#download) — DARK full-bleed bookend. Oversize headline, dual
-   download, ghost secondary on dark, reused Capture Fan device.
-9. Footer — LIGHT, 4-col, inline newsletter, cookie-preferences re-open, author.
+## Section order (home, top to bottom) — CAPITAL REBUILD (2026-06-01, third round)
+The morph and the six-section rhythm are GONE. The page is HEADER + 3 SECTIONS +
+FOOTER. All light except the ModeSwitcher's dark demo panel inside the hero.
+1. Nav — sticky, transparent to paper/85 + blur at scrollY > 8. Logo + Modes /
+   Pricing / FAQ anchors + Download free pill. Mobile: a disclosure panel under
+   the bar (not a fixed overlay). LIGHT.
+2. Hero (#top) — Section 1. Left: eyebrow + big headline + tight subhead + dual
+   download CTA with honest notes (Direct = all five modes / App Store = OCR,
+   HEX, SPX). Right: the interactive ModeSwitcher on a dark panel. LIGHT page,
+   dot-grid, dark demo panel inside.
+3. Modes (#modes) — Section 2, informative. A 3-step strip (cmd+shift+1, drag a
+   region, Tab to the mode) + five hairline-bordered rows. Each row: mode name
+   (+ Pro badge on DOM/SVG), one concrete sentence, audience/channel line, and a
+   real example output (OCR text / HEX swatch / DOM selector / SVG glyph / SPX
+   calipers). NO chips, NO captions under blobs. LIGHT.
+4. Pricing (#pricing) — Section 3. Two tiers (Free OCR/HEX/SPX vs Quirky Pro
+   $16.99 one time, Pro accent-highlighted), a download band with both buttons,
+   App-Store honesty + one time/refund footnotes, then a compact 4-item FAQ
+   (#faq anchor lives here). LIGHT.
+5. Footer — LIGHT. Brand + slogan + social, Product + Legal link columns, small
+   inline newsletter, cookie-preferences re-open, author line, copyright.
 
-DROPPED from the page in v0.4 (JSON + files retained, just not rendered):
-Workflows (proof line moved into Modes), the Fits 6-card grid (demoted to the
-TrustStrip), and the standalone ModeRail / Features sections (merged into Modes).
+Nav anchors (source of truth = copy.json.nav): #modes, #pricing, #faq. Plus
+#download (the download band in Section 3) and #top (hero). scroll-mt-24 on the
+anchored elements offsets the fixed nav; Lenis applies an 88px scrollTo offset.
 
-Nav anchors (source of truth = copy.json.nav): #how-it-works, #features (now
-points into the Modes section context), #pricing, #faq, plus #modes (Modes) and
-#download (FinalCTA). scroll-mt-24 on sections offsets the fixed nav; Lenis
-applies an 88px scrollTo offset.
-
-## Dark break sections (Webflow rebuild notes)
-- ModesShowcase + FinalCTA are full-bleed `--color-ink-surface #160C0A` bands
-  with a faint white dot-grid (`.dot-grid-dark`, white at 8% alpha), top+bottom
-  white/10 hairlines, and paper-white text via the `.dark-scope` class. The
-  accent red is used at LARGE display sizes (the giant "5", the demo accents) and
-  on the primary CTA fill. Body text on dark uses on-dark at 70%/60% opacity
-  (clears WCAG AA on #160C0A). Reusable wrapper promoted to the kit as
-  `DarkSection` (token contract documented in INDEX.md). In Webflow: a section
-  with the near-black bg + a white text colour swatch on all children + an accent
-  swatch reused from the light sections (same hex).
+## ModeSwitcher (the one clever interaction — Webflow rebuild notes)
+- The hero demo is a WAI-ARIA tablist: a static capture scene (a browser window
+  with a dashed accent capture rectangle over a "Get started" button) above five
+  real `<button>` tabs (OCR/HEX/DOM/SVG/SPX). Clicking a tab cross-fades the
+  output panel to that mode's real result from the SAME capture. It sits on a
+  dark `--color-ink-surface #160C0A` panel (`.dark-scope` + `.dot-grid-dark`) for
+  contrast; the rest of the page is light.
+- Promoted to the kit as `ModeSwitcher` (generic scene + tabs + outputs via
+  props; token-driven chrome, `tone="dark"` for the dark panel). Webflow IX2: a
+  tabs widget where each tab swaps a content pane with a fade; the active tab uses
+  the accent fill, inactive tabs use white/5 + white/15 border on dark. Keep the
+  panel min-height fixed (CLS-neutral) and resolve the FIRST tab on load so the
+  pane is never empty.
+- Default tab = OCR resolves on first render, so under reduced-motion / ?motion=0
+  / before JS the panel shows a real output, never blank. Click switching works
+  with motion off (no cross-fade). This is the load-bearing accessibility rule.
 
 ## Animation notes (one easing everywhere: cubic-bezier(0.16,1,0.3,1), NO bounce)
 - Section enter: `Reveal` = opacity 0->1, y 16->0, blur 8->0, 0.5s, whileInView
   once, optional per-item stagger (index * 0.06s). Webflow IX2: scroll-into-view
   + move/fade/blur, same easing, stagger children.
-- Hero + FinalCTA Capture Fan: chips stagger in (Framer, 0.08s), then gently
-  float (CSS loop, staggered delay). Marquee dashes march; Tab keycap pulses.
-- FAQ: height + opacity expand/collapse, 0.3s, same easing. +/- glyph rotates
-  45deg.
+- ModeSwitcher output: cross-fade opacity/y/blur, 0.32s, same easing, on tab
+  click. Tab background/border transition 150ms. Webflow IX2: tab-content fade.
+- Compact FAQ: height + opacity expand/collapse, 0.3s, same easing. +/- glyph
+  rotates 45deg.
 - Nav background/blur transition 150ms.
-- Reduced motion + `?motion=0`: all loops freeze in final frame; Reveal renders
-  final state instantly (no blank/0 flash); FAQ toggles instantly.
+- Reduced motion + `?motion=0`: the ModeSwitcher resolves the OCR tab statically
+  (never blank) and swaps panels instantly on click; Reveal renders final state
+  instantly (no blank/0 flash); the compact FAQ toggles instantly.
 
-## Signature morph (2026-06-01) — WEBFLOW IS NO LONGER A TARGET FOR THIS PIECE
-Per the user, the through-flying scroll-pinned morphing block is built for the
-React/Next build only and is NOT constrained to IX2-replicable motion. Do not
-attempt to rebuild it in Webflow; if a Webflow version is ever needed, ship the
-static sections (the content backbone) and treat the morph as a custom React
-embed or omit it. The rest of this HANDOFF still applies to the static sections.
+## Morph — REMOVED (2026-06-01, capital rebuild)
+The scroll-pinned morphing block was deleted at the user's request (confusing,
+not informative). No `morph` / `data-morph` anything remains in the codebase. The
+old "signature morph" handoff note no longer applies. Everything above is
+straightforwardly IX2-replicable.
 
 What it is: ONE fixed-overlay Quirky block that tracks whole-page scroll and
 morphs through 5 forms (re-timed for the v0.4 six-section page) as it flies the

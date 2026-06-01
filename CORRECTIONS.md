@@ -24,6 +24,58 @@ write here; soldier reads before building.
 - Modes-first order. Workflows replace privacy-panic at the high-trust slot.
   (quirky-direction.md section 3-4)
 
+## CAPITAL REBUILD (user, 2026-06-01, THIRD round) — overrides earlier morph/section plans
+User: the morphing flying block is confusing and not informative ("непонятно зачем
+тут летает этот блок", "бред какой-то"). Wants a CAPITAL rebuild: a clean, simple,
+SMART structure. This SUPERSEDES the morph journey and the 6-section layout.
+
+NEW STRUCTURE (this is the whole page):
+- HEADER (sticky nav: logo + a couple anchors + Download CTA)
+- SECTION 1 = HERO with an INTERACTIVE mode switcher demo. ONE realistic capture
+  scene on screen; visitor clicks tabs OCR / HEX / DOM / SVG / SPX and the OUTPUT
+  panel updates live to show that mode's real result from the SAME one capture:
+  OCR -> a copied text string, HEX -> #3D9DF2 swatch + "copied", DOM -> button.cta
+  selector + inner text, SVG -> the lifted icon, SPX -> 184 x 48 measurement.
+  The visitor DRIVES it (click/tab), so they immediately understand the product:
+  one capture, five kinds of data. Headline + subhead + the two download CTAs
+  (Direct all 5 modes / App Store OCR-HEX-SPX honest note) live here too.
+- SECTION 2 = the five modes, INFORMATIVE. Each mode: name + what it does in one
+  concrete line + its real output example. This is where "not informative" is
+  fixed: say clearly what each mode returns and for whom. No chips, no captions
+  under blobs; real headings + real example outputs.
+- SECTION 3 = PRICING + DOWNLOAD. Free (OCR/HEX/SPX) vs Pro $16.99 one time (adds
+  DOM/SVG), one time framing, both download buttons, App Store honesty footnote.
+- FOOTER (condensed current footer: brand, a few links, FAQ link or inline,
+  legal links, cookie preferences, author line, newsletter optional-inline).
+
+REMOVE ENTIRELY:
+- The whole morph system (MorphMount/MorphJourney/MorphForms/useMorphEnabled,
+  the .morph-handoff handoff CSS, the data-morph attribute). Delete its mount in
+  page.tsx and the handoff wrappers. No flying block anywhere.
+- The standalone ModeRail / Features / Workflows / Fits / TrustStrip / HowItWorks
+  / ModesShowcase as separate sections. Fold the useful content into SECTION 2.
+  HowItWorks (3 steps) can become a small strip inside Hero or Section 2 if it
+  helps comprehension, but NOT its own big section. Keep it tight: 3 sections total.
+- FAQ as a big section: move FAQ either into the footer area (compact) or keep a
+  short 3-4 Q/A block appended to Section 3; do not let it become a 4th heavy
+  section. (Standalone /privacy /terms /refunds /thanks /install stay as routes.)
+
+KEEP (still locked):
+- Accent friendly warm red #E63E2E (5-step). One accent. #3D9DF2 is the sampled
+  HEX demo value (allowed, not brand).
+- No dashes in visible prose (no em/en/hyphen-as-separator/compound). ASCII.
+- 16px min body (display can be large), pneumatic easing cubic-bezier(0.16,1,0.3,1)
+  NO bounce, borders as separators, pill CTAs.
+- ?motion=0 / reduced-motion: the interactive demo must have a sensible static
+  default state (e.g. show the OCR/first tab's output) and remain fully usable by
+  click even with motion off; no blank.
+- App-Store honesty visible (Section 1 + Section 3). Pricing one time $16.99.
+- Light theme base; ONE dark section is fine for contrast (e.g. the mode demo
+  panel or Section 2) but do not require the old light/dark/light/dark rhythm.
+  Keep it clean and "smart", not busy.
+- Deployable: Next.js static export, basePath /quirky-landing, favicon
+  /quirky-landing/icon.svg, build green.
+
 ## REDESIGN DIRECTIVE (user, 2026-06-01) — contrast + scale + cut text
 User feedback on the v0.1 live site: "всего слишком много, выглядит несуразно,
 читается тяжело, нужно больше контраста, скучно, много текста, нет масштаба чтоб

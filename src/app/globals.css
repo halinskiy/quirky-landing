@@ -65,16 +65,6 @@ button:focus:not(:focus-visible) {
 }
 
 /* ----------------------------------------------------------------------
- *  Pause-off-screen contract. A single global IO (PauseOffscreen) toggles
- *  data-anim-paused on [data-pauseable] roots when off-screen; this halts
- *  the hero CSS loops (marquee / float / pulse) while invisible.
- * ---------------------------------------------------------------------- */
-[data-anim-paused="true"],
-[data-anim-paused="true"] * {
-  animation-play-state: paused !important;
-}
-
-/* ----------------------------------------------------------------------
  *  Dot-grid surface — soft warm dots behind the hero. 24px grid.
  *  .dot-grid (light) on paper; .dot-grid-dark on the ink break surfaces.
  * ---------------------------------------------------------------------- */
@@ -101,53 +91,7 @@ button:focus:not(:focus-visible) {
   color: var(--color-on-dark);
 }
 
-/* ----------------------------------------------------------------------
- *  Hero Capture Fan device loops. ONE easing everywhere; the playful
- *  override does NOT add bounce. Marquee dashes march, chips breathe
- *  gently, the Tab keycap pulses. All gated below for reduced motion.
- * ---------------------------------------------------------------------- */
-@keyframes quirky-marquee {
-  to { stroke-dashoffset: -56; }
-}
-@keyframes quirky-float {
-  0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-4px); }
-}
-@keyframes quirky-pulse {
-  0%, 100% { opacity: 0.55; }
-  50%      { opacity: 1; }
-}
-
-/* Reduced-motion + ?motion=0: freeze every hero loop in its resting frame.
- * Chips render in their final state via Framer's reduce branch; these rules
- * cover the CSS-driven loops so nothing keeps animating. */
-@media (prefers-reduced-motion: reduce) {
-  .marquee,
-  .quirky-float,
-  .quirky-pulse {
-    animation: none !important;
-  }
-  .quirky-pulse { opacity: 1 !important; }
-}
-:root[data-motion="off"] .marquee,
-:root[data-motion="off"] .quirky-float,
-:root[data-motion="off"] .quirky-pulse {
-  animation: none !important;
-}
-:root[data-motion="off"] .quirky-pulse { opacity: 1 !important; }
-
-/* ----------------------------------------------------------------------
- *  Morph hand-off. When the flying morph overlay is live (set by MorphMount
- *  on <html data-morph="on">), the static section devices it "takes over"
- *  (the hero + final-CTA Capture Fan) fade out so the page shows ONE block,
- *  not a duplicate. The transition is opacity-only (GPU, no layout shift, no
- *  CLS). When the morph is off (motion-off / reduced / mobile) the attribute
- *  is absent and these devices render fully, so the static fallback is intact.
- * ---------------------------------------------------------------------- */
-.morph-handoff {
-  transition: opacity 300ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-:root[data-morph="on"] .morph-handoff {
-  opacity: 0;
-  pointer-events: none;
-}
+/* The interactive ModeSwitcher and Modes section have no CSS keyframe loops:
+ * all motion is Framer (entry reveals + output cross-fade), each gated on
+ * reduced-motion + ?motion=0 in the component. No marquee / float / pulse
+ * loops remain after the morph + Capture Fan rebuild. */

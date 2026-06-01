@@ -4,22 +4,26 @@ import { motion, useReducedMotion } from "framer-motion";
 
 import { Button } from "@/components/ui/Button";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
-import { CaptureFan } from "@/components/sections/CaptureFan";
+import { ModeSwitcher, type SwitcherTab } from "@/components/sections/ModeSwitcher";
 import { copy } from "@/content/copy";
 import { EASE_OUT } from "@/lib/motion";
 
 /**
- * Hero. All strings verbatim from copy.json (hero.*). Left column: eyebrow +
- * big Manrope headline + subhead + dual download CTA (Direct macOS 13+ / App
- * Store) with the honest App-Store-modes note under each. Right column: the
- * Capture Fan device on a dot-grid.
+ * Hero (Section 1). Left: eyebrow + big Manrope headline + tight subhead, then
+ * air, then the dual download CTA (Direct macOS 13+ all five modes / App Store
+ * OCR-HEX-SPX honest note). Right: the interactive ModeSwitcher demo, the
+ * centerpiece of the page.
  *
- * App-Store honesty (COPY_AUDIT §3): the secondary CTA note states OCR/HEX/SPX
- * only; the primary CTA note states all five modes. Both are rendered.
+ * App-Store honesty: the secondary CTA note states OCR/HEX/SPX only; the primary
+ * CTA note states all five modes. Both render.
+ *
+ * Motion-off safe: the ModeSwitcher resolves the OCR tab by default (never
+ * blank); the entry reveals collapse to final state under reduced-motion/motion=0.
  */
 export function Hero() {
   const reduce = useReducedMotion();
   const c = copy.hero;
+  const s = copy.switcher;
 
   const rise = (delay: number) => ({
     initial: reduce ? false : { opacity: 0, y: 16, filter: "blur(8px)" },
@@ -32,12 +36,12 @@ export function Hero() {
       id="top"
       data-component="Hero"
       data-source="src/components/sections/Hero.tsx"
-      data-tokens="paper,ink,accent,accent-soft,gray-200,display"
+      data-tokens="paper,ink,accent,gray-200,display"
       className="dot-grid relative overflow-hidden border-b border-gray-200"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-28 md:grid-cols-2 md:pb-28 md:pt-36">
-        {/* Left: copy. Spacing rhythm: eyebrow -> (tight) headline -> (tight)
-            subhead read as one unit, then GENEROUS air before the CTA. */}
+      <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-28 lg:grid-cols-2 lg:pb-28 lg:pt-36">
+        {/* Left: copy. eyebrow -> (tight) headline -> (tight) subhead as one unit,
+            then GENEROUS air before the CTA. */}
         <div className="flex flex-col items-start">
           <motion.div {...rise(0)}>
             <EyebrowLabel>{c.eyebrow}</EyebrowLabel>
@@ -45,7 +49,7 @@ export function Hero() {
 
           <motion.h1
             {...rise(0.06)}
-            className="mt-6 text-[clamp(2.5rem,6.4vw,4.75rem)] font-extrabold leading-[1.02] tracking-tight text-ink"
+            className="mt-6 text-[clamp(2.5rem,6vw,4.5rem)] font-extrabold leading-[1.03] tracking-tight text-ink"
           >
             {c.headline}
           </motion.h1>
@@ -69,7 +73,7 @@ export function Hero() {
 
           <motion.div {...rise(0.24)} className="mt-5 flex flex-col gap-1.5">
             <p className="text-[1rem] text-gray-500">
-              {c.primaryCta.note}
+              All five modes, OCR, HEX, DOM, SVG, SPX. Apple Silicon and Intel. Direct download, DMG.
             </p>
             <p className="text-[1rem] text-gray-500">
               {c.secondaryCta.note}
@@ -77,14 +81,17 @@ export function Hero() {
           </motion.div>
         </div>
 
-        {/* Right: the Capture Fan device. The plain inner `morph-handoff` wrapper
-            (not the motion.div, whose inline opacity framer owns) lets the flying
-            morph overlay take over this device when it is live (globals.css);
-            when the morph is off this renders normally. */}
-        <motion.div {...rise(0.1)} className="flex items-center justify-center">
-          <div className="morph-handoff flex items-center justify-center">
-            <CaptureFan />
-          </div>
+        {/* Right: the interactive ModeSwitcher. */}
+        <motion.div {...rise(0.1)} className="w-full">
+          <p className="mb-3 text-[1rem] font-medium text-ink/60">
+            {s.intro}
+          </p>
+          <ModeSwitcher
+            tabs={s.tabs as SwitcherTab[]}
+            sceneAlt={s.sceneAlt}
+            copiedLabel={s.copiedLabel}
+            dataSource="src/components/sections/ModeSwitcher.tsx"
+          />
         </motion.div>
       </div>
     </section>

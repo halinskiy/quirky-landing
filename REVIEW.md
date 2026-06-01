@@ -652,3 +652,139 @@ contrast work is required.
 - /tmp/quirky-judge/probe.mjs (7-route motion=0 + dark contrast + morph)
 - /tmp/quirky-judge/probe2.mjs (FAQ-expand dash visibility + morph bookend opacity)
 - /tmp/quirky-judge/probe3.mjs + probe4.mjs (scale moments, eyebrow contrast, $16.99)
+
+---
+
+# CAPITAL REBUILD REVIEW 2026-06-01
+
+**Reviewer:** 3mpq-judge
+**Scope:** from-scratch restructure to HEADER + 3 sections + FOOTER, morph removed,
+interactive ModeSwitcher hero (CORRECTIONS.md "CAPITAL REBUILD" spec).
+**Method:** independent clean build x2 + tsc + headless Chrome CDP over the static
+`out/` export served under basePath, 7 routes, motion=0 and motion ON, 1440 + 390.
+**VERDICT: PASSED** — gate cleared for redeploy.
+
+## Headline answers
+
+- **Section count:** exactly 3 content `<section>` in `<main>` (#top Hero, #modes
+  Modes, #pricing Pricing) + `<nav>` header + `<footer>`. CDP `main > section`
+  count = 3 at both 1440 and 390. Not 6. page.tsx renders Nav, Hero, Modes,
+  Pricing, Footer only.
+- **Switcher motion-off non-blank:** at `?motion=0`, panel default textContent =
+  `"Get started / Copied to clipboard / Recognized text, copied to clipboard"`
+  (len 69) at **1440 AND 390**. Clicking HEX with motion off switches the panel to
+  `#3D9DF2 / Copied to clipboard / Sampled pixel color...` and aria-selected moves.
+  `prefers-reduced-motion: reduce` emulation: panel len 69, same OCR default. Zero
+  blank in every motion-off condition.
+- **Morph gone:** `grep -rn "morph|data-morph|MorphJourney|MorphMount|MorphForms|
+  morph-handoff" src/` returns only 3 descriptive COMMENT lines (globals.css:97,
+  page.tsx:9, page.tsx:19) noting removal. ZERO functional references. `src/components/morph/`
+  dir does not exist. `CaptureFan` gone. Runtime: `html[data-morph]` = null on
+  every route; `[data-morph],[data-component*="Morph"]` element count = 0 on every
+  route/viewport. No flying/fixed overlay block.
+- **Per-route motion=0 (all 7):** /, /install, /privacy-policy, /terms, /refunds,
+  /thanks, /404.html — every route overflow 0 (scrollWidth == clientWidth) at BOTH
+  390 and 1440; sub-16px body offenders = 0 on every route (only 12px uppercase
+  eyebrows remain, allowed); body content non-empty on every route; morph absent.
+
+## Checklist
+
+### Structure (CRITICAL)
+- [x] PASS — page.tsx = Nav + main(Hero, Modes, Pricing) + Footer. 5 section files
+  total (Nav, Hero, Modes, ModeSwitcher, Pricing, Footer); no ModeRail/Features/
+  Workflows/Fits/TrustStrip/HowItWorks/FinalCta/Faq/ModesShowcase/DarkSection-as-section.
+- [x] PASS — exactly 3 content sections in main (CDP verified, both viewports).
+
+### Morph removal (CRITICAL)
+- [x] PASS — zero functional morph refs in src (comments only). No morph dir.
+- [x] PASS — no data-morph on html, 0 morph elements at runtime, no overlay.
+
+### Interactive ModeSwitcher (CRITICAL centerpiece)
+- [x] PASS — real WAI-ARIA tablist: role="tablist", 5 role="tab" (OCR/HEX/DOM/SVG/SPX),
+  aria-selected on active, roving tabindex (`["0","-1","-1","-1","-1"]` at rest),
+  aria-controls -> role="tabpanel".
+- [x] PASS — keyboard nav: ArrowRight from OCR moves selection + focus to HEX and
+  (after cross-fade) the panel reads `#3D9DF2 / Sampled pixel color, copied`. Home
+  returns to OCR. ArrowLeft/Right/Up/Down/Home/End all wired with preventDefault.
+- [x] PASS — each tab renders its real result from the same capture: OCR text
+  "Get started" + copied; HEX `#3D9DF2` swatch (the sampled blue, NOT brand red) +
+  copied; DOM `button.cta` selector + inner text "Get started"; SVG lifted
+  `icon.svg` glyph; SPX `184 x 48` with calipers. All confirmed via per-tab CDP click.
+- [x] PASS — default resolves first tab (useState(0)); never null; static fallback
+  branch (`staticMode = reduce || motionOff`) renders OutputBody directly (no
+  AnimatePresence) so motion-off shows real output and click still switches.
+
+### Section 2 informative
+- [x] PASS — 5 hairline-bordered rows, each: real `<h3>` name + concrete sentence
+  (mode.line) + audience line + real example output (color swatch / measure
+  calipers / svg glyph / selector code). DOM + SVG carry "Pro" badge (channel="pro").
+  3-step strip (cmd+shift+1, drag a region, Tab) at top. No chips, no captions under blobs.
+
+### Section 3 pricing
+- [x] PASS — Free tier (OCR/HEX/SPX, 6 feats) vs Quirky Pro $16.99 (adds DOM/SVG,
+  5 feats, accent-highlighted "All five modes" badge). "one time / No subscription"
+  framing present. Download band has BOTH buttons (Direct + Mac App Store), CDP
+  count = 2. App-Store footnote present. Compact 4-item FAQ ("Before you download")
+  appended, not a heavy 4th section. CDP: free=true, pro16=true, oneTime=true,
+  appStoreFootnote=true, downloadButtons=2, faqPresent=true.
+
+### App-Store honesty (both sections)
+- [x] PASS — Section 1 (#top) contains "App Store" (secondaryCta note: OCR/HEX/SPX
+  on App Store, DOM/SVG need direct download). Section 3 (#pricing) contains 5
+  "App Store" mentions (download band + footnotes). Visible in both as required.
+
+### Accent / one color
+- [x] PASS — `--color-accent` computed = `#e63e2e`; `--color-captured-blue` = `#3d9df2`
+  (used only as the sampled HEX swatch, not as brand chrome). grep src for old coral
+  #FF7059/#F25742/#DB4733/#FFE9E4/#FFF4F1 = ZERO. One accent rule holds.
+
+### No dashes in visible prose
+- [x] PASS — copy.json prose sweep (skipping href/id/slug keys): zero em/en-dash,
+  middle-dot, bullet, spaced-hyphen, hyphen-compound. Rendered HTML visible-text
+  sweep over all 7 routes (scripts/styles stripped): 0 unicode-dash, 0 spaced-hyphen.
+  Visible hyphen-compound sweep on home = [] (the prior on-device/click-through/
+  reverse-engineer/mid-capture fixes hold). Remaining hyphens are slugs only.
+
+### Guardrails
+- [x] PASS — clean `rm -rf .next out && npm run build` GREEN twice; `tsc --noEmit`
+  clean; all 7 routes export to out/ (+ 404.html and 404/); 0 "Html should not be
+  imported" errors in any out/*.html; basePath `/quirky-landing/_next` + favicon
+  `/quirky-landing/icon.svg` intact in out/index.html.
+- [x] PASS — overflow 0 at 390 and 1440 on all 7 routes (motion=0).
+- [x] PASS — 0 sub-16px body offenders on all 7 routes (12px uppercase eyebrows only).
+- [x] PASS — pneumatic easing cubic-bezier(0.16,1,0.3,1) on tab/FAQ transitions;
+  tab transitionDuration 0.15s; no bounce keywords. CTA has transition.
+- [x] PASS — pricing one time $16.99 rendered (CDP hasPricing16 + hasOneTime true).
+- [x] PASS — mobile 390 clean single-column stack, tabs usable (5 tabs flex-wrap),
+  no horizontal overflow; switcher non-blank at 390.
+
+### UX / a11y
+- [x] PASS — tabs have focus-visible ring (ring-accent, offset on dark panel),
+  hover border/text states; FAQ buttons aria-expanded/aria-controls + region;
+  CTA pill buttons with transitions.
+
+## Notes (non-blocking)
+
+- NOTE — In the motion=0 full-page screenshot the CookieConsent card overlays the
+  lower-left of the hero. That is the consent gate behaving as designed (first
+  visit, no choice stored), not a layout defect; it dismisses on Accept/Decline and
+  the footer re-open button persists. No action required.
+- NOTE — ArrowRight panel text lags ~200ms behind selection during the cross-fade
+  under motion ON (selection + aria-selected update instantly; panel settles after
+  the 0.32s fade). Verified the panel does resolve to the new mode at 700ms. Correct
+  behavior, recorded for completeness.
+
+## Screenshots (this review, independent)
+
+- /tmp/aisoldier-judge/quirky-rebuild/desktop-hero.png (1440, motion=0)
+- /tmp/aisoldier-judge/quirky-rebuild/desktop-full.png (1440 full page, motion=0)
+- /tmp/aisoldier-judge/quirky-rebuild/mobile-full.png (390 full page, motion=0)
+- /tmp/aisoldier-judge/quirky-rebuild/desktop-hero-motion.png (1440, motion ON)
+
+## CDP harness (this review)
+
+- /tmp/quirky-cdp/driver.mjs (7-route motion=0 guardrails + switcher interaction +
+  motion-off non-blank + reduced-motion + accent/dash sweep)
+- /tmp/quirky-cdp/driver2.mjs (ArrowRight full settle + App-Store section location +
+  interactive states + pricing completeness)
+- /tmp/quirky-cdp/shot.mjs (screenshots)

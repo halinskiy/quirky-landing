@@ -3,7 +3,6 @@ import { Manrope } from "next/font/google";
 
 import { copy } from "@/content/copy";
 import { LenisProvider } from "@/components/providers/LenisProvider";
-import { PauseOffscreen } from "@/components/providers/PauseOffscreen";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
 import { Inspector } from "@/components/devtools/Inspector";
 
@@ -95,8 +94,9 @@ const JSON_LD = {
 };
 
 // Pre-hydration: read ?motion=0 / prefers-reduced-motion before first paint and
-// set <html data-motion="off"> so CSS loops + BlurReveal short-circuit to final
-// state. Runs before React so nothing flashes its initial animation frame.
+// set <html data-motion="off"> so Reveal + the ModeSwitcher short-circuit to
+// their final / resolved state. Runs before React so nothing flashes an initial
+// animation frame.
 const MOTION_BOOTSTRAP = `(function(){try{var s=new URLSearchParams(location.search).get('motion')==='0';var r=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(s||r){document.documentElement.dataset.motion='off';}}catch(e){}})();`;
 
 export default function RootLayout({
@@ -114,7 +114,6 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: MOTION_BOOTSTRAP }} />
       </head>
       <body>
-        <PauseOffscreen />
         <ConsentProvider>
           <LenisProvider>{children}</LenisProvider>
         </ConsentProvider>

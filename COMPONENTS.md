@@ -1,5 +1,17 @@
 # Quirky — Components
 
+## CAPITAL REBUILD (2026-06-01, third round) — new + changed + removed
+
+| Component | Path | Purpose | Status |
+|---|---|---|---|
+| `ModeSwitcher` | `src/components/sections/ModeSwitcher.tsx` | The interactive centerpiece. A static capture scene (browser window + dashed accent capture rect over a "Get started" button) above a WAI-ARIA tablist of five real `<button>` tabs (OCR/HEX/DOM/SVG/SPX). Clicking a tab cross-fades the `role="tabpanel"` output to that mode's real result from the same capture: OCR text + "Copied to clipboard", HEX #3D9DF2 swatch + copied, DOM `button.cta` selector + inner text, SVG lifted glyph, SPX "184 x 48" with calipers. Roving tabindex + Arrow/Home/End keyboard nav + aria-selected. Default resolves the FIRST tab (OCR) so the panel is never blank under motion-off; reads reduced-motion + ?motion=0 (via `useMotionOff`) and swaps instantly. Dark `ink-surface` panel for contrast. | NEW, PROMOTED to `ui-kit/components/section/ModeSwitcher.tsx` (generic scene+tabs+outputs via props, token-driven, `tone` prop) + INDEX row + index.ts export, same session. |
+| `Modes` | `src/components/sections/Modes.tsx` | Section 2, informative. 3-step strip (cmd+shift+1 / drag a region / Tab to the mode) + five hairline rows, each with a real heading (+ Pro badge on DOM/SVG), one concrete sentence, audience/channel line, and a real example output (`Example` renders text/selector/color/svg/measure shapes). No chips, no captions under blobs. | NEW (project-local; encodes Quirky's five modes + channel split). Replaces the dropped ModesShowcase. |
+| `useMotionOff` | `src/components/motion/useMotionOff.ts` | Hook reading the `?motion=0` flag (`<html data-motion=off>`) via MutationObserver. Used by ModeSwitcher + the compact FAQ for static fallback. | NEW (project-local). |
+| `Pricing` | `src/components/sections/Pricing.tsx` | Section 3. Two tiers + a download band (both buttons + App-Store note) + comparison + footnotes + a compact 4-item FAQ (`CompactFaq`, the #faq anchor now lives here). | CHANGED (absorbed the FAQ + download into one section). |
+| `Hero` | `src/components/sections/Hero.tsx` | Section 1. Now renders the ModeSwitcher instead of the CaptureFan; the morph-handoff wrapper is gone; primary CTA note expanded to list all five modes inline. | CHANGED. |
+| `Footer` | `src/components/sections/Footer.tsx` | Condensed to a 3-col grid (brand + Product + Legal); kept cookie re-open + author line. | CHANGED (was 4-col). |
+| morph system + dead sections | `src/components/morph/*`, `CaptureFan`, `ModesShowcase`, `HowItWorks`, `TrustStrip`, `FinalCta`, `ModeRail`, `Features`, `Fits`, `Workflows`, `Faq`, `PauseOffscreen` | The flying morph + the six-section rhythm + their support files. | DELETED. globals.css morph CSS + hero-loop keyframes + pause rule also removed. Grep confirms zero morph/data-morph remnants. |
+
 ## v0.4 redesign (2026-06-01) — new + changed + promoted
 
 | Component | Path | Purpose | Status |

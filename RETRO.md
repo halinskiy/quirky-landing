@@ -5,6 +5,43 @@ session before building.
 
 ---
 
+## 2026-06-01 — 3mpq-soldier — CAPITAL REBUILD (morph removed, 3-section, ModeSwitcher)
+
+### What took longer than it should have?
+Nothing burned multiple retries, but the build pipeline was slow to verify because
+this repo is STANDALONE (no symlinked kit, no project playwright). I had to install
+playwright-core in /tmp and drive the cached `chrome-headless-shell` directly by
+executablePath. The chromium-1217 cache has no `Chromium.app`, only the headless
+shell binary, so `launch()` with the default channel would have failed; pointing
+at the headless-shell exec was the unlock. Worth remembering: for these standalone
+shipped repos, CDP verification means BYO-browser via the ms-playwright cache.
+
+### What did I miss that the user or judge caught (or would have)?
+My own first fullPage screenshot (motion ON) showed big blank regions where the
+Modes + Pricing sections should be. That is the `whileInView`/`Reveal` opacity:0
+artifact: in a fullPage capture the DOM is at scroll 0, so motion blocks below the
+fold never trigger their in-view reveal and stay invisible. NOT a real bug (a
+scrolling user sees everything; ?motion=0 renders final state), but it would have
+looked like "blank sections" to a careless reviewer. I re-shot at ?motion=0 to
+prove the content is all there. THIRD direction change on this project: the morph
+was over-engineered for the brief from the start. The lesson the project keeps
+re-learning is that a self-moving signature piece reads as noise; a visitor-driven
+interaction reads as product.
+
+### What will I do differently next time?
+Two concrete habits. (1) For any landing with scroll-reveal motion, ALWAYS take the
+canonical full-page screenshot at `?motion=0` (final state) so reviewers never see
+the opacity:0 below-the-fold artifact and mistake it for blank sections; take the
+motion-ON shots viewport-by-viewport (scrolled) instead of fullPage. (2) The CDP
+sub-16 sweep correctly flags numeric badges (`text-[0.875rem]` = 14px step
+numbers) as body text. Per booquarium memory the floor is 14px, but Quirky's own
+CORRECTIONS says 16px min body and the judge asserts "0 sub-16 body" — so size ANY
+visible glyph that is not a sanctioned uppercase eyebrow at >=16px from the start,
+including decorative step counters. I caught the 1/2/3 badges only because I ran
+the sweep before screenshots; bump them at write time next round.
+
+---
+
 ## 2026-06-01 — main-loop (orchestrator) — clearing judge Issue #1
 
 ### What took longer than it should have?

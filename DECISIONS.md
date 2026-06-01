@@ -1,5 +1,40 @@
 # Quirky — Decisions log
 
+## 2026-06-01 — CAPITAL REBUILD (3mpq-soldier)
+
+- **Morph removed, not re-timed.** The user rejected the flying morph twice over
+  ("бред какой-то"). Decision: delete the whole morph system rather than try to
+  make it clearer. The signature interaction is now the ModeSwitcher, which earns
+  its place by being driven by the visitor and showing real outputs, not by
+  moving on its own. Rejected: keeping the morph as an optional flourish (the user
+  was explicit it confused more than it impressed).
+
+- **Comprehension via interaction, not animation.** The page's one clever moment
+  is a tablist the visitor clicks: one capture, five outputs. This directly fixes
+  the "not informative" complaint, because the user learns the product by doing.
+  The five-modes section underneath then states each mode plainly with a real
+  example. Decision: clever ON TOP of clear, never instead of clear.
+
+- **ModeSwitcher default = OCR resolved (load-bearing).** State initialises to
+  tab 0, not null, so the panel renders a real output on the very first frame
+  (SSR + before JS + reduced-motion + ?motion=0). This is the accessibility rule
+  the spec called out; the cross-fade is an enhancement layered on top.
+
+- **HEX swatch stays #3D9DF2 (sampled blue), not the brand red.** Reinforces "a
+  color you took", and keeps the one-accent rule honest (red is brand; blue is
+  data in the demo).
+
+- **Three sections, FAQ folded into Section 3.** Rather than a fourth heavy FAQ
+  section, the four download-relevant questions ride at the bottom of Pricing as a
+  compact accordion. The #faq anchor points there. Keeps the page to header + 3 +
+  footer as the brief demands.
+
+- **Promoted ModeSwitcher to the kit (generic).** The quirky-specific scene +
+  outputs are passed as props; the kit version is theme-driven and reusable for
+  any "one input, many outputs" dev-tool landing. The project keeps a local copy
+  (standalone repo, kit vendored), but the canonical component now lives in
+  `ui-kit/components/section/ModeSwitcher.tsx`.
+
 ## 2026-06-01 — v0.4 redesign (3mpq-soldier)
 
 - **Two dark breaks, not three.** Brief recommended Modes + FinalCTA, optionally

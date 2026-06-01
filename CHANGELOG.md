@@ -1,5 +1,61 @@
 # Quirky — Changelog
 
+## 2026-06-01 — CAPITAL REBUILD: morph removed, three-section page, interactive ModeSwitcher
+
+Third direction change (CORRECTIONS.md "CAPITAL REBUILD"). The user rejected the
+flying morph block ("непонятно зачем тут летает этот блок", "бред какой-то"). The
+page was rebuilt from a six-section + scroll-pinned-morph layout to a clean,
+smart HEADER + 3 SECTIONS + FOOTER structure. Not a tweak.
+
+Removed entirely:
+- The whole morph system: deleted `src/components/morph/*` (MorphMount,
+  MorphJourney, MorphForms, useMorphEnabled), the `.morph-handoff` CSS and the
+  `:root[data-morph=on]` rules in globals.css, and every `.morph-handoff`
+  wrapper. Grep across `src/` confirms ZERO `morph` / `data-morph` remnants (the
+  only matches left are descriptive comments in page.tsx noting the removal).
+- The Capture Fan hero device (`CaptureFan.tsx`) and its CSS loops
+  (quirky-marquee / float / pulse keyframes + the pause-offscreen rule), plus the
+  now-unused `PauseOffscreen` provider (no `[data-pauseable]` targets remain).
+- Standalone sections folded out: `ModesShowcase`, `HowItWorks`, `TrustStrip`,
+  `FinalCta`, `ModeRail`, `Features`, `Fits`, `Workflows`, `Faq` (deleted).
+
+New page (page.tsx renders exactly): Nav, Hero (Section 1), Modes (Section 2),
+Pricing (Section 3), Footer.
+- SECTION 1 Hero: headline + tight subhead + dual download CTA (Direct all five
+  modes / App Store OCR-HEX-SPX honest note) + the interactive ModeSwitcher.
+- ModeSwitcher (new, promoted to ui-kit): one stylized capture scene (a browser
+  with a dashed capture rectangle over a "Get started" button), five real
+  `<button>` tabs (OCR/HEX/DOM/SVG/SPX) in a WAI-ARIA tablist with roving
+  tabindex + Arrow/Home/End keyboard nav + aria-selected. Clicking a tab updates
+  the output panel live from the SAME capture: OCR text + "Copied to clipboard",
+  HEX #3D9DF2 swatch (sampled blue, NOT brand) + copied, DOM `button.cta` +
+  inner text, SVG lifted glyph, SPX "184 x 48" with calipers. Default resolves
+  the FIRST tab (OCR) so the panel is NEVER blank under ?motion=0 /
+  reduced-motion; click switching still works with motion off (no cross-fade).
+  Sits on a dark panel for contrast; the page stays mostly light.
+- SECTION 2 Modes: informative. The 3-step strip (cmd+shift+1, drag a region,
+  Tab to the mode) + five hairline-bordered rows, each with a real heading, one
+  concrete sentence, a real example output, the audience/channel line, and a Pro
+  badge on DOM/SVG. No chips, no captions under blobs.
+- SECTION 3 Pricing: Free (OCR/HEX/SPX) vs Quirky Pro $16.99 one time (adds
+  DOM/SVG, accent-highlighted), a download band with both buttons, the App-Store
+  honesty + one time/refund footnotes, and a compact 4-item FAQ.
+- Footer condensed to Product + Legal columns (anchors updated to #modes /
+  #pricing / #download / #faq), kept the cookie-preferences re-open, author line.
+
+Added `useMotionOff` hook (`src/components/motion/useMotionOff.ts`): reads the
+`?motion=0` flag via a MutationObserver; used by the ModeSwitcher and the compact
+FAQ so they short-circuit to static state under the QA flag.
+
+Verification: tsc clean; `rm -rf .next out && npm run build` green twice; all
+routes export (/ + /install + /privacy-policy + /terms + /refunds + /thanks +
+/404), basePath /quirky-landing and favicon /quirky-landing/icon.svg intact. CDP
+at 1440 and 390, motion=0 and motion ON: 3 sections in main + nav + footer, panel
+non-blank (OCR resolved by default), 0 sub-16 body offenders, scrollWidth ==
+clientWidth (no overflow), all five tabs switch + keyboard ArrowRight moves
+selection. Screenshots: rebuild3-desktop-full.png, rebuild3-demo-{ocr,hex,dom,spx}.png,
+rebuild3-mobile-{390,hero}.png. NOT deployed (devops after judge PASSED).
+
 ## 2026-06-01 — Fix redesign Issue #1: hyphen-as-dash compounds in visible prose
 
 Judge V0.4 REDESIGN REVIEW: one blocking ISSUE. The no-dash rule (no hyphen used
