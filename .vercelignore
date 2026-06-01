@@ -1,0 +1,7 @@
+out/
+screenshots/
+research/
+*.md
+!README.md
+main-prompt.md
+research-prompt.md

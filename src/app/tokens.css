@@ -1,0 +1,94 @@
+/*
+ * quirky-landing — Complete token set
+ *
+ * Single warm-coral accent (#FF7059, LOCKED), warm off-white paper theme,
+ * Manrope sans + system mono. Rounder radii than Corder for the friendly,
+ * toy-like character the brief asks for.
+ *
+ * Source of truth: research/quirky-direction.md sections 1, 2, 5.
+ *
+ * These names are mirrored into the Tailwind @theme block in globals.css so
+ * utility classes resolve: bg-accent, text-ink, bg-paper, border-gray-200,
+ * text-accent-pressed, ring-accent, text-gray-500, etc.
+ *
+ * Discipline note: coral is for fills / dots / chip chrome / CTA backgrounds
+ * and LARGE display accents only. Coral as body text on white FAILS WCAG AA
+ * (~2.4:1) and is forbidden; use --color-accent-pressed for coral text.
+ * White text on a coral fill passes.
+ */
+
+@theme {
+  /* =====================================================================
+   * ACCENT — Warm coral (LOCKED by user, 2026-05-31)
+   * 5-step scale: base / hover / pressed / soft / subtle.
+   * base + hover + soft are locked; pressed + subtle are derived.
+   * ===================================================================== */
+  --color-accent: #ff7059;          /* warm coral, LOCKED */
+  --color-accent-hover: #f25742;    /* LOCKED */
+  --color-accent-pressed: #db4733;  /* derived: text-safe coral step + :active */
+  --color-accent-soft: #ffe9e4;     /* LOCKED: tinted surface, blob fill, hover bg */
+  --color-accent-subtle: #fff4f1;   /* derived: faint wash */
+
+  /* =====================================================================
+   * NEUTRAL — warm paper light palette (not pure white)
+   * paper = page bg, ink = text. gray-* are the warm neutral ramp.
+   * ===================================================================== */
+  --color-paper: #fdfcfa;           /* warm paper white (page bg) */
+  --color-ink: #1a1614;             /* near-black warm (text) */
+  --color-gray-50: #faf8f4;
+  --color-gray-100: #f7f5f1;
+  --color-gray-200: #eceae6;        /* hairline border (primary separator) */
+  --color-gray-300: #ddd9d2;        /* stronger hairline */
+  --color-gray-400: #c2bcb2;
+  --color-gray-500: #6c6660;        /* muted body text */
+  --color-gray-600: #4a443f;
+
+  /* Captured-blue: the hero HEX chip shows a real grabbed colour, NOT the
+   * brand accent, so it reads as "a colour you took". Semantic only. */
+  --color-captured-blue: #3d9df2;
+
+  /* =====================================================================
+   * TYPOGRAPHY — Manrope (quirky-direction section 2)
+   * --font-manrope is injected by next/font on <html>. Mono = system stack,
+   * code / selector / hex fragments only.
+   * ===================================================================== */
+  --font-sans: var(--font-manrope), "Manrope", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* Display scale tuned for the hero headline. */
+  --text-display-xl: clamp(44px, 6.8vw, 96px);
+  --text-display-lg: clamp(38px, 5.6vw, 76px);
+  --text-display-md: clamp(30px, 4.2vw, 56px);
+
+  --text-h1: clamp(28px, 3.4vw, 46px);
+  --text-h2: clamp(22px, 2.5vw, 34px);
+  --text-h3: 20px;
+
+  --text-body-xl: 22px;
+  --text-body-lg: 18px;
+  --text-body: 16px;
+  --text-eyebrow: 12px;
+
+  --lh-display: 1.04;
+  --lh-h1: 1.1;
+  --lh-h2: 1.18;
+  --lh-body: 1.6;
+
+  --ls-display: -0.02em;
+  --ls-eyebrow: 0.04em;
+
+  /* =====================================================================
+   * RADIUS — rounder than Corder for the blobby / toy feel (documented).
+   * window 20 (Corder 12), card 16, button 14 (Corder 8), pill full.
+   * ===================================================================== */
+  --radius-window: 20px;
+  --radius-card: 16px;
+  --radius-button: 14px;
+  --radius-pill: 999px;
+}
+
+/* Coral selection wash. Coral at low alpha over warm paper, readable. */
+::selection {
+  background: rgba(255, 112, 89, 0.24);
+  color: inherit;
+}
