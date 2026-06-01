@@ -270,3 +270,37 @@ progressive enhancement, gated + code-split, never the content source); CLS 0;
 sane LCP (lazy GSAP/canvas); mobile simplified, no 390 overflow; App-Store
 honesty visible; $16.99 one-time. Heavy-motion tech budget stays UNLOCKED
 (GSAP/WebGL/canvas allowed).
+
+---
+
+## PLAYGROUND DIRECTION, FUNCTIONAL (user, 2026-06-01, 7th/8th round) — current
+
+Supersedes everything below it. The site is ONLY the hero, and it is a REAL
+working playground, not scripted demos. The user must actually do on the page
+what Quirky does on the Mac, with each mode.
+
+- **One screen only.** No Pricing, no Footer, no FAQ, no separate Modes section.
+  Just the full-screen playground. (Pricing.tsx / Footer.tsx still exist as
+  files but are NOT rendered.)
+- **Each mode = a real browser tool** (src/components/playground/tools.tsx):
+  - HEX: native EyeDropper API (pick any on-screen pixel -> hex). Fallback text
+    on Safari (no EyeDropper).
+  - OCR: Tesseract.js v5, lazy dynamic import, on a dropped/pasted/chosen image.
+  - SPX: pointer drag on a canvas -> real px width x height.
+  - DOM: click an element in an inline sample page -> real CSS selector
+    (selectorFor() builds tag.class#id nth path; sample uses clean semantic
+    classNames styled inline so selectors stay meaningful).
+  - SVG: drop/paste/pick -> real SVG source + preview.
+  - Every result copies to clipboard (navigator.clipboard).
+- **Shell** (Playground.tsx): full-screen capture-grid, strict top bar (Quirky +
+  "macOS 13+ / free core"), one tagline, the luxurious window (title bar
+  "quirky / {mode}" + live dot), and the bottom DOCK (segmented, sliding accent
+  pill via layoutId) that switches modes. The dock IS the navigation.
+- **Cursor SFX REMOVED** (user: "не делай курсор с этим эффектом"). CaptureHUD is
+  now static crop-marks + "QUIRKY / CAPTURE" status only, no crosshair/coord/
+  bracket, no pointer listeners.
+- **Mobile = MobileGate banner only** (user: "мобилку баннером закрой, сотри всё,
+  только десктоп Mac"). Site hidden below md; consent banner also hidden below md.
+- Guardrails hold: one accent #E63E2E, captured-blue #3D9DF2, IBM Plex Mono for
+  data, no dashes, no exclamations, 16px min (eyebrow/label/HUD chrome exempt),
+  ?motion=0 = static, CLS 0, desktop only. tesseract.js added to deps.
