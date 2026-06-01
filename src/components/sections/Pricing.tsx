@@ -5,31 +5,43 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/motion/Reveal";
-import { Section, SectionHeader } from "@/components/section/Section";
-import { Quirky } from "@/components/character/Quirky";
+import { Section } from "@/components/section/Section";
 import { useMotionOff } from "@/components/motion/useMotionOff";
 import { copy } from "@/content/copy";
 import { EASE_OUT } from "@/lib/motion";
 
 /**
- * Pricing + Download (Section 3). Two tiers, one-time frame (no subscription).
- * Quirky free (OCR + HEX + SPX) and Quirky Pro $16.99 one-time (adds DOM + SVG).
- * Pro is highlighted with the accent. Both download buttons present in the
- * download band below the tiers. Footnotes carry the App-Store honesty + refund
- * + one-time lines. A compact 4-item FAQ is appended so detail exists without a
- * separate heavy section.
- *
- * Strings from copy.json.pricing (+ a 4-item slice of copy.json.faq.pairs).
+ * Pricing + Download (Section 3) — VISUAL rebuild. The character, the long
+ * descriptions, the multi line footnotes and the comparison paragraph are gone.
+ * Each tier carries a row of five mode chips that light up for what is included
+ * (Free lights three, Pro lights five): the difference is shown, not narrated.
+ * Three short feature lines per tier, one honesty footnote, a compact FAQ with
+ * one line answers. This is the "five times less text" pass.
  */
 
-// The four download-relevant questions surfaced here; the rest live nowhere
-// heavier than this (the page is intentionally three sections).
-const COMPACT_FAQ_INDEXES = [3, 1, 7, 0];
+const MODE_ORDER = [
+  { id: "ocr", label: "OCR" },
+  { id: "hex", label: "HEX" },
+  { id: "dom", label: "DOM" },
+  { id: "svg", label: "SVG" },
+  { id: "spx", label: "SPX" },
+];
+
+type Tier = {
+  id: string;
+  name: string;
+  price: string;
+  priceSub: string;
+  modes: string[];
+  features: string[];
+  highlight?: boolean;
+  cta: { label: string; href: string };
+};
 
 export function Pricing() {
   const c = copy.pricing;
   const hero = copy.hero;
-  const faqPairs = COMPACT_FAQ_INDEXES.map((i) => copy.faq.pairs[i]).filter(Boolean);
+  const faqPairs = copy.faq.pairs;
 
   return (
     <Section
@@ -39,11 +51,18 @@ export function Pricing() {
       tokens="paper,ink,accent,accent-soft,gray-200"
     >
       <Reveal>
-        <SectionHeader eyebrow={c.eyebrow} headline={c.headline} intro={c.subhead} />
+        <div className="flex flex-col gap-4">
+          <span className="font-mono text-[0.8125rem] font-semibold uppercase tracking-[0.14em] text-accent-pressed">
+            03 / {c.eyebrow}
+          </span>
+          <h2 className="max-w-3xl text-[clamp(2rem,4.4vw,3.5rem)] font-extrabold leading-[1.04] tracking-tight text-ink">
+            {c.headline}
+          </h2>
+        </div>
       </Reveal>
 
       <div className="mt-12 grid gap-5 lg:grid-cols-2">
-        {c.tiers.map((tier, i) => {
+        {(c.tiers as Tier[]).map((tier, i) => {
           const highlight = Boolean(tier.highlight);
           return (
             <div key={tier.id} className={`st-reveal st-reveal-${i + 1} h-full`}>
@@ -57,32 +76,46 @@ export function Pricing() {
               >
                 {highlight && (
                   <span className="absolute right-6 top-6 inline-flex items-center rounded-full bg-accent px-3 py-1 text-[0.75rem] font-semibold uppercase tracking-[0.062em] text-paper">
-                    All five modes
+                    All five
                   </span>
                 )}
-                {/* Quirky perches happily on the Pro card corner: it knows this is
-                    the good one. Static-safe (rests when motion is off). */}
-                {highlight && (
-                  <div className="pointer-events-none absolute -left-3 -top-10 z-10 hidden sm:block">
-                    <Quirky size={64} mood="happy" lookAt={null} label="Quirky, delighted, next to the Pro plan" />
-                  </div>
-                )}
 
-                <div className="flex flex-col gap-2">
-                  <h3 className="text-[1.375rem] font-extrabold tracking-tight text-ink">
+                <div className="flex flex-col gap-3">
+                  <h3 className="font-mono text-[1.0625rem] font-bold uppercase tracking-[0.08em] text-ink">
                     {tier.name}
                   </h3>
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-[clamp(2.75rem,5vw,4rem)] font-extrabold leading-none tracking-tight text-ink">
-                      {tier.price}
-                    </span>
-                    <span className="text-[1rem] text-gray-500">
-                      {tier.priceSub}
-                    </span>
+                  <div className="flex items-baseline gap-3">
+                    <PriceCapture capture={highlight}>
+                      <span className="text-[clamp(2.75rem,5.4vw,4.25rem)] font-extrabold leading-none tracking-tight text-ink">
+                        {tier.price}
+                      </span>
+                    </PriceCapture>
+                    {tier.priceSub && (
+                      <span className="font-mono text-[1rem] text-gray-500">
+                        {tier.priceSub}
+                      </span>
+                    )}
                   </div>
-                  <p className="text-[1rem] leading-relaxed text-gray-500">
-                    {tier.description}
-                  </p>
+                </div>
+
+                {/* Mode chips: lit = included. Shows the difference visually. */}
+                <div className="flex flex-wrap gap-2">
+                  {MODE_ORDER.map((m) => {
+                    const on = tier.modes.includes(m.id);
+                    return (
+                      <span
+                        key={m.id}
+                        className={[
+                          "inline-flex items-center rounded-button border px-3 py-1.5 font-mono text-[1rem] font-semibold transition-colors duration-150",
+                          on
+                            ? "border-accent bg-paper text-accent-pressed"
+                            : "border-gray-200 text-gray-400",
+                        ].join(" ")}
+                      >
+                        {m.label}
+                      </span>
+                    );
+                  })}
                 </div>
 
                 <ul className="flex flex-col gap-2.5">
@@ -97,17 +130,15 @@ export function Pricing() {
                   ))}
                 </ul>
 
-                <div className="mt-auto flex flex-col gap-3">
+                <div className="mt-auto">
                   <Button
                     href={tier.cta.href}
                     variant={highlight ? "primary" : "secondary"}
                     className="w-full"
+                    data-capture
                   >
                     {tier.cta.label}
                   </Button>
-                  <p className="text-[1rem] leading-relaxed text-gray-500">
-                    {tier.note}
-                  </p>
                 </div>
               </article>
             </div>
@@ -115,45 +146,29 @@ export function Pricing() {
         })}
       </div>
 
-      {/* Download band: both channels present, App-Store honesty inline. */}
+      {/* Download band: both channels present, App Store honesty inline. */}
       <Reveal>
         <div
           id="download"
           className="mt-8 flex scroll-mt-24 flex-col gap-4 rounded-window border border-gray-200 bg-gray-50 p-6 md:flex-row md:items-center md:justify-between md:p-8"
         >
-          <div className="flex flex-col gap-1">
-            <p className="text-[1.125rem] font-bold text-ink">
-              Download Quirky for macOS 13 or later.
-            </p>
-            <p className="text-[1rem] text-gray-500">
-              {hero.secondaryCta.note}
-            </p>
-          </div>
+          <p className="font-mono text-[1.0625rem] font-bold text-ink">
+            download / macOS 13+
+          </p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button href="#download">{hero.primaryCta.label}</Button>
-            <Button href="#download" variant="secondary">
+            <Button href="#download" data-capture>{hero.primaryCta.label}</Button>
+            <Button href="#download" variant="secondary" data-capture>
               {hero.secondaryCta.label}
             </Button>
           </div>
         </div>
       </Reveal>
 
-      {/* Comparison note */}
+      {/* Single honesty footnote. */}
       <Reveal>
-        <p className="mt-8 max-w-3xl text-[1rem] leading-relaxed text-gray-500">
-          {c.comparisonNote}
+        <p className="mt-6 text-[1rem] leading-relaxed text-gray-500">
+          {c.footnote}
         </p>
-      </Reveal>
-
-      {/* Footnotes */}
-      <Reveal>
-        <ul className="mt-6 flex flex-col gap-2 border-t border-gray-200 pt-6">
-          {c.footnotes.map((note, i) => (
-            <li key={i} className="text-[1rem] leading-relaxed text-gray-500">
-              {note}
-            </li>
-          ))}
-        </ul>
       </Reveal>
 
       {/* Compact FAQ */}
@@ -251,6 +266,46 @@ function CompactFaq({ pairs }: { pairs: { q: string; a: string }[] }) {
         })}
       </div>
     </div>
+  );
+}
+
+/* The Pro price gets "captured": four corner ticks snap around it, the way the
+ * cursor brackets an element. Static-safe (ticks rest in place under motion-off). */
+function PriceCapture({
+  capture,
+  children,
+}: {
+  capture: boolean;
+  children: React.ReactNode;
+}) {
+  const reduce = useReducedMotion();
+  const motionOff = useMotionOff();
+  const staticMode = Boolean(reduce) || motionOff;
+
+  if (!capture) return <>{children}</>;
+
+  const ticks = [
+    "left-0 top-0 border-r-0 border-b-0",
+    "right-0 top-0 border-l-0 border-b-0",
+    "left-0 bottom-0 border-r-0 border-t-0",
+    "right-0 bottom-0 border-l-0 border-t-0",
+  ];
+
+  return (
+    <span className="relative inline-flex px-3 py-1.5">
+      {children}
+      {ticks.map((pos, i) => (
+        <motion.span
+          key={i}
+          aria-hidden="true"
+          className={`pointer-events-none absolute h-3.5 w-3.5 border-2 border-accent ${pos}`}
+          initial={staticMode ? false : { opacity: 0, scale: 1.6 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true, margin: "-10%" }}
+          transition={{ duration: 0.4, delay: 0.15 + i * 0.07, ease: EASE_OUT }}
+        />
+      ))}
+    </span>
   );
 }
 

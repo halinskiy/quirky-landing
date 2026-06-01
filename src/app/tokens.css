@@ -62,7 +62,7 @@
    * TYPOGRAPHY — Manrope. Mono = system stack, code / hex / selector only.
    * ===================================================================== */
   --font-sans: var(--font-manrope), "Manrope", system-ui, -apple-system, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
 
   /* Display scale. The redesign pushes the top end for the oversize moments
    * (giant "5", huge #3D9DF2, the 184 x 48 readout, dark-section headlines). */

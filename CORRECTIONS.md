@@ -230,3 +230,43 @@ The first redesign pass was still not it. Sharper direction:
   are NOT em-dashes (ASCII double-hyphen) but the copywriter should review
   whether to replace with a colon or a period per the no-dash house style
   before Phase 2 wires them verbatim.
+
+---
+
+## CAPTURE OS DIRECTION (user, 2026-06-01, 6th round) — SUPERSEDES all prior visual passes
+
+The "5x less text / visual" pass (Modes bento + Pricing chips, no mascot) was
+structurally right but STILL not bold enough ("каждая секция особенная,
+анимированная, смелые решения только"). The mascot/character is PERMANENTLY
+REMOVED (user: "ассистент блоб этот тупой ... вообще без ассистента").
+
+Locked new art direction, confirmed via survey:
+- **CAPTURE OS as a SPIRIT, on a LIGHT base.** Warm paper #FDFCFA, ink #1A1614,
+  ONE accent red #E63E2E, captured-blue #3D9DF2 for "a pixel you grabbed". MONO
+  font for all technical/data bits (coords, mode codes, hex, selectors, px).
+  Manrope for big headlines + body. NOT a literal OS-chrome clone — a bold
+  product site that PLAYS WITH the capture/OS metaphor to demonstrate the modes.
+- **MAX EFFECT approved.** Fullscreen scenes, pinned scroll-capture, cursor-drag,
+  non-obvious navigation are all allowed. Goal = surprise. Each of the 3 sections
+  is its OWN distinct animated set-piece (no shared template look).
+- **Through-line (soldier's pick, user said "удиви меня"): CURSOR = CAPTURE TOOL.**
+  Site-wide HUD: a crosshair + live coordinate readout follows the cursor; corner
+  crop-marks + a thin capture status bar frame the page; a selection bracket snaps
+  to interactive elements on hover. Each section is "a different capture demo".
+- **Per-section concepts:**
+  1. HERO = the live capture (pinned scrub: cursor draws a marquee over a sample
+     UI, resolves OCR/HEX/DOM/SVG/SPX into chips). Light, bold, mono labels.
+  2. MODES = an OS-style capture WINDOW that demonstrates each mode with a
+     distinct animated micro-demo (OCR scan-line, HEX loupe/eyedropper, DOM
+     bracket+selector type, SVG lift+code, SPX edge brackets counting). This is
+     where the "obыgrыvat OS to demo modes" note lives. Interactive + autocycle.
+  3. PRICING = "capture the deal": a marquee snaps around $16.99 and resolves;
+     mode chips light 3 (free) vs 5 (Pro). Clear, App-Store honesty survives.
+
+GUARDRAILS (unchanged, non-negotiable): one accent #E63E2E; no dashes of any
+kind in visible prose; NO exclamation marks; 16px min body; ?motion=0 +
+reduced-motion = clean static readable site on all 7 routes (HUD/cursor/pin are
+progressive enhancement, gated + code-split, never the content source); CLS 0;
+sane LCP (lazy GSAP/canvas); mobile simplified, no 390 overflow; App-Store
+honesty visible; $16.99 one-time. Heavy-motion tech budget stays UNLOCKED
+(GSAP/WebGL/canvas allowed).

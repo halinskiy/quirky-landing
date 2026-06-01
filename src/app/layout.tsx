@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, IBM_Plex_Mono } from "next/font/google";
 
 import { copy } from "@/content/copy";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { ConsentProvider } from "@/components/consent/ConsentProvider";
+import { CaptureHUD } from "@/components/capture/CaptureHUD";
 import { Inspector } from "@/components/devtools/Inspector";
 
 import "./globals.css";
@@ -12,6 +13,15 @@ const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-manrope",
+});
+
+// Capture OS uses a real monospace for every technical readout (coordinates,
+// mode codes, hex, selectors, px). IBM Plex Mono keeps the engineering feel.
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-plex-mono",
 });
 
 const SITE_URL = "https://quirky.app";
@@ -105,7 +115,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={manrope.variable} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${manrope.variable} ${plexMono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           type="application/ld+json"
@@ -117,6 +131,10 @@ export default function RootLayout({
         <ConsentProvider>
           <LenisProvider>{children}</LenisProvider>
         </ConsentProvider>
+        {/* Capture OS through-line: cursor crosshair + live coordinate HUD +
+            corner crop-marks + selection bracket. Self-gates to desktop +
+            pointer:fine + motion-on; otherwise renders only static crop-marks. */}
+        <CaptureHUD />
         {/* Dev-only Cmd+click inspector for Webflow handoff (doctrine §6). */}
         {process.env.NODE_ENV === "development" && <Inspector />}
       </body>

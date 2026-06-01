@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { Quirky } from "@/components/character/Quirky";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { KineticHeadline } from "@/components/motion/KineticHeadline";
 import { EyebrowLabel } from "@/components/ui/EyebrowLabel";
@@ -49,7 +48,6 @@ import { copy } from "@/content/copy";
 export function HeroScroll() {
   const c = copy.hero;
   const s = copy.switcher;
-  const ch = copy.character;
 
   // Refs into the pinned stage for GSAP to drive. All animation targets carry a
   // data-anim hook so the GSAP module can query them without prop drilling.
@@ -57,12 +55,9 @@ export function HeroScroll() {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const spacerRef = useRef<HTMLDivElement | null>(null);
 
-  // isMobile / staticMode are resolved on the client. SSR + first paint render
-  // the desktop poster (safe: it is the full static end-state either way).
+  // isMobile is resolved on the client. SSR + first paint render the desktop
+  // poster (safe: it is the full static end-state either way).
   const [isMobile, setIsMobile] = useState(false);
-  // Which mode the character should react to during the scrub (for eye-aim +
-  // delight). -1 = resting.
-  const [activeMode, setActiveMode] = useState(-1);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -155,17 +150,6 @@ export function HeroScroll() {
                 scrub: 1,
                 anticipatePin: 1,
                 invalidateOnRefresh: true,
-                onUpdate: (self) => {
-                  // Map progress -> active mode for the character (5 chips across
-                  // the resolve window 0.18..0.86).
-                  const p = self.progress;
-                  if (p < 0.16) setActiveMode(-1);
-                  else if (p > 0.9) setActiveMode(-1);
-                  else
-                    setActiveMode(
-                      Math.min(4, Math.floor(((p - 0.16) / 0.74) * 5)),
-                    );
-                },
               },
             });
 
@@ -204,7 +188,6 @@ export function HeroScroll() {
             tl.to(chips, { y: "-=6", duration: 0.6, stagger: 0.04 }, 9.2);
 
             return () => {
-              setActiveMode(-1);
               tl.scrollTrigger?.kill();
               tl.kill();
               // restore poster + chips to static end-state for the non-pinned DOM
@@ -227,11 +210,6 @@ export function HeroScroll() {
       cleanup?.();
     };
   }, []);
-
-  // The character mood reacts to the scrubbed active mode.
-  const charMood = activeMode >= 0 ? "happy" : "idle";
-  const charSay =
-    activeMode >= 0 ? ch.reactionGrab : ch.greeting;
 
   return (
     <section
@@ -258,14 +236,17 @@ export function HeroScroll() {
           <div ref={spacerRef} data-anim="spacer" className="hero-spacer relative">
             <div
               ref={stageRef}
-              className="hero-stage dot-grid relative w-full overflow-hidden"
+              className="hero-stage capture-grid relative w-full overflow-hidden"
             >
               <HeroBlobs />
 
               <div className="relative mx-auto grid h-full max-w-6xl items-center gap-10 px-5 pb-16 pt-28 lg:grid-cols-[1.02fr_0.98fr] lg:gap-12 lg:pb-20 lg:pt-32">
                 {/* LEFT: copy */}
                 <div className="flex flex-col items-start">
-                  <EyebrowLabel>{c.eyebrow}</EyebrowLabel>
+                  <span className="inline-flex items-center gap-2 font-mono text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-accent-pressed">
+                    <span className="h-2 w-2 rounded-full bg-accent" />
+                    {c.eyebrow}
+                  </span>
 
                   <KineticHeadline
                     text={c.headline}
@@ -277,38 +258,21 @@ export function HeroScroll() {
                   </p>
 
                   <div className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-                    <MagneticButton href="#download">
+                    <MagneticButton href="#download" data-capture>
                       {c.primaryCta.label}
                     </MagneticButton>
-                    <MagneticButton href="#download" variant="secondary">
+                    <MagneticButton href="#download" variant="secondary" data-capture>
                       {c.secondaryCta.label}
                     </MagneticButton>
                   </div>
 
-                  <div className="mt-5 flex flex-col gap-1.5">
-                    <p className="text-[1rem] text-gray-500">
-                      All five modes, OCR, HEX, DOM, SVG, SPX. Apple Silicon and
-                      Intel. Direct download, DMG.
-                    </p>
-                    <p className="text-[1rem] text-gray-500">
-                      {c.secondaryCta.note}
-                    </p>
-                  </div>
+                  <p className="mt-5 font-mono text-[1rem] text-gray-500">
+                    macOS 13+ &middot; Apple Silicon and Intel &middot; offline
+                  </p>
                 </div>
 
-                {/* RIGHT: the capture stage. Character perches on top. */}
+                {/* RIGHT: the capture stage. */}
                 <div className="relative w-full">
-                  <div className="pointer-events-none absolute -right-1 -top-12 z-30 sm:-right-2 sm:-top-14">
-                    <Quirky
-                      size={84}
-                      mood={charMood}
-                      lookAt="pointer"
-                      say={charSay}
-                      bubbleSide="left"
-                      label={ch.altText}
-                    />
-                  </div>
-
                   <CaptureStage tabs={s.tabs as SwitcherTab[]} />
                 </div>
               </div>
@@ -344,27 +308,24 @@ function CaptureStage({ tabs }: { tabs: SwitcherTab[] }) {
 
   return (
     <div className="relative">
-      {/* The capture browser scene */}
-      <div
-        className="dark-scope overflow-hidden rounded-window border border-white/10 p-5 sm:p-6"
-        style={{ background: "var(--color-ink-surface)" }}
-      >
+      {/* The capture browser scene (light Capture OS) */}
+      <div className="overflow-hidden rounded-window border border-gray-300 bg-paper p-5 shadow-[0_24px_60px_-40px_rgba(26,22,20,0.4)] sm:p-6">
         <svg
           viewBox="0 0 520 260"
           role="img"
           aria-label="A browser window with a dashed capture rectangle drawn over a button labelled Get started"
           className="h-auto w-full"
         >
-          <rect x="16" y="16" width="488" height="228" rx="16" fill="var(--color-ink-raised)" stroke="rgba(253,252,250,0.12)" strokeWidth="1.5" />
-          <line x1="16" y1="52" x2="504" y2="52" stroke="rgba(253,252,250,0.12)" strokeWidth="1.5" />
-          <circle cx="40" cy="34" r="5" fill="none" stroke="rgba(253,252,250,0.3)" strokeWidth="1.5" />
-          <circle cx="58" cy="34" r="5" fill="none" stroke="rgba(253,252,250,0.3)" strokeWidth="1.5" />
-          <circle cx="76" cy="34" r="5" fill="none" stroke="rgba(253,252,250,0.3)" strokeWidth="1.5" />
-          <rect x="150" y="26" width="220" height="16" rx="8" fill="rgba(253,252,250,0.06)" />
+          <rect x="16" y="16" width="488" height="228" rx="16" fill="var(--color-gray-50)" stroke="var(--color-gray-200)" strokeWidth="1.5" />
+          <line x1="16" y1="52" x2="504" y2="52" stroke="var(--color-gray-200)" strokeWidth="1.5" />
+          <circle cx="40" cy="34" r="5" fill="none" stroke="var(--color-gray-300)" strokeWidth="1.5" />
+          <circle cx="58" cy="34" r="5" fill="none" stroke="var(--color-gray-300)" strokeWidth="1.5" />
+          <circle cx="76" cy="34" r="5" fill="none" stroke="var(--color-gray-300)" strokeWidth="1.5" />
+          <rect x="150" y="26" width="220" height="16" rx="8" fill="var(--color-gray-100)" />
 
-          <rect x="48" y="80" width="200" height="14" rx="7" fill="rgba(253,252,250,0.16)" />
-          <rect x="48" y="106" width="320" height="9" rx="4.5" fill="rgba(253,252,250,0.09)" />
-          <rect x="48" y="124" width="280" height="9" rx="4.5" fill="rgba(253,252,250,0.09)" />
+          <rect x="48" y="80" width="200" height="14" rx="7" fill="var(--color-gray-300)" />
+          <rect x="48" y="106" width="320" height="9" rx="4.5" fill="var(--color-gray-200)" />
+          <rect x="48" y="124" width="280" height="9" rx="4.5" fill="var(--color-gray-200)" />
 
           <rect x="48" y="156" width="184" height="48" rx="12" fill="var(--color-captured-blue)" />
           <text x="140" y="186" textAnchor="middle" fontFamily="var(--font-sans)" fontSize="16" fontWeight="700" fill="#0b1f33">
@@ -400,8 +361,8 @@ function CaptureStage({ tabs }: { tabs: SwitcherTab[] }) {
             <g transform="translate(242 214)">
               <path
                 d="M0 0 L0 18 L4.5 13.5 L8 21 L11 19.5 L7.5 12 L13 12 Z"
-                fill="var(--color-paper)"
-                stroke="var(--color-ink)"
+                fill="var(--color-accent)"
+                stroke="var(--color-paper)"
                 strokeWidth="1.2"
                 strokeLinejoin="round"
               />
@@ -412,9 +373,9 @@ function CaptureStage({ tabs }: { tabs: SwitcherTab[] }) {
         {/* a small hint that GSAP hides during scrub (poster only) */}
         <p
           data-anim="poster-hint"
-          className="mt-3 text-center text-[1rem] text-on-dark/55"
+          className="mt-3 text-center font-mono text-[1rem] text-gray-500"
         >
-          One capture, five kinds of data.
+          one capture, five kinds of data
         </p>
       </div>
 
@@ -448,7 +409,7 @@ function CaptureStage({ tabs }: { tabs: SwitcherTab[] }) {
 function Chip({ tab }: { tab: SwitcherTab }) {
   return (
     <div className="flex flex-col gap-2 rounded-card border border-gray-200 bg-paper p-3.5 shadow-sm">
-      <span className="text-[0.75rem] font-semibold uppercase tracking-[0.062em] text-accent-pressed">
+      <span className="font-mono text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-accent-pressed">
         {tab.label}
       </span>
       <ChipValue tab={tab} />
@@ -507,7 +468,7 @@ function HeroMobile() {
   const c = copy.hero;
   const s = copy.switcher;
   return (
-    <div className="dot-grid relative overflow-hidden">
+    <div className="capture-grid relative overflow-hidden">
       <HeroBlobs />
       <div className="relative mx-auto flex max-w-6xl flex-col gap-10 px-5 pb-16 pt-28">
         <div className="flex flex-col items-start">
@@ -526,16 +487,11 @@ function HeroMobile() {
               {c.secondaryCta.label}
             </MagneticButton>
           </div>
-          <div className="mt-5 flex flex-col gap-1.5">
-            <p className="text-[1rem] text-gray-500">
-              All five modes, OCR, HEX, DOM, SVG, SPX. Apple Silicon and Intel.
-              Direct download, DMG.
-            </p>
-            <p className="text-[1rem] text-gray-500">{c.secondaryCta.note}</p>
-          </div>
+          <p className="mt-5 text-[1rem] text-gray-500">
+            macOS 13+, Apple Silicon and Intel. Works offline.
+          </p>
         </div>
         <div className="relative w-full">
-          <p className="mb-3 text-[1rem] font-medium text-ink/60">{s.intro}</p>
           <ModeSwitcher
             tabs={s.tabs as SwitcherTab[]}
             sceneAlt={s.sceneAlt}

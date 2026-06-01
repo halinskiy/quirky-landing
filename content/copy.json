@@ -2,13 +2,21 @@
   "nav": {
     "logoAlt": "Quirky",
     "links": [
-      { "label": "Modes", "href": "#modes" },
-      { "label": "Pricing", "href": "#pricing" },
-      { "label": "FAQ", "href": "#faq" }
+      {
+        "label": "Modes",
+        "href": "#modes"
+      },
+      {
+        "label": "Pricing",
+        "href": "#pricing"
+      },
+      {
+        "label": "FAQ",
+        "href": "#faq"
+      }
     ],
     "ctaPill": "Download free"
   },
-
   "switcher": {
     "intro": "One capture. Tab to the data you need.",
     "sceneAlt": "A browser window with a dashed capture rectangle drawn over a button labelled Get started",
@@ -18,14 +26,14 @@
         "label": "OCR",
         "kind": "text",
         "value": "Get started",
-        "caption": "Boop. That text is in your clipboard."
+        "caption": "Text, in your clipboard."
       },
       {
         "id": "hex",
         "label": "HEX",
         "kind": "color",
         "value": "#3D9DF2",
-        "caption": "Grabbed it. That blue is yours."
+        "caption": "That color, copied."
       },
       {
         "id": "dom",
@@ -33,26 +41,25 @@
         "kind": "dom",
         "selector": "button.cta",
         "value": "Get started",
-        "caption": "Here is the selector. And what is written inside it."
+        "caption": "The selector and its text."
       },
       {
         "id": "svg",
         "label": "SVG",
         "kind": "svg",
         "value": "icon.svg",
-        "caption": "The actual SVG. Not a screenshot of it."
+        "caption": "The real SVG source."
       },
       {
         "id": "spx",
         "label": "SPX",
         "kind": "measure",
         "value": "184 x 48",
-        "caption": "That gap is exactly this wide. Quirky found the edges."
+        "caption": "The exact size, edge to edge."
       }
     ],
     "copiedLabel": "Copied to clipboard"
   },
-
   "hero": {
     "eyebrow": "macOS 13+, v1.0, works offline",
     "headline": "Point at it. Get five kinds of data back.",
@@ -69,7 +76,6 @@
     "hotkey": "cmd+shift+1",
     "captureDeviceAlt": "Quirky capture fan: one screen region fans out into five data chips showing a text snippet, a hex color, a CSS selector, an SVG icon, and a pixel measurement"
   },
-
   "modeRail": {
     "eyebrow": "Five modes, one hotkey",
     "intro": "One capture. Tab to the data you need.",
@@ -102,66 +108,53 @@
     ],
     "switcherNote": ""
   },
-
   "modes": {
-    "eyebrow": "Five modes, one hotkey",
-    "headline": "Five kinds of data. One capture gesture.",
-    "intro": "Press cmd+shift+1, drag over anything on your screen, then hit Tab to pick the mode. Same region, whatever you need.",
-    "proofLine": "Cloning a pricing card? Grab the selector, the color, and the icon in three captures. That is the whole job.",
+    "eyebrow": "Five modes",
+    "headline": "One capture. Five kinds of data.",
+    "hotkey": "cmd+shift+1",
     "list": [
       {
         "id": "ocr",
         "name": "OCR",
-        "line": "Drag over a screenshot, a PDF preview, or a tooltip you cannot select. Apple Vision reads the text on your Mac and copies it. No network, no server.",
+        "tag": "Text",
         "example": "Get started",
         "exampleKind": "text",
-        "audience": "Works offline. In the free build.",
         "channel": "free"
       },
       {
         "id": "hex",
         "name": "HEX",
-        "line": "Hover any pixel on your screen and Quirky grabs the exact color. The hex copies the moment you lift your finger.",
+        "tag": "Color",
         "example": "#3D9DF2",
         "exampleKind": "color",
-        "audience": "Works offline. In the free build.",
         "channel": "free"
       },
       {
         "id": "dom",
         "name": "DOM",
-        "line": "Click any element in your browser tab. Quirky reads the live page and hands you the CSS selector and whatever text is inside. No DevTools, no digging, no guessing.",
+        "tag": "Selector",
         "example": "button.cta",
         "exampleKind": "selector",
-        "audience": "Safari, Chrome, Arc, Brave, Edge, Comet, Vivaldi, Opera. Direct download only.",
         "channel": "pro"
       },
       {
         "id": "svg",
         "name": "SVG",
-        "line": "See an icon you want on a page? Quirky lifts the actual SVG source, ready to paste into Figma or your codebase. Not a screenshot of it. The real thing.",
+        "tag": "Icon source",
         "example": "icon.svg",
         "exampleKind": "svg",
-        "audience": "For designers and developers. Direct download only.",
         "channel": "pro"
       },
       {
         "id": "spx",
         "name": "SPX",
-        "line": "Draw over a gap or an element. Edge detection snaps the measurement bounds to the nearest UI edges, so the number you get is the number that matters.",
+        "tag": "Pixel size",
         "example": "184 x 48",
         "exampleKind": "measure",
-        "audience": "Works offline. In the free build.",
         "channel": "free"
       }
-    ],
-    "steps": [
-      "Press cmd+shift+1",
-      "Drag a region",
-      "Tab to the mode"
     ]
   },
-
   "howItWorks": {
     "eyebrow": "How it works",
     "headline": "Three steps. Under two seconds.",
@@ -184,7 +177,6 @@
     ],
     "demoAlt": "Animated demo of Quirky capturing a screen region and extracting a CSS selector via DOM mode"
   },
-
   "features": {
     "eyebrow": "What each mode does",
     "headline": "Five tools. One capture gesture.",
@@ -227,7 +219,6 @@
       }
     ]
   },
-
   "workflows": {
     "eyebrow": "Who uses it",
     "headline": "A few people who stopped doing it the slow way.",
@@ -249,7 +240,6 @@
       }
     ]
   },
-
   "fits": {
     "eyebrow": "Works the way a Mac app should",
     "headline": "Offline. No account. No Dock clutter.",
@@ -281,108 +271,82 @@
       }
     ]
   },
-
   "pricing": {
     "eyebrow": "Pricing",
     "headline": "Pay once. It is yours.",
-    "subhead": "No, really. A friend does not send you a monthly bill.",
     "tiers": [
       {
         "id": "free",
         "name": "Quirky",
         "price": "Free",
-        "priceSub": "No credit card. No catch.",
-        "description": "Three modes. The full hotkey experience, nothing held back on a timer.",
+        "priceSub": "",
+        "modes": [
+          "ocr",
+          "hex",
+          "spx"
+        ],
         "features": [
-          "OCR: read text from anything on screen, fully offline",
-          "HEX: grab the exact pixel color, copied instantly",
-          "SPX: measure in pixels, edge detection included",
-          "Floating mode switcher pill",
-          "Menu bar icon, cmd+shift+1 hotkey",
-          "Sparkle auto update"
+          "OCR, HEX, SPX",
+          "Works offline",
+          "Menu bar, cmd+shift+1"
         ],
         "cta": {
           "label": "Download free",
           "href": "#download"
-        },
-        "note": "Available on the Mac App Store and as a direct DMG download."
+        }
       },
       {
         "id": "pro",
         "name": "Quirky Pro",
         "price": "$16.99",
-        "priceSub": "One time. Yours forever.",
-        "description": "All five modes. DOM and SVG join the party.",
+        "priceSub": "One time",
+        "modes": [
+          "ocr",
+          "hex",
+          "dom",
+          "svg",
+          "spx"
+        ],
         "features": [
-          "Everything in Quirky",
-          "DOM: live selector and text from any browser element, no DevTools",
-          "SVG: the actual icon source from the page, not a screenshot",
-          "All five modes active and switchable while capturing",
-          "Future extraction modes included"
+          "Everything in free",
+          "Adds DOM and SVG",
+          "All five modes"
         ],
         "highlight": true,
         "cta": {
-          "label": "Get Quirky Pro",
+          "label": "Get Pro",
           "href": "#download"
-        },
-        "note": "Direct download only. DOM and SVG use Apple Events, which the App Store sandbox does not allow."
+        }
       }
     ],
-    "footnotes": [
-      "App Store build: OCR, HEX, and SPX. DOM and SVG require the direct download.",
-      "One time purchase. No subscription. Updates included for version 1.x.",
-      "Refund policy: email hegona3@gmail.com within 30 days if something is broken and I cannot fix it."
-    ],
-    "comparisonNote": "TextSniper is $7.99 for OCR alone. ColorSlurp is $7.99 for color picking alone. PixelSnap is $39 for measurement alone. Quirky Pro is $16.99 for all five, including two modes none of them offer."
+    "footnote": "App Store ships OCR, HEX, SPX. DOM and SVG need the direct download."
   },
-
   "faq": {
     "eyebrow": "Questions",
-    "headline": "Things people ask before downloading.",
+    "headline": "Before you download.",
     "pairs": [
       {
-        "q": "How is this different from CleanShot X?",
-        "a": "CleanShot X captures and annotates screenshots. Quirky extracts data from what is already on your screen: text, color, a DOM selector, an SVG, a pixel size. They do different jobs and honestly work well side by side."
+        "q": "Does it work offline?",
+        "a": "OCR, HEX, and SPX run fully on your Mac. DOM and SVG read the browser already open in front of you."
       },
       {
-        "q": "Does it need the internet to work?",
-        "a": "OCR, HEX, and SPX run entirely on your Mac. Nothing goes out to a server. DOM and SVG read from the browser already open in front of you. They need the browser open, not the internet."
+        "q": "Why no DOM and SVG on the App Store?",
+        "a": "The sandbox blocks the Apple Events those two modes rely on. The direct download has all five."
       },
       {
         "q": "Which browsers work with DOM and SVG?",
-        "a": "Safari, Google Chrome, Arc, Brave, Microsoft Edge, Comet, Vivaldi, and Opera. These eight expose what Quirky needs through Apple Events. You do need the direct download for this, not the App Store build."
-      },
-      {
-        "q": "Why does the App Store version not have DOM and SVG?",
-        "a": "The Mac App Store sandbox does not allow apps to talk to other apps via Apple Events. DOM and SVG work exactly that way, by reading your browser directly. Apple does not grant that permission inside the sandbox, so those two modes live in the direct download only."
-      },
-      {
-        "q": "Does OCR send my screen to a server?",
-        "a": "No. OCR uses Apple Vision, which runs on your Mac at high accuracy with language correction on. Nothing leaves your machine. It works with no network connection at all."
-      },
-      {
-        "q": "Can I measure inside interactive UI without clicking through the overlay?",
-        "a": "Yes. SPX has a ghost mode. Press cmd+shift+1 while SPX is active and the overlay lets clicks pass through. You can hover real buttons and inputs to measure them without triggering anything."
-      },
-      {
-        "q": "How does Quirky update?",
-        "a": "The direct download uses Sparkle. Quirky will let you know when a new version is ready and offer to install it. The App Store version updates through the App Store the usual way."
+        "a": "Safari, Chrome, Arc, Brave, Edge, Comet, Vivaldi, and Opera."
       },
       {
         "q": "Can I get a refund?",
-        "a": "If something is broken and I cannot fix it, email hegona3@gmail.com within 30 days and I will sort it. For App Store purchases, Apple handles refunds through their standard process."
+        "a": "Email hegona3@gmail.com within 30 days and I will sort it."
       },
       {
-        "q": "What permissions does Quirky ask for?",
-        "a": "Two. Screen Recording, so it can see the region you drag over. Automation, so DOM and SVG can read your browser. macOS prompts you for each one separately the first time, and both prompts say what the permission is actually for."
-      },
-      {
-        "q": "Does it work on Apple Silicon and Intel Macs?",
-        "a": "Yes. The direct download is a universal binary. It runs natively on both."
+        "q": "Apple Silicon and Intel?",
+        "a": "Yes. The direct download is a universal binary."
       }
     ]
   },
-
   "finalCta": {
     "eyebrow": "It is already on your screen",
     "headline": "Press cmd+shift+1 and just take it.",
@@ -397,7 +361,6 @@
       "note": "Includes OCR, HEX, and SPX. DOM and SVG require the direct download."
     }
   },
-
   "footer": {
     "logoAlt": "Quirky",
     "slogan": "Point at it. Get the data.",
@@ -405,18 +368,39 @@
       {
         "heading": "Product",
         "links": [
-          { "label": "Modes", "href": "#modes" },
-          { "label": "Pricing", "href": "#pricing" },
-          { "label": "Download", "href": "#download" },
-          { "label": "FAQ", "href": "#faq" }
+          {
+            "label": "Modes",
+            "href": "#modes"
+          },
+          {
+            "label": "Pricing",
+            "href": "#pricing"
+          },
+          {
+            "label": "Download",
+            "href": "#download"
+          },
+          {
+            "label": "FAQ",
+            "href": "#faq"
+          }
         ]
       },
       {
         "heading": "Legal",
         "links": [
-          { "label": "Privacy policy", "href": "/privacy-policy" },
-          { "label": "Terms of use", "href": "/terms" },
-          { "label": "Refund policy", "href": "/refunds" }
+          {
+            "label": "Privacy policy",
+            "href": "/privacy-policy"
+          },
+          {
+            "label": "Terms of use",
+            "href": "/terms"
+          },
+          {
+            "label": "Refund policy",
+            "href": "/refunds"
+          }
         ]
       }
     ],
@@ -427,14 +411,21 @@
       "note": "No marketing. Just release notes, when there is something worth saying."
     },
     "social": [
-      { "platform": "Twitter / X", "href": "https://x.com/halinskiy", "label": "@halinskiy" },
-      { "platform": "GitHub", "href": "https://github.com/halinskiy", "label": "halinskiy" }
+      {
+        "platform": "Twitter / X",
+        "href": "https://x.com/halinskiy",
+        "label": "@halinskiy"
+      },
+      {
+        "platform": "GitHub",
+        "href": "https://github.com/halinskiy",
+        "label": "halinskiy"
+      }
     ],
     "cookiePreferences": "Cookie preferences",
     "authorLine": "Made in Leicester by Kostya. If it breaks, email me: hegona3@gmail.com",
     "copyright": "2026 Quirky. Made by one person."
   },
-
   "meta": {
     "titleTag": "Quirky: five screen extraction modes, one hotkey",
     "metaDescription": "Point at anything on your screen. Quirky grabs the text, color, DOM selector, SVG, or pixel size. macOS 13+, works offline. Free core, $16.99 Pro one time.",
@@ -444,15 +435,6 @@
     "canonicalPath": "/",
     "twitterCard": "summary_large_image"
   },
-
-  "character": {
-    "greeting": "Oh, you can just grab that.",
-    "altText": "Quirky, a small friendly blob creature, looking delighted",
-    "reactionGrab": "Got it.",
-    "reactionIdle": "Ready when you are.",
-    "reactionPeek": "Psst. There is data in there."
-  },
-
   "standalone": {
     "privacyPolicy": {
       "pageTitle": "Privacy policy",
@@ -486,7 +468,6 @@
       "lastUpdated": "May 2026",
       "contactLine": "Questions: hegona3@gmail.com"
     },
-
     "terms": {
       "pageTitle": "Terms of use",
       "intro": "Short version: use Quirky on your own Mac, do not take it apart to copy it, and do not blame me if something goes sideways.",
@@ -511,7 +492,6 @@
       "lastUpdated": "May 2026",
       "contactLine": "Questions: hegona3@gmail.com"
     },
-
     "refunds": {
       "pageTitle": "Refund policy",
       "intro": "If something is broken and I cannot fix it, you get your money back. Simple.",
@@ -528,7 +508,6 @@
       "lastUpdated": "May 2026",
       "contactLine": "hegona3@gmail.com"
     },
-
     "thanks": {
       "pageTitle": "You are in.",
       "headline": "Check your inbox for release notes.",
@@ -536,7 +515,6 @@
       "ctaLabel": "Back to Quirky",
       "ctaHref": "/"
     },
-
     "notFound": {
       "pageTitle": "404",
       "headline": "Nothing here.",

@@ -183,3 +183,121 @@ button:focus:not(:focus-visible) {
   overflow: hidden;
   padding-bottom: 0.08em;
 }
+
+/* ======================================================================
+ *  CAPTURE OS — the light "you are using the tool" system (CORRECTIONS.md
+ *  "CAPTURE OS DIRECTION"). Crop-marks + crosshair HUD + measurement grid +
+ *  selection bracket. The HUD is aria-hidden decoration; the cursor-tracking
+ *  layer only mounts on desktop + pointer:fine + motion-on (CaptureHUD.tsx).
+ * ====================================================================== */
+
+/* Measurement grid surface: faint engineering ruling, warm. Use on big
+ * Capture OS scenes instead of (or over) the dot-grid. */
+.capture-grid {
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(to right, var(--color-gray-200) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-gray-200) 1px, transparent 1px);
+  background-size: 96px 96px;
+  background-position: -1px -1px;
+}
+.capture-grid-fine {
+  background-image:
+    linear-gradient(to right, var(--color-gray-200) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-gray-200) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* Corner crop-marks framing the viewport. */
+.cm {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--color-gray-300);
+}
+.cm-tl { top: 14px; left: 14px; border-right: 0; border-bottom: 0; }
+.cm-tr { top: 14px; right: 14px; border-left: 0; border-bottom: 0; }
+.cm-bl { bottom: 14px; left: 14px; border-right: 0; border-top: 0; }
+.cm-br { bottom: 14px; right: 14px; border-left: 0; border-top: 0; }
+
+.hud-status {
+  position: fixed;
+  left: 18px;
+  bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--color-gray-400);
+}
+
+/* Cursor-tracking layer (mounted only when live). transform-driven, GPU. */
+.hud-line-h {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 1px;
+  background: rgba(230, 62, 46, 0.28);
+  will-change: transform;
+}
+.hud-line-v {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100vh;
+  background: rgba(230, 62, 46, 0.28);
+  will-change: transform;
+}
+.hud-dot {
+  position: fixed;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--color-accent);
+  background: transparent;
+  will-change: transform;
+}
+.hud-coord {
+  position: fixed;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-accent-pressed);
+  background: var(--color-paper);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 6px;
+  padding: 4px 7px;
+  white-space: nowrap;
+  will-change: transform;
+}
+.hud-bracket {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transition: opacity 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, width, height;
+}
+.hud-bracket span {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-accent);
+}
+.hud-bracket span:nth-child(1) { left: -1px; top: -1px; border-right: 0; border-bottom: 0; }
+.hud-bracket span:nth-child(2) { right: -1px; top: -1px; border-left: 0; border-bottom: 0; }
+.hud-bracket span:nth-child(3) { left: -1px; bottom: -1px; border-right: 0; border-top: 0; }
+.hud-bracket span:nth-child(4) { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+
+/* On touch / coarse pointers, hide the HUD entirely (crop-marks read as broken
+ * UI on phones). Capture OS chrome is a desktop affordance. */
+@media (max-width: 768px), (pointer: coarse) {
+  .capture-hud { display: none; }
+}
