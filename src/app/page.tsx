@@ -1,5 +1,5 @@
 import { Nav } from "@/components/nav/Nav";
-import { Hero } from "@/components/sections/Hero";
+import { HeroScroll } from "@/components/sections/HeroScroll";
 import { Modes } from "@/components/sections/Modes";
 import { Pricing } from "@/components/sections/Pricing";
 import { Footer } from "@/components/sections/Footer";
@@ -25,7 +25,7 @@ export default function Home() {
     <>
       <Nav />
       <main id="top">
-        <Hero />
+        <HeroScroll />
         <Modes />
         <Pricing />
       </main>

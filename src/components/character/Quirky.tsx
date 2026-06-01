@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 import { useMotionOff } from "@/components/motion/useMotionOff";
 import { EASE_OUT } from "@/lib/motion";
@@ -67,8 +73,25 @@ export function Quirky({
 
   const wrapRef = useRef<HTMLDivElement | null>(null);
 
-  // Pupil offset in viewBox units (range roughly -3.2..3.2 from centre).
-  const [pupil, setPupil] = useState({ x: 0, y: 0 });
+  // Pupil + body-lean physics via motion values (NO per-frame React re-render).
+  // Raw pointer-derived targets; springs give a critically-damped, no-overshoot
+  // settle (research §3: "physics without bounce"). pupil range ~ -3..3 viewBox
+  // units; lean is a small rotate/translate of the whole body toward the cursor.
+  const pupilXRaw = useMotionValue(0);
+  const pupilYRaw = useMotionValue(0);
+  const pupilX = useSpring(pupilXRaw, { stiffness: 200, damping: 26, mass: 0.5 });
+  const pupilY = useSpring(pupilYRaw, { stiffness: 200, damping: 26, mass: 0.5 });
+
+  // Body lean: rotate + small x toward the cursor. Critically damped, clamped.
+  const leanXRaw = useMotionValue(0); // -1..1 horizontal pointer offset
+  const leanYRaw = useMotionValue(0);
+  const leanXs = useSpring(leanXRaw, { stiffness: 120, damping: 18, mass: 0.7 });
+  const leanYs = useSpring(leanYRaw, { stiffness: 120, damping: 18, mass: 0.7 });
+  // Map normalised lean to a gentle rotate (max 5deg) and a few px of shift.
+  const bodyRotate = useTransform(leanXs, [-1, 1], [-5, 5]);
+  const bodyTx = useTransform(leanXs, [-1, 1], [-4, 4]);
+  const bodyTy = useTransform(leanYs, [-1, 1], [-3, 3]);
+
   const [blink, setBlink] = useState(false);
   const [coarse, setCoarse] = useState(false);
 
@@ -100,8 +123,10 @@ export function Quirky({
     };
   }, [staticMode]);
 
-  // Eye tracking. Pointer mode listens to mousemove; a fixed point recomputes on
-  // change. Disabled entirely in static mode or on coarse pointers.
+  // Eye tracking + body lean. Pointer mode listens to mousemove and feeds the
+  // raw motion values; the springs do the damped settle. A fixed point recomputes
+  // on change. Disabled entirely in static mode or on coarse pointers. Writing to
+  // motion values does NOT trigger a React re-render (compositor-friendly).
   useEffect(() => {
     if (staticMode || coarse || lookAt === null) return;
 
@@ -114,22 +139,39 @@ export function Quirky({
       const dx = clientX - cx;
       const dy = clientY - cy;
       const dist = Math.hypot(dx, dy) || 1;
-      // Normalise and clamp to a gentle range so pupils never leave the eye.
+      // Pupils: clamped reach so they never leave the eye.
       const max = 3.0;
       const reach = Math.min(dist / 220, 1);
-      setPupil({
-        x: (dx / dist) * max * reach,
-        y: (dy / dist) * max * reach,
-      });
+      pupilXRaw.set((dx / dist) * max * reach);
+      pupilYRaw.set((dy / dist) * max * reach);
+      // Body lean: normalised horizontal/vertical offset, clamped to -1..1 over
+      // a 520px reach so the whole creature tilts toward the cursor a little.
+      leanXRaw.set(Math.max(-1, Math.min(1, dx / 520)));
+      leanYRaw.set(Math.max(-1, Math.min(1, dy / 520)));
     }
 
     if (lookAt === "pointer") {
-      const onMove = (e: MouseEvent) => aimAt(e.clientX, e.clientY);
+      let frame = 0;
+      let lastX = 0;
+      let lastY = 0;
+      const onMove = (e: MouseEvent) => {
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (frame) return;
+        frame = requestAnimationFrame(() => {
+          frame = 0;
+          aimAt(lastX, lastY);
+        });
+      };
       window.addEventListener("mousemove", onMove, { passive: true });
-      return () => window.removeEventListener("mousemove", onMove);
+      return () => {
+        window.removeEventListener("mousemove", onMove);
+        if (frame) cancelAnimationFrame(frame);
+      };
     } else {
       aimAt(lookAt.x, lookAt.y);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [staticMode, coarse, lookAt]);
 
   const happy = mood === "happy" && !staticMode;
@@ -142,9 +184,17 @@ export function Quirky({
   const eyeR = 8;
   const pupilR = 3.6;
 
-  // In static mode pupils rest centred; happy mood lifts them slightly.
-  const px = staticMode ? 0 : pupil.x;
-  const py = staticMode ? 0 : happy ? pupil.y - 0.6 : pupil.y;
+  // Pupils are driven by the springs (motion values). Per-eye x is the eye centre
+  // plus the spring offset; a small "happy" lift is folded into the y spring base.
+  // In static mode the springs sit at 0 (no listeners ever write to them).
+  const lPupilCx = useTransform(pupilX, (v) => lEyeX + (staticMode ? 0 : v));
+  const rPupilCx = useTransform(pupilX, (v) => rEyeX + (staticMode ? 0 : v));
+  const pupilCy = useTransform(pupilY, (v) =>
+    eyeY + (staticMode ? 0 : happy ? v - 0.6 : v),
+  );
+  const lLightCx = useTransform(lPupilCx, (v) => v - 1.1);
+  const rLightCx = useTransform(rPupilCx, (v) => v - 1.1);
+  const lightCy = useTransform(pupilCy, (v) => v - 1.1);
 
   return (
     <div
@@ -170,18 +220,34 @@ export function Quirky({
         aria-hidden={decorative || undefined}
         aria-label={decorative ? undefined : label}
         className="overflow-visible"
-        animate={
+        // Outer layer carries the critically-damped BODY LEAN toward the cursor
+        // (spring motion values). Static mode = no lean (springs sit at 0).
+        style={
           staticMode
-            ? undefined
-            : peek
-              ? { rotate: -8, y: 0 }
-              : happy
-                ? { rotate: 0, y: -3, scaleY: 1.04, scaleX: 0.98 }
-                : { rotate: 0, y: 0, scaleY: 1, scaleX: 1 }
+            ? { transformOrigin: "50% 80%" }
+            : {
+                transformOrigin: "50% 80%",
+                rotate: bodyRotate,
+                x: bodyTx,
+                y: bodyTy,
+              }
         }
-        transition={{ duration: 0.45, ease: EASE_OUT }}
-        style={{ transformOrigin: "50% 80%" }}
       >
+        {/* Mood layer: peek tilt / happy squash. Separate group so it does not
+            fight the lean rotate on the outer svg. */}
+        <motion.g
+          animate={
+            staticMode
+              ? undefined
+              : peek
+                ? { rotate: -8, y: 0 }
+                : happy
+                  ? { rotate: 0, y: -3, scaleY: 1.04, scaleX: 0.98 }
+                  : { rotate: 0, y: 0, scaleY: 1, scaleX: 1 }
+          }
+          transition={{ duration: 0.45, ease: EASE_OUT }}
+          style={{ transformOrigin: "50% 80%" }}
+        >
         {/* Body: soft rounded blob, accent-soft fill + ink hairline. */}
         <path
           d="M50 8 C72 8 90 20 92 44 C94 68 82 90 50 92 C18 90 6 68 8 44 C10 20 28 8 50 8 Z"
@@ -205,22 +271,19 @@ export function Quirky({
           <circle cx="74" cy="54" r="5" fill="var(--color-accent)" opacity={0.4} />
         </g>
 
-        {/* Eyes. The whites are paper, lid is the body fill closing on blink. */}
-        {[lEyeX, rEyeX].map((ex, i) => (
+        {/* Eyes. The whites are paper, lid is the body fill closing on blink.
+            Pupils are driven by the spring motion values (no per-frame React
+            re-render); they settle with no overshoot. */}
+        {[
+          { ex: lEyeX, cx: lPupilCx, lcx: lLightCx },
+          { ex: rEyeX, cx: rPupilCx, lcx: rLightCx },
+        ].map(({ ex, cx, lcx }, i) => (
           <g key={i}>
             <circle cx={ex} cy={eyeY} r={eyeR} fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth={1.6} />
-            {/* Pupil tracks the target. */}
-            <circle
-              cx={ex + px}
-              cy={eyeY + py}
-              r={pupilR}
-              fill="var(--color-ink)"
-              style={{
-                transition: staticMode ? undefined : "cx 120ms linear, cy 120ms linear",
-              }}
-            />
+            {/* Pupil tracks the target via the spring. */}
+            <motion.circle cx={cx} cy={pupilCy} r={pupilR} fill="var(--color-ink)" />
             {/* tiny catchlight */}
-            <circle cx={ex + px - 1.1} cy={eyeY + py - 1.1} r={1.1} fill="var(--color-paper)" />
+            <motion.circle cx={lcx} cy={lightCy} r={1.1} fill="var(--color-paper)" />
             {/* Blink lid: a rounded rect that drops over the eye. */}
             <rect
               x={ex - eyeR - 1.4}
@@ -247,6 +310,7 @@ export function Quirky({
           strokeLinecap="round"
           style={{ transition: staticMode ? undefined : "d 250ms cubic-bezier(0.16,1,0.3,1)" }}
         />
+        </motion.g>
       </motion.svg>
     </div>
   );

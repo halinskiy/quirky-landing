@@ -33,7 +33,7 @@ export function Footer() {
       className="border-t border-gray-200 bg-gray-50"
     >
       <div className="mx-auto max-w-6xl px-5 py-16">
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="st-reveal grid gap-10 md:grid-cols-2 lg:grid-cols-3">
           {/* Brand + slogan + social */}
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2 text-ink" aria-label={`${c.logoAlt} home`}>

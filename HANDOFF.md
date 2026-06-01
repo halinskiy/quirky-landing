@@ -1,5 +1,41 @@
 # quirky-landing — Handoff (Webflow rebuild)
 
+## AWWWARDS MOTION PASS (2026-06-01) — GSAP + physics, custom-code flags
+
+IMPORTANT: this project's motion budget was deliberately UNLOCKED beyond doctrine
+(no Webflow target for this build). Several pieces are NOT replicable in Webflow
+IX2 and must be ported as custom code embeds if the studio ever rebuilds in
+Webflow. Flags:
+
+- **HeroScroll pinned scrub (`[data-component="HeroScroll"]`) — CUSTOM CODE.**
+  GSAP ScrollTrigger pin + scrub + DrawSVG, synced to Lenis. This is the
+  centerpiece (scroll advances a 5-mode capture film). IX2 cannot do scrubbed
+  DrawSVG + pinned timeline cleanly. Port `HeroScroll.tsx` + GSAP as an embed, OR
+  rebuild as a simpler Webflow scroll-into-view sequence and accept it is tamer.
+  The static poster (the fanned 5-chip end-state) is plain SVG/HTML and IS
+  Webflow-friendly on its own if you drop the scrub.
+- **KineticHeadline (`[data-component="KineticHeadline"]`) — CUSTOM CODE.** GSAP
+  SplitText per-word reveal + scroll-velocity skew (clamped 6deg). IX2 has no
+  velocity hook; port as embed or ship a plain headline.
+- **MagneticButton (`[data-component="MagneticButton"]`) — IX2 POSSIBLE.** Framer
+  spring pull toward cursor. Webflow has community magnetic-button IX2 patterns;
+  acceptable to rebuild natively. Keep the pull small and the return non-bouncy.
+- **Quirky character physics** — see the SOUL PASS note below; now spring-driven
+  (Framer useSpring). Same custom-code recommendation.
+- **Native scroll-timeline reveals (`.st-reveal`)** — pure CSS
+  (`animation-timeline: view()`). Webflow can host this as custom CSS on a class;
+  no JS. Falls back to visible content where unsupported. Easiest to keep as-is.
+
+Reduced-motion / `?motion=0` gating (verified): the entire heavy layer is gated.
+With reduced motion or `?motion=0`, NO ScrollTrigger is created, the hero shows
+the static poster end-state, the tall pin reservation collapses (CSS-gated), and
+every native reveal sits at its visible resting state. CLS measured 0 in all
+modes. If rebuilding in Webflow, preserve a static, fully-readable fallback for
+each of the above.
+
+GSAP libraries are dynamic-imported + code-split (not in the shared bundle), so
+they only load on the home route, on desktop, when motion is on.
+
 ## SOUL PASS (2026-06-01) — character + living demo + scroll delight
 
 Structure unchanged (HEADER + 3 sections + FOOTER). What the Webflow dev needs to

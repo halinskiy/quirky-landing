@@ -1,5 +1,40 @@
 # Quirky — Decisions log
 
+## 2026-06-01 — AWWWARDS MOTION PASS (3mpq-soldier)
+
+- **Doctrine budget lift, this project only.** Per CORRECTIONS "AWWWARDS MOTION",
+  the user approved the FULL motion arsenal and lifted the global GSAP/WebGL ban
+  and the ~80KB JS budget FOR quirky-landing only (Webflow is not a target here).
+  Decision: add GSAP (ScrollTrigger + DrawSVG + SplitText) and Framer springs;
+  keep everything dynamic-imported + code-split so it costs nothing on first paint
+  and nothing on the other 6 routes. The doctrine ban still holds for all other
+  projects; this is a scoped exception recorded here.
+- **GSAP for the pinned scrub, NOT Framer.** Decision: the hero film uses GSAP
+  ScrollTrigger (pin + scrub + DrawSVG) because long multi-phase scroll timelines
+  are GSAP's strength and Framer's weakness (research §2). Framer is kept for the
+  short spring-y pointer-driven pieces (character, magnetic CTA) where its DX wins.
+- **No WebGL / Three.js.** Decision: skipped the optional shader. The product is a
+  2D blobby capture tool; a pinned SVG/DOM scrub already delivers the wow at a
+  fraction of the bundle. WebGL was off-budget even under the lift for no real gain.
+- **No Rive.** Decision: the character stays a Framer-spring inline SVG. Rive would
+  need an explicit user go + a custom-embed flag (doctrine §3) and the spring
+  version is shippable and charming. Flagged as the ambitious upgrade path only.
+- **Pin via CSS-reserved spacer, not JS height toggle.** First attempt toggled the
+  spacer height in React state (auto -> 520vh) after GSAP init; that caused
+  CLS 0.14. Decision: reserve the tall scroll height with a CSS media query
+  (`min-width:769px` + `prefers-reduced-motion:no-preference` +
+  `html:not([data-motion=off])`) so it is present from first paint. CLS dropped to
+  0 in all modes. Pre-hydration bootstrap sets `data-motion` before paint so the
+  gate resolves correctly.
+- **Mobile drops the pin.** Decision: `gsap.matchMedia("(max-width:768px)")` swaps
+  the DOM to the existing interactive `ModeSwitcher` (tap-through, accessible) on
+  small screens. No pin, no scroll-trap on touch, no 390 overflow. The scrub is a
+  desktop/tablet enhancement only.
+- **No bounce, even with physics.** Decision: every spring is critically damped
+  (high damping, no overshoot) and the velocity skew is clamped to 6deg. The wow
+  comes from scrub/pin/draw-on/scale/blur, not from elastic motion (research §3;
+  doctrine A4 kept).
+
 ## 2026-06-01 — SOUL PASS (3mpq-soldier)
 
 - **Personality without structural change.** The user called the clean rebuild

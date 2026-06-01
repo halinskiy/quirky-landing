@@ -46,7 +46,7 @@ export function Pricing() {
         {c.tiers.map((tier, i) => {
           const highlight = Boolean(tier.highlight);
           return (
-            <Reveal key={tier.id} index={i} className="h-full">
+            <div key={tier.id} className={`st-reveal st-reveal-${i + 1} h-full`}>
               <article
                 className={[
                   "relative flex h-full flex-col gap-6 rounded-window border p-7 md:p-8",
@@ -110,7 +110,7 @@ export function Pricing() {
                   </p>
                 </div>
               </article>
-            </Reveal>
+            </div>
           );
         })}
       </div>

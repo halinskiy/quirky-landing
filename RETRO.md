@@ -5,6 +5,44 @@ session before building.
 
 ---
 
+## 2026-06-01 — 3mpq-soldier — AWWWARDS MOTION PASS (GSAP pin/scrub, physics, native reveals)
+
+### What took longer than it should have?
+The pinned-hero CLS. My first cut toggled the spacer height in React state
+(`height: gsapActive ? "520vh" : "auto"`) AFTER GSAP's matchMedia fired. That post-
+paint height jump shifted everything below the hero and measured CLS 0.14 (a hard
+fail). The fix was to reserve the scroll height with a CSS media query gated on
+`min-width:769px` + `prefers-reduced-motion:no-preference` + `html:not([data-motion=off])`
+so it is present from FIRST PAINT, with GSAP only doing the pin. CLS dropped to 0.
+Burned one verify cycle. Lesson below.
+
+### What did I miss that the user or judge caught?
+Caught it myself in CDP before returning (measured CLS in motion-on AND motion-off
+AND reduced), but I should have anticipated it: ANY layout-affecting value that
+flips from a JS effect after paint is a CLS source. I knew "pin via transform,
+reserve space up front" was the rule (it is literally in CORRECTIONS and the
+research) and still reached for a React state toggle first because it felt simpler.
+
+### What will I do differently next time?
+For any pinned/scroll-reserved section: reserve the scroll length in CSS gated on a
+media query + the data-motion attr, NEVER via a post-mount JS height toggle. The
+gate trio for "heavy desktop motion that must vanish under motion-off" is now a
+fixed recipe: `@media (min-width:N) and (prefers-reduced-motion:no-preference)` +
+`html:not([data-motion="off"])`. Use it for the height reserve AND the CSS reveals.
+And: always measure CLS in all three modes (on / reduced / motion=0), because the
+shift only appeared in the motion-on path.
+
+Second note: gsap plugin subpath imports (`gsap/ScrollTrigger`, `gsap/DrawSVGPlugin`,
+`gsap/SplitText`) resolve fine via the package `./*` export and code-split cleanly
+when dynamic-imported; they do NOT land in the shared chunk, so first-paint cost is
+zero. The `q(...)` selector returns generic Element[] so cast via `as unknown as
+SVGPathElement` (TS rejects the direct cast). MagneticButton/motion.a spreading
+native anchor props collides with Framer's drag handler types: `Omit<..., "onDrag"
+| "onDragStart" | "onDragEnd" | "onAnimationStart" | "onAnimationEnd">` on the prop
+type clears it.
+
+---
+
 ## 2026-06-01 — 3mpq-soldier — CAPITAL REBUILD (morph removed, 3-section, ModeSwitcher)
 
 ### What took longer than it should have?

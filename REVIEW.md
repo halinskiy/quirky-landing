@@ -1003,3 +1003,76 @@ layout/color/motion/character/structure change.
 - /tmp/qk-cdp/test-hyphen.mjs (innerText hyphen-compound visibility)
 - /tmp/qk-cdp/shot.mjs (screenshots)
 - Build logs: /tmp/qk-soul-build1.log, /tmp/qk-soul-build2.log (EXIT 0, 0 Html, 7 routes)
+
+---
+
+# MOTION PASS REVIEW 2026-06-01
+
+**Reviewer:** 3mpq-judge
+**Scope:** AWWWARDS MOTION PASS (5th direction, "удивить") — 4 heavy GSAP/scroll-driven set-pieces.
+**Build reviewed:** clean `npm run build` x2, served via `serve` under basePath /quirky-landing, headless Chrome 148 over CDP.
+**VERDICT: PASSED.** Gate cleared for redeploy. The accessibility/perf fallbacks all hold under independent CDP measurement; the wow is real and meaningful.
+
+## The 4 load-bearing checks (verified independently, did not trust soldier)
+
+### 1. Scroll-trap under motion-off — PASS
+Tested all 7 routes in THREE fallback configs: `?motion=0` @1440, `prefers-reduced-motion:reduce` @1440, `?motion=0` @390. Every route scrolls fully to the bottom (reached === maxScroll, gap = 0). NO pin/ScrollTrigger trap anywhere.
+- Home `/`: under BOTH motion=0 and reduced, `.hero-spacer` height = **776px** (auto/content, NOT the 520vh = 4680px pin reservation). Scroll reaches bottom, footer visible. The CSS media-query gate `@media (min-width:769px) and (prefers-reduced-motion:no-preference) html:not([data-motion=off])` collapses the reservation exactly as designed.
+- Standalone routes (/install /privacy-policy /terms /refunds /thanks) have no `<footer>` element (legal-page shell), so the first heuristic flagged "footerVis=false" — that was a false alarm in my harness, NOT a trap: every one reports `reached === maxScroll`, `gap = 0`, `bodyBottomReached = true`. Confirmed via a second probe (/tmp/qk-footer.mjs).
+- /404.html reports `data-motion=null` under motion=0 (the static error doc does not run the pre-hydration hook) but maxScroll=0, no trap. Consistent with the standing NOTE; no action.
+
+### 2. CLS — PASS (~0 in all three modes)
+Measured with a buffered layout-shift PerformanceObserver installed pre-navigation, then scrubbed the full page:
+| Mode | CLS | spacerH | data-motion |
+|---|---|---|---|
+| MOTION-ON | **0.0015** | 4680 (pin reservation ACTIVE) | null |
+| REDUCED | **0.0000** | 776 (collapsed) | off |
+| MOTION=0 | **0.0000** | 776 (collapsed) | off |
+The regression path the soldier flagged (JS height toggle -> 0.14) is gone. The two micro-shifts in motion-on are 0.0007 each (negligible, far under the 0.1 budget). The CSS media-query reservation holds CLS at effectively zero.
+
+### 3. Mobile @390 — PASS
+At 390 with motion ON: `.hero-spacer` = null (NO pin), the desktop `.hero-stage` is absent (`stagePresent=false`), the interactive `ModeSwitcher` fallback IS rendered (`hasSwitcher=true`). The DOM swap causes no overflow: `scrollWidth == clientWidth == 390`, `overflowX = 0`, scroll reaches bottom (no trap). The lighter switcher fallback fires on small screens exactly as specified. No jump, no horizontal scroll.
+
+### 4. LCP / first paint + code-split — PASS
+- **GSAP is code-split off the shared chunk.** Shared chunks (255, 4bd1b696 = 102 kB) contain NO gsap/ScrollTrigger/DrawSVG. GSAP lives in async chunks `580.*.js` (44 kB) + `c15bf2b0.*.js` (52 kB) loaded only via the home page chunk. Home First Load = 181 kB vs 115 kB for every other route — the ~66 kB delta is the home-only motion payload. Other 6 routes never load GSAP.
+- **Static SVG poster paints first.** Sampling chip opacity over time on motion-on home: t=50ms -> all 5 chips visible (poster painted), t>=120ms -> chips go to 0 (GSAP initialized and set the scrub start-state). The poster IS the LCP frame; GSAP takes over only after mount. Headline text present immediately (non-blank). Under motion=0 the poster is permanent: all 5 chips visible with real outputs.
+
+## Per-route motion=0 result (non-blank, overflow, sub-16) — ALL PASS
+@1440 and @390, all 7 routes: substantial text (home ~4.3k chars), `overflowX = 0` (scrollWidth==clientWidth), `sub16 = 0` (no body text under 16px except the sanctioned 0.75rem uppercase eyebrows). Home motion=0 poster shows the full informative end-state: OCR "Get started", HEX #3D9DF2, DOM button.cta, SVG icon.svg, SPX "184 x 48", headline, poster hint, Quirky mascot. Non-blank everywhere.
+
+## Accent / dash / exclamation grep — ALL PASS
+- **Accent:** zero old coral (#FF7059/#F25742/#DB4733/#FFE9E4/#FFF4F1) in src; zero banned brick/green (#b7443d/#217a50). `#E63E2E` is the accent, `#3D9DF2` present as the sampled HEX demo (allowed).
+- **Dashes:** visible-prose sweep of rendered HTML across all 7 routes (head/script/style/svg/aria stripped): em-dash 0, en-dash 0, middle-dot/bullet 0.
+- **Exclamations:** 0 across all 7 routes.
+
+## App-Store honesty + pricing — PASS
+`$16.99` present on home. App-Store honesty visible: "App Store and as a direct DMG download", "App Store sandbox does not allow", "Direct download only. DOM and SVG use Apple Events..." — OCR/HEX/SPX vs DOM/SVG framing intact. One-time pricing.
+
+## Build / deploy integrity — PASS
+`rm -rf .next out && npm run build` x2: EXIT 0 both, 0 Html errors, all routes exported (index, install, privacy-policy, terms, refunds, thanks, 404). basePath `/quirky-landing/_next` and favicon `/quirky-landing/icon.svg` intact. `tsc --noEmit` clean. Inspector dev-only (absent from static export), hero root carries data-component/data-source/data-tokens.
+
+## The wow — REAL and MEANINGFUL
+- **Pinned scrub hero:** drove scroll under motion-on. Stage stays PINNED (stageTop=0, fixed in viewport) through ~frac 0.0-0.45 while scroll advances, then releases. Chips RESOLVE progressively with scroll: 0 -> 2 -> 4 -> 5 visible. "One capture, five modes" advances under the user's own scroll. This is the awwwards mechanic and it is literally the product demo. Screenshot: hero-1440-scrub-mid.png.
+- **Character physics — no overshoot (PASS by spring math):** pupil spring zeta = 26/(2*sqrt(200*0.5)) = 1.30 (overdamped); body lean zeta = 18/(2*sqrt(120*0.7)) = 0.98 (critically damped); magnetic CTA zeta = 30/(2*sqrt(220*0.6)) = 1.31 (overdamped). All zeta >= ~0.98 -> mathematically cannot meaningfully overshoot; settles, never bounces. The sanctioned damped lean honours the no-bounce rule. (Runtime synthetic-pointer sampling returned zeros — pointer-capability gating defeats headless synthetic events; the spring config is the authoritative proof.)
+- **Native scroll-timeline reveals:** 8 `.st-reveal` elements, 0 hidden under motion=0 (triple-gated @supports + reduced-motion + data-motion). Content is never hidden when unsupported/reduced.
+- **Magnetic CTAs + kinetic headline:** magnetic spring transform-only, clamped 10px, critically damped; SplitText headline skew clamped 6deg, GSAP dynamic-imported, never blocks paint, disabled under motion=0/reduced.
+
+## Most important issue
+None blocking. Minor NOTEs only:
+- NOTE — /404.html runs without the motion hook (data-motion=null); harmless, maxScroll=0, no trap.
+- NOTE — runtime spring-overshoot sampling could not be driven via headless synthetic pointer events; verified by spring math instead. A real on-page assertion harness for the character spring would let future passes confirm settle-without-overshoot at runtime rather than analytically. (Logging as a self-deferral against my next motion review.)
+- NOTE — cookie consent card overlays the lower hero on first paint (designed strict-opt-in gate, not a defect).
+
+## Screenshots (own, non-zero)
+- /tmp/aisoldier-judge/quirky-motion/hero-1440-motion0.png (motion=0 poster, all 5 chips fanned, non-blank)
+- /tmp/aisoldier-judge/quirky-motion/hero-1440-scrub-mid.png (motion-on, chips resolving mid-scrub, character reacting)
+- /tmp/aisoldier-judge/quirky-motion/hero-390-motion-on.png (390 single column, switcher fallback, no overflow)
+
+## CDP harness (this review, independent)
+- /tmp/qk-judge-scrolltrap.mjs (7 routes x 3 fallback modes: spacer height, scroll-reach-bottom, overflow)
+- /tmp/qk-cls.mjs (buffered layout-shift CLS x3 modes + spacer reservation)
+- /tmp/qk-mobile-paint.mjs + /tmp/qk-poster0.mjs + /tmp/qk-paint2.mjs (mobile fallback, first-paint poster timing)
+- /tmp/qk-scrub.mjs (pinned stage + progressive chip resolution under scroll)
+- /tmp/qk-allroutes-blank.mjs (motion=0 non-blank + overflow + sub-16 x2 widths)
+- /tmp/qk-textcheck.mjs (visible-prose dash/exclamation sweep)
+- Build logs: /tmp/qk-build1.log, /tmp/qk-build2.log (EXIT 0, 0 Html, tsc clean)

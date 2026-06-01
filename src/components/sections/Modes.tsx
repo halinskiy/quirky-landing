@@ -97,10 +97,13 @@ export function Modes() {
             </ol>
           </Reveal>
 
-          {/* The five modes as readable rows */}
+          {/* The five modes as readable rows. Each row reveals via the native
+              CSS scroll-timeline (.st-reveal, compositor thread, zero JS). The
+              .st-reveal-N classes stagger them. Content is visible by default
+              under no-support / reduced / ?motion=0 (CSS gates handle it). */}
           <div className="mt-10 overflow-hidden rounded-window border border-gray-200">
             {c.list.map((mode, i) => (
-              <Reveal key={mode.id} index={i}>
+              <div key={mode.id} className={`st-reveal st-reveal-${(i % 4) + 1}`}>
                 <article className="group grid items-start gap-5 border-b border-gray-200 bg-paper p-6 transition-colors duration-150 last:border-b-0 hover:bg-accent-subtle md:grid-cols-[120px_1fr_220px] md:gap-8 md:p-8">
                   {/* name */}
                   <div className="flex items-center gap-3">
@@ -125,7 +128,7 @@ export function Modes() {
                     <Example kind={mode.exampleKind} value={mode.example} />
                   </div>
                 </article>
-              </Reveal>
+              </div>
             ))}
           </div>
 

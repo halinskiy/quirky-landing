@@ -117,6 +117,31 @@ Hard guardrails unchanged: one accent #E63E2E, 16px min body, pneumatic easing n
 bounce, no dashes, App-Store honesty, deployable static export, ?motion=0 static
 on all routes, no horizontal overflow at 390. Make it fun WITHOUT breaking these.
 
+## AWWWARDS MOTION (user, 2026-06-01, 5th round) — "удивить"
+The soul pass still reads as light fade-ins; the user sees "ничего крутого, ни
+анимаций, ни моушна" and wants AWWWARDS-LEVEL motion, the kind motion specialists
+build, with the explicit goal to SURPRISE ("удивить"). Research is in
+research/motion-awwwards-2026.md (read it before building).
+
+TECH BUDGET UNLOCKED (user approved the FULL arsenal, 2026-06-01): GSAP (incl.
+ScrollTrigger / Flip / SplitText / MotionPath), Three.js / WebGL / shaders /
+canvas, Framer Motion physics, Lenis (already in). NO JS-size cap anymore. The
+old doctrine bans on GSAP/WebGL/Rive and the 80KB budget are LIFTED for this
+project (Webflow is not a target). Use the heavy tools where they earn real wow.
+Still: pneumatic feel (no childish bounce/overshoot unless it genuinely serves
+the friendly character), one accent, no dashes, App-Store honesty, $16.99.
+
+NON-NEGOTIABLE EVEN WITH HEAVY MOTION:
+- prefers-reduced-motion AND ?motion=0 -> a clean STATIC, fully readable site on
+  all 7 routes (no blank, no scroll-trap, no WebGL canvas spinning). Heavy motion
+  is progressive enhancement, gated and code-split, never the content source.
+- CLS = 0 (reserve space, pin via transform). LCP stays reasonable (lazy-init the
+  WebGL/GSAP below the fold or after first paint; do not block first paint on a
+  shader). Mobile: simplify or drop the heaviest pieces, no 390 overflow, no jank.
+- The motion must MEAN something for Quirky (capture, the 5 modes, the friend
+  character), not decoration for its own sake. Pick the highest-impact set-pieces
+  from the research recommendation.
+
 ## REDESIGN DIRECTIVE (user, 2026-06-01) — contrast + scale + cut text
 User feedback on the v0.1 live site: "всего слишком много, выглядит несуразно,
 читается тяжело, нужно больше контраста, скучно, много текста, нет масштаба чтоб

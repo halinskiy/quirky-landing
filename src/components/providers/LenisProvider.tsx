@@ -37,6 +37,11 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       touchMultiplier: 1.2,
     });
 
+    // Expose the instance so the GSAP hero (HeroScroll) can sync ScrollTrigger to
+    // Lenis (lenis.on('scroll', ScrollTrigger.update)) for a frame-perfect scrub.
+    // Only set when Lenis is actually running (motion on). Cleared on teardown.
+    (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+
     let frame = requestAnimationFrame(function raf(time: number) {
       lenis.raf(time);
       frame = requestAnimationFrame(raf);
@@ -58,6 +63,7 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       document.removeEventListener("click", onClick);
       cancelAnimationFrame(frame);
       lenis.destroy();
+      delete (window as unknown as { __lenis?: Lenis }).__lenis;
     };
   }, []);
 

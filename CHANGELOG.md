@@ -1,5 +1,58 @@
 # Quirky — Changelog
 
+## 2026-06-01 — AWWWARDS MOTION PASS (5th direction, "удивить") — heavy set-pieces
+
+The soul pass still read as light fade-ins ("ничего крутого, ни анимаций, ни
+моушна"). This pass builds award-level, motion-specialist set-pieces. Tech budget
+unlocked for THIS project only (CORRECTIONS "AWWWARDS MOTION"): GSAP added, no
+JS-size cap. The four set-pieces:
+
+1. **THE HERO — scroll-scrubbed "one capture, five modes" pinned film.** New
+   `src/components/sections/HeroScroll.tsx`. On desktop+motion the stage PINS
+   (GSAP ScrollTrigger pin + scrub, synced to Lenis via
+   `lenis.on('scroll', ScrollTrigger.update)` + `gsap.ticker.lagSmoothing(0)`).
+   Scrubbing draws the capture marquee (GSAP DrawSVG), snaps the SPX corner
+   handles, then resolves OCR -> HEX -> DOM -> SVG -> SPX each flying into a
+   blob-chip, then fans all five out deck-of-cards style. Replaces the old click-
+   only ModeSwitcher as the hero (the switcher survives as the <=768 fallback and
+   stays fully accessible). Library: GSAP ScrollTrigger + DrawSVG + Lenis.
+2. **Living blob character physics.** `Quirky.tsx` upgraded: pupils + body lean
+   now driven by Framer `useMotionValue` + `useSpring` (critically damped,
+   stiffness 120-200 / damping 18-26, NO overshoot) instead of per-frame React
+   state. Eyes track the cursor, the body leans toward it and settles, the
+   character pops a one-shot delight when a mode resolves during the scrub.
+   rAF-throttled pointer; no tracking on coarse pointers.
+3. **Native scroll-timeline reveals below the fold.** New `.st-reveal` CSS
+   (`globals.css`) via `animation-timeline: view()` (compositor thread, zero JS),
+   applied to the Modes rows, pricing cards, and footer. Replaces those JS fade
+   wrappers. Triple-gated (`@supports` + reduced-motion + `html:not([data-motion=off])`).
+4. **Magnetic CTAs + one kinetic headline.** New `MagneticButton.tsx` (Framer
+   spring pull toward cursor, clamped, critically damped) on the hero CTAs. New
+   `KineticHeadline.tsx` (GSAP SplitText per-word reveal + scroll-velocity skew
+   CLAMPED to 6deg) on the hero headline only.
+
+Unlocked stack added this pass: **gsap@3.15** (ScrollTrigger, DrawSVGPlugin,
+SplitText, all dynamic-imported + code-split; not in the shared chunk). Framer
+Motion springs reused. Lenis already wired.
+
+LCP / first paint: HeroScroll renders a STATIC SVG poster (capture scene already
+drawn + all five chips fanned + labelled) as the first paint; GSAP/ScrollTrigger/
+DrawSVG/SplitText are all dynamic-imported only AFTER mount, never blocking paint.
+
+Reduced-motion / ?motion=0: NO ScrollTrigger is created (gated by
+`gsap.matchMedia()` on `prefers-reduced-motion: no-preference` + the `?motion=0`
+flag check), NO pin (the tall scroll reservation is CSS-gated and collapses to
+auto), the static poster end-state is the whole hero, magnetic + kinetic + native
+reveals all disable to their resting state. Mobile (<=768): no pin, the
+interactive `ModeSwitcher` tap-through is shown.
+
+CDP-verified (Chrome 147, dev): motion ON @1440 the hero pins + scrubs through all
+5 modes, character tracks + leans, native reveals fire, CTAs magnetic, headline
+skews on velocity; CLS = 0 in motion-on, reduced, and motion=0; ?motion=0 on
+ALL 7 routes @1440 and @390 = 0 horizontal overflow, 0 sub-16 body, no scroll-
+trap, full readable, motion attr off; reduced-motion = spacer auto (no pin), no
+trap. Build green x2, tsc clean, basePath + favicon intact, GSAP code-split.
+
 ## 2026-06-01 — Fix soul-pass S1: two hyphen-compounds in visible prose
 
 Judge SOUL PASS REVIEW: one blocking FAIL. Two hyphen-as-compound words rendered

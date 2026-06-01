@@ -95,3 +95,91 @@ button:focus:not(:focus-visible) {
  * all motion is Framer (entry reveals + output cross-fade), each gated on
  * reduced-motion + ?motion=0 in the component. No marquee / float / pulse
  * loops remain after the morph + Capture Fan rebuild. */
+
+/* ----------------------------------------------------------------------
+ *  NATIVE SCROLL-TIMELINE REVEALS (set-piece E, motion research §E).
+ *
+ *  .st-reveal elements rise + sharpen as they pass through the viewport,
+ *  driven entirely by the CSS scroll-driven animation timeline. This runs on
+ *  the COMPOSITOR thread (zero JS, zero main-thread cost) and is the cheap
+ *  site-wide answer to "ни анимаций" below the fold.
+ *
+ *  Defaults: content is ALWAYS visible (the @keyframes end-state is the
+ *  resting state; opacity defaults to 1). The reveal only applies when ALL of:
+ *    - the browser supports animation-timeline: view()  (@supports gate), AND
+ *    - prefers-reduced-motion: no-preference,            AND
+ *    - html is NOT data-motion="off"  (the ?motion=0 QA flag).
+ *  Non-supporting browsers + reduced motion + motion=0 => plain visible content,
+ *  never hidden, never motion-only. No layout properties animate (transform +
+ *  opacity + filter only) so CLS stays 0.
+ * ---------------------------------------------------------------------- */
+.st-reveal {
+  /* Resting / fallback state: fully visible. */
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html:not([data-motion="off"]) .st-reveal {
+      animation: st-rise both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 34%;
+      will-change: transform, opacity, filter;
+    }
+    /* Per-row stagger so grouped rows do not all fire on the exact same line. */
+    html:not([data-motion="off"]) .st-reveal-1 { animation-range: entry 8% cover 38%; }
+    html:not([data-motion="off"]) .st-reveal-2 { animation-range: entry 12% cover 42%; }
+    html:not([data-motion="off"]) .st-reveal-3 { animation-range: entry 16% cover 46%; }
+    html:not([data-motion="off"]) .st-reveal-4 { animation-range: entry 20% cover 50%; }
+  }
+}
+
+@keyframes st-rise {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.985);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* ----------------------------------------------------------------------
+ *  HERO PIN scroll reservation (set-piece A). The tall spacer + full-height
+ *  stage are reserved by CSS from FIRST PAINT so there is NO JS height toggle
+ *  and CLS stays 0. Reserved ONLY when ALL hold:
+ *    - desktop (min-width: 769px),
+ *    - prefers-reduced-motion: no-preference,
+ *    - html is NOT data-motion="off"  (?motion=0 QA flag, set pre-hydration).
+ *  Otherwise the spacer is auto height and the stage flows as a normal static
+ *  hero (reduced motion / motion=0 / mobile / no GSAP) => no pin, no scroll-trap.
+ * ---------------------------------------------------------------------- */
+.hero-spacer {
+  height: auto;
+}
+.hero-stage {
+  height: auto;
+}
+@media (min-width: 769px) and (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .hero-spacer {
+    height: 520vh;
+  }
+  html:not([data-motion="off"]) .hero-stage {
+    height: 100vh;
+  }
+}
+
+/* KineticHeadline SplitText words: each word is wrapped in a .kh-word span by
+ * GSAP. We clip the overflow so the per-word rise reads as letters lifting from
+ * a mask. Inline-block keeps spacing; overflow-hidden on the word lets yPercent
+ * 110->0 wipe up cleanly. SplitText sets the spans; this just styles them. */
+.kh-word {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
