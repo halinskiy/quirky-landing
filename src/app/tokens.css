@@ -1,33 +1,32 @@
 /*
  * quirky-landing — Complete token set
  *
- * Single warm-coral accent (#FF7059, LOCKED), warm off-white paper theme,
- * Manrope sans + system mono. Rounder radii than Corder for the friendly,
- * toy-like character the brief asks for.
+ * Single friendly warm-red accent (#E63E2E), warm off-white paper theme plus a
+ * warm near-black ink surface for the dark break sections. Manrope sans + system
+ * mono. Rounder radii than Corder for the friendly, toy-like character.
  *
- * Source of truth: research/quirky-direction.md sections 1, 2, 5.
+ * Source of truth: CORRECTIONS.md "REDESIGN REFINEMENT" (accent + dark surface).
  *
  * These names are mirrored into the Tailwind @theme block in globals.css so
  * utility classes resolve: bg-accent, text-ink, bg-paper, border-gray-200,
- * text-accent-pressed, ring-accent, text-gray-500, etc.
+ * text-accent-pressed, ring-accent, text-gray-500, bg-ink-surface, etc.
  *
- * Discipline note: coral is for fills / dots / chip chrome / CTA backgrounds
- * and LARGE display accents only. Coral as body text on white FAILS WCAG AA
- * (~2.4:1) and is forbidden; use --color-accent-pressed for coral text.
- * White text on a coral fill passes.
+ * Discipline note: the new accent #E63E2E clears WCAG AA for white text at
+ * button sizes, so white-on-accent CTAs are fine. Accent as small body text on
+ * white still fails contrast; use --color-accent-pressed for accent-coloured
+ * text. On the dark ink surface the accent reads at LARGE display sizes only.
  */
 
 @theme {
   /* =====================================================================
-   * ACCENT — Warm coral (LOCKED by user, 2026-05-31)
-   * 5-step scale: base / hover / pressed / soft / subtle.
-   * base + hover + soft are locked; pressed + subtle are derived.
+   * ACCENT — Friendly warm red (replaces the old coral, 2026-06-01)
+   * 5-step scale: base / hover / pressed / soft / subtle. ONE accent rule.
    * ===================================================================== */
-  --color-accent: #ff7059;          /* warm coral, LOCKED */
-  --color-accent-hover: #f25742;    /* LOCKED */
-  --color-accent-pressed: #db4733;  /* derived: text-safe coral step + :active */
-  --color-accent-soft: #ffe9e4;     /* LOCKED: tinted surface, blob fill, hover bg */
-  --color-accent-subtle: #fff4f1;   /* derived: faint wash */
+  --color-accent: #e63e2e;          /* friendly warm red */
+  --color-accent-hover: #cf3322;
+  --color-accent-pressed: #b82c1d;
+  --color-accent-soft: #fce6e2;     /* tinted surface, blob fill, hover bg */
+  --color-accent-subtle: #fef3f0;   /* faint wash */
 
   /* =====================================================================
    * NEUTRAL — warm paper light palette (not pure white)
@@ -43,20 +42,32 @@
   --color-gray-500: #6c6660;        /* muted body text */
   --color-gray-600: #4a443f;
 
+  /* =====================================================================
+   * DARK INK SURFACE — the full-bleed break sections (Modes, Final CTA).
+   * Warm near-black so the page rhythm reads light -> dark -> light and the
+   * accent red + white pop hard. Text on dark uses an opacity ramp on
+   * --color-on-dark (white) for hierarchy; hairlines are white at low alpha.
+   * Contrast: on-dark/70 on #160c0a clears WCAG AA for body; pure on-dark for
+   * headings; accent #e63e2e on dark reserved for LARGE display only.
+   * ===================================================================== */
+  --color-ink-surface: #160c0a;     /* warm near-black break surface */
+  --color-ink-raised: #221513;      /* faintly raised card on the dark surface */
+  --color-on-dark: #fdfcfa;         /* paper-white text on the dark surface */
+
   /* Captured-blue: the hero HEX chip shows a real grabbed colour, NOT the
    * brand accent, so it reads as "a colour you took". Semantic only. */
   --color-captured-blue: #3d9df2;
 
   /* =====================================================================
-   * TYPOGRAPHY — Manrope (quirky-direction section 2)
-   * --font-manrope is injected by next/font on <html>. Mono = system stack,
-   * code / selector / hex fragments only.
+   * TYPOGRAPHY — Manrope. Mono = system stack, code / hex / selector only.
    * ===================================================================== */
   --font-sans: var(--font-manrope), "Manrope", system-ui, -apple-system, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, monospace;
 
-  /* Display scale tuned for the hero headline. */
-  --text-display-xl: clamp(44px, 6.8vw, 96px);
+  /* Display scale. The redesign pushes the top end for the oversize moments
+   * (giant "5", huge #3D9DF2, the 184 x 48 readout, dark-section headlines). */
+  --text-display-2xl: clamp(64px, 12vw, 140px);  /* the giant single numbers / values */
+  --text-display-xl: clamp(44px, 8vw, 104px);     /* dark-section + hero headlines */
   --text-display-lg: clamp(38px, 5.6vw, 76px);
   --text-display-md: clamp(30px, 4.2vw, 56px);
 
@@ -69,7 +80,7 @@
   --text-body: 16px;
   --text-eyebrow: 12px;
 
-  --lh-display: 1.04;
+  --lh-display: 1.02;
   --lh-h1: 1.1;
   --lh-h2: 1.18;
   --lh-body: 1.6;
@@ -79,7 +90,6 @@
 
   /* =====================================================================
    * RADIUS — rounder than Corder for the blobby / toy feel (documented).
-   * window 20 (Corder 12), card 16, button 14 (Corder 8), pill full.
    * ===================================================================== */
   --radius-window: 20px;
   --radius-card: 16px;
@@ -87,8 +97,8 @@
   --radius-pill: 999px;
 }
 
-/* Coral selection wash. Coral at low alpha over warm paper, readable. */
+/* Accent selection wash. Warm red at low alpha over warm paper, readable. */
 ::selection {
-  background: rgba(255, 112, 89, 0.24);
+  background: rgba(230, 62, 46, 0.22);
   color: inherit;
 }

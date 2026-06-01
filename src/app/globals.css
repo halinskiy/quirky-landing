@@ -76,11 +76,29 @@ button:focus:not(:focus-visible) {
 
 /* ----------------------------------------------------------------------
  *  Dot-grid surface — soft warm dots behind the hero. 24px grid.
+ *  .dot-grid (light) on paper; .dot-grid-dark on the ink break surfaces.
  * ---------------------------------------------------------------------- */
 .dot-grid {
   background-image: radial-gradient(circle, var(--color-gray-200) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: 0 0;
+}
+.dot-grid-dark {
+  background-image: radial-gradient(circle, rgba(253, 252, 250, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0;
+}
+
+/* ----------------------------------------------------------------------
+ *  Dark break sections. Scope sets the on-dark text colour + a matching
+ *  accent selection wash so light text selects readably on near-black.
+ * ---------------------------------------------------------------------- */
+.dark-scope {
+  color: var(--color-on-dark);
+}
+.dark-scope ::selection {
+  background: rgba(230, 62, 46, 0.45);
+  color: var(--color-on-dark);
 }
 
 /* ----------------------------------------------------------------------

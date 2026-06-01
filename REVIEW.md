@@ -1,5 +1,16 @@
 # Review — Quirky landing (first-pass full QA)
 
+> REDESIGN ISSUE #1 RESOLVED 2026-06-01 (main-loop): the V0.4 REDESIGN REVIEW's
+> single blocker (hyphen-as-dash compounds in visible prose: on-device,
+> click-through, reverse-engineer x2, mid-capture) is fixed in copy.json.
+> Independent re-verification: a visible-text hyphen-compound sweep (scripts/style
+> stripped) across all 7 rendered routes returns ZERO compounds; remaining
+> copy.json hyphens are href slugs + metadata only. JSON valid, clean next build
+> green. Everything else in the V0.4 REDESIGN REVIEW already measured PASS (zero
+> old coral, dark sections AA-legible 4.67-18.77, motion=0 static on all 7 routes,
+> App-Store honesty visible, $16.99, massive scale, no chips, build green). The
+> redesign blocking condition is now SATISFIED. Cleared for redeploy.
+
 **Date:** 2026-06-01
 **Reviewer:** 3mpq-judge
 **Scope:** Full first-pass visual + doctrine QA of the whole site (11 home sections
@@ -463,3 +474,181 @@ overlay over FAQ unobtrusive, and the overlay remains `pointer-events: none`.
   sandbox (Chrome 148 limitation), so `judge-*.png` could not be saved this pass;
   the soldier's in-repo screenshots (`qk-home-desktop.png` etc.) corroborate the
   CDP geometry but are not relied on for the verdict.
+
+---
+
+# V0.4 REDESIGN REVIEW 2026-06-01
+
+**Reviewer:** 3mpq-judge
+**Scope:** full review of the v0.4 REDESIGN (new accent, light/dark rhythm, fewer
++ bigger sections, meaningful animation) against CORRECTIONS.md "REDESIGN
+DIRECTIVE" + "REDESIGN REFINEMENT", CHANGELOG v0.4 entry, COPY_AUDIT, copy.json.
+**Method:** two clean `rm -rf .next out && npm run build` runs, static `out/`
+served under `/quirky-landing` basePath (symlink) on :4321, independent Playwright
+CDP over all 7 routes at `?motion=0` (390 + 1440), dark-section computed-color
+contrast, morph motion-ON, plus rendered-HTML / CSS / JS-bundle greps. Own
+screenshots saved (non-zero rasters this pass).
+
+## VERDICT: ISSUES (1 item, severity FAIL by the brief's own PASSED bar)
+
+Everything the user asked for in the redesign is delivered and measures clean,
+**except the "NO dashes at all, no hyphen used as a separator or as a dash"
+requirement** (REFINEMENT item 4), which is violated in user-visible prose by
+hyphenated compound modifiers the copy sweep missed. The brief lists "no dashes
+in prose" as a hard PASSED condition, so this blocks. It is a one-string-each
+copy fix, not a build defect; once copy.json is corrected and rebuilt, this
+flips to PASSED (no other blocker found).
+
+---
+
+## Per-route motion=0 static integrity (PASS on all 7)
+
+| Route | vw | overflow | sub-16 body | 12px eyebrows | blank sections | morph |
+|---|---|---|---|---|---|---|
+| / | 390 | 0 | 0 | 10 | 0 | none |
+| / | 1440 | 0 | 0 | 10 | 0 | none |
+| /install | 390/1440 | 0 | 0 | 1 | 0 | none |
+| /privacy-policy | 390/1440 | 0 | 0 | 1 | 0 | none |
+| /terms | 390/1440 | 0 | 0 | 1 | 0 | none |
+| /refunds | 390/1440 | 0 | 0 | 1 | 0 | none |
+| /thanks | 390/1440 | 0 | 0 | 1 | 0 | none |
+| /404.html | 390/1440 | 0 | 0 | 1 | 0 | none |
+
+- `scrollWidth == clientWidth` at BOTH 390 and 1440 on every route (overflow 0).
+- 0 sub-16px body offenders anywhere; the only <16px text is the sanctioned 12px
+  uppercase eyebrows.
+- 0 blank sections; both DARK sections (#modes, #download) render full content
+  with motion off (OCR demo shows resolved "Copied to clipboard", SVG star lifted,
+  SPX "184 x 48", HEX "#3D9DF2", proof line, headings, CTAs).
+- Morph overlay ABSENT under `?motion=0` on every route (`html[data-morph]=none`,
+  no fixed pointer-events-none block).
+
+## Dark-section contrast (home, 1440, computed colors composited over #160C0A)
+
+| Element | color | contrast | bar | result |
+|---|---|---|---|---|
+| #modes h2 heading | #FDFCFA on #160C0A | 18.77 | >=3 large | PASS |
+| #download h2 heading | #FDFCFA on #160C0A | 18.77 | >=3 large | PASS |
+| FinalCta secondary GHOST button text ("Get it on the Mac App Store", 16px) | #FDFCFA on #160C0A | 18.77 | >=4.5 body | PASS |
+| FinalCta App-Store note (on-dark/60, 16px) | composited 161,156,154 | 7.08 | >=4.5 body | PASS |
+| Modes intro / proof (on-dark/70-80, 18px) | composited 184.. / 207.. | 9.35 / 12.04 | >=4.5 body | PASS |
+| accent #E63E2E on #160C0A (giant "5" 140px, mode-number labels) | - | 4.67 | >=3 large | PASS |
+
+The two specifically-flagged risks (the ghost/secondary button and its App-Store
+note) clear AA comfortably (18.77 and 7.08). The new accent on near-black is
+4.67, used only for large display (giant 5, the `0N / id` labels) per tokens.css
+discipline note. No dark-text legibility failure anywhere.
+
+## Old coral: GONE (confirmed at every layer)
+
+- `src/` grep for `#FF7059 / #F25742 / #DB4733 / #FFE9E4 / #FFF4F1`: ZERO hits.
+  The word "coral" survives only in code comments/docstrings, never as a value.
+- Rendered `out/*.html`: ZERO old-coral hexes. CSS bundle: ZERO. JS chunks: ZERO.
+- New accent `#E63E2E` present 6x in the CSS bundle; the 5-step (e63e2e/cf3322/
+  b82c1d/fce6e2/fef3f0) is the only brand ramp.
+- The `#3D9DF2` grabbed-blue sample is present (18 src refs, in HEX demo + morph)
+  and correctly retained as sampled data, not brand.
+- Banned second colors (forest #217a50, Corder brick #b7443d): ZERO in src + bundles.
+- ONE accent rule holds.
+
+## Dash grep result
+
+- Rendered HTML, all 7 routes: ZERO U+2014 em-dash, U+2013 en-dash, U+00B7
+  middle-dot, U+2022 bullet. copy.json: ZERO of those + ZERO ` -- ` + ZERO ` - `
+  separators. TrustStrip uses a decorative rounded `<span>` accent dot element,
+  not a bullet glyph (OK).
+- **FAIL source:** hyphen-as-compound-modifier in user-VISIBLE prose, which the
+  REFINEMENT explicitly bans ("prefer 'menu bar' not 'menu-bar', rewrite rather
+  than hyphenate"):
+  - `on-device` -- copy.json:263, faq pair "How does OCR work" answer. CDP
+    confirmed VISIBLE on FAQ expand (`on-device visible in FAQ: true`).
+  - `click-through` -- copy.json:267, faq pair "Can I measure inside interactive
+    UI" answer. CDP confirmed VISIBLE on expand (`click-through visible: true`).
+  - `reverse-engineer` x2 -- copy.json:394 + 402, /terms intro + "What you may
+    not do". CDP confirmed VISIBLE in rendered /terms (2 occurrences).
+  - `mid-capture` -- copy.json:127, features.cells[switcher].body. Bundled but
+    NOT rendered (Features grid dropped); not user-visible -> NOTE only, fix for
+    hygiene since the key still ships in the page chunk.
+
+## Requirement-by-requirement (the user's explicit redesign asks)
+
+1. New accent, zero old coral: **PASS** (see above).
+2. Light/dark alternation, AA-legible: **PASS**. Rhythm reads light(Hero) ->
+   DARK(Modes) -> light(How/Trust/Pricing/FAQ) -> DARK(FinalCta). Near-black
+   #160C0A. All dark text clears AA.
+3. Massive scale: **PASS**. Giant "5" = 140px accent; "#3D9DF2" leaf span = 72px;
+   "184 x 48" giant readout with calipers; display headlines clamp to ~104-140px;
+   "extraction modes, one capture." and "Press cmd+shift+1 and just take it." land
+   oversize with generous air (not crowded).
+4. Fewer sections (~5-6): **PASS**. Rendered: Hero, ModesShowcase, HowItWorks,
+   TrustStrip, Pricing, Faq, FinalCta. Workflows DROPPED (not imported in
+   page.tsx, proof line salvaged into Modes). Fits 6-card grid GONE -> one-line
+   TrustStrip. ModeRail chips + Features grid GONE -> merged into ModesShowcase.
+5. NO chips, NO captions: **PASS**. Modes shown by animated demos + real verb-
+   phrase headings ("Lift the real SVG.", "Measure in pixels.") + `0N / id`
+   accent labels. No chip UI, no caption-scale text under elements.
+6. NO dashes in prose: **FAIL** (the 1 blocking item above).
+7. Spacing rhythm (tight heading->subhead, air before CTA): **PASS** on spot
+   checks (Hero: headline->subhead gap tight, `mt-10` before CTA row; FinalCta:
+   `mt-4` subhead, `mt-10` before buttons; Modes: tight number->heading).
+8. Meaningful animation + resolved motion-off frame: **PASS**. Each demo shows the
+   mode doing its job (OCR resolves blurred lines -> Copied; HEX locks #3D9DF2;
+   DOM pulls button.cta; SVG lifts the star; SPX extends calipers to 184 x 48).
+   Motion ON they animate; motion OFF they render the resolved final frame (CDP:
+   0 blank, all demo text present static).
+
+## Guardrails (no regression)
+
+- motion=0 static integrity all 7 routes: **PASS** (table above).
+- Build green + stable: **PASS**. Two clean `rm -rf .next out && npm run build`
+  runs both green, 10 routes export incl /404 (+ /404.html), 0 Html errors (only
+  two non-blocking lint warnings: unused `error` in global-error.tsx, unused
+  `Keycap` import in ModesShowcase.tsx -- NOTE, not blocking). basePath
+  /quirky-landing intact in asset URLs; favicon `href="/quirky-landing/icon.svg"`.
+- Morph motion-ON: **PASS**. `html[data-morph]=on`, 1 fixed pointer-events-none
+  overlay block present; bookend child opacity = 1 at TOP (scrollY 0) AND at
+  BOTTOM (scrollY 6264) -- the opacity-1-at-extremes fix holds, no one-third
+  ghost. Hero + FinalCta static CaptureFan fade under data-morph=on (no duplicate).
+- App-Store honesty: **PASS** and visible. Hero note ("Includes OCR, HEX, SPX.
+  DOM and SVG require the direct download."), TrustStrip strip line, Pricing Pro
+  note + footnote, FinalCta note, /install, FAQ "Why does the App Store version
+  not have DOM and SVG". Survived the section cuts.
+- Pricing $16.99 one time: **PASS** (rendered in #pricing; "One time. No
+  subscription." present). 16px min body: **PASS** (0 offenders). Pneumatic
+  easing cubic-bezier(0.16,1,0.3,1), no bounce: **PASS** (EASE_OUT used, no
+  spring/overshoot in demos or Reveal).
+- Doctrine: data-component/source/tokens on every section root (PASS); Inspector
+  dev-gated `process.env.NODE_ENV === "development"` (PASS); borders on dark via
+  white/10 hairlines (PASS).
+
+## Issues requiring fix
+
+| # | Severity | What | Expected | Actual | Fix |
+|---|---|---|---|---|---|
+| 1 | FAIL | Hyphenated compounds used as dashes in user-VISIBLE prose (REFINEMENT item 4 bans these) | "rewrite rather than hyphenate" | `on-device` (copy.json:263, FAQ, visible on expand), `click-through` (267, FAQ, visible), `reverse-engineer` x2 (394+402, /terms, rendered) | Copywriter edits copy.json: "on-device" -> "on device" (or rewrite to "runs on your Mac at high accuracy"); "click-through" -> "click through" (or "the overlay lets your clicks pass through"); "reverse-engineer" -> "reverse engineer" (both lines). Then `rm -rf .next out && npm run build`. Re-grep `grep -noE '[a-z]+-[a-z]+' content/copy.json` -> only href anchors (#how-it-works, /privacy-policy) and `cmd+shift+1` plus-strings may remain. |
+| 2 | NOTE | `mid-capture` (copy.json:127, features switcher) ships in the page JS chunk though the Features grid is unrendered | dash-free everywhere | bundled, not visible | Same fix ("mid capture") while in copy.json, so the page chunk is clean too. |
+| 3 | NOTE | Two non-blocking build lint warnings | clean | unused `error` (global-error.tsx:21), unused `Keycap` import (ModesShowcase.tsx:7) | Drop the unused `Keycap` import; prefix `_error` or consume it. Not blocking. |
+
+## Single most important issue
+
+**Issue #1** -- the no-dash directive is violated by `on-device`, `click-through`
+(FAQ answers, visible on expand) and `reverse-engineer` x2 (/terms, rendered).
+This is the only thing standing between the redesign and PASSED. It is a copy.json
+fix (copywriter), one string each, then a rebuild; no layout, color, motion, or
+contrast work is required.
+
+## Screenshots (own, non-zero rasters this pass)
+
+- /tmp/quirky-judge/dark-modes.png (Modes header: giant red "5", oversize
+  headline, OCR resolved demo)
+- /tmp/quirky-judge/dark-finalcta.png (FinalCta: cmd+shift+1 keycap headline,
+  ghost button legible, CaptureFan handoff device)
+- /tmp/quirky-judge/modes-deep.png (SVG lift + giant "184 x 48" SPX readout)
+- /tmp/quirky-judge/hero.png (light hero)
+- /tmp/quirky-judge/mobile-hero.png (390, single column, no overflow)
+
+## CDP harness
+
+- /tmp/quirky-judge/probe.mjs (7-route motion=0 + dark contrast + morph)
+- /tmp/quirky-judge/probe2.mjs (FAQ-expand dash visibility + morph bookend opacity)
+- /tmp/quirky-judge/probe3.mjs + probe4.mjs (scale moments, eyebrow contrast, $16.99)

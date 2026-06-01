@@ -1,10 +1,8 @@
 import { Nav } from "@/components/nav/Nav";
 import { Hero } from "@/components/sections/Hero";
-import { ModeRail } from "@/components/sections/ModeRail";
+import { ModesShowcase } from "@/components/sections/ModesShowcase";
 import { HowItWorks } from "@/components/sections/HowItWorks";
-import { Features } from "@/components/sections/Features";
-import { Workflows } from "@/components/sections/Workflows";
-import { Fits } from "@/components/sections/Fits";
+import { TrustStrip } from "@/components/sections/TrustStrip";
 import { Pricing } from "@/components/sections/Pricing";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
@@ -12,15 +10,25 @@ import { Footer } from "@/components/sections/Footer";
 import { MorphMount } from "@/components/morph/MorphMount";
 
 /**
- * Home composition. Section order per research/quirky-direction.md §3:
- * modes-first, workflows-as-trust, dual download loud at the end. Every string
- * comes from content/copy.json via each section. Anchors: #how-it-works /
- * #features / #pricing / #faq / #download (match copy.json.nav hrefs).
+ * Home composition — the v0.4 redesign (CORRECTIONS.md "REDESIGN REFINEMENT").
+ *
+ * Six content sections, light -> dark -> light rhythm:
+ *   Hero            (light, dot-grid)
+ *   ModesShowcase   (DARK break, oversize, the 5 modes shown by animation)
+ *   HowItWorks      (light, 3 animated steps + keycaps)
+ *   TrustStrip      (light, thin one-line trust band, App Store honesty)
+ *   Pricing         (light, 2 tiers, $16.99 one time)
+ *   Faq             (light, holds all detail)
+ *   FinalCta        (DARK break, loud, dual download)
+ *
+ * Dropped vs v0.3: Workflows (proof line salvaged into ModesShowcase), the Fits
+ * 6-card grid (demoted to TrustStrip), the ModeRail chips + Features grid (merged
+ * into ModesShowcase). Every string still comes from content/copy.json.
  *
  * MorphMount layers the signature scroll-pinned morphing block ON TOP of the
- * static sections (one Quirky block that flies the page and changes shape per
- * section). It is an enhancement only: it renders nothing on motion-off /
- * reduced-motion / mobile, where the static sections below are the whole page.
+ * static sections, re-timed over the new six-section rhythm. It is an enhancement
+ * only: it renders nothing on motion-off / reduced-motion / mobile, where the
+ * static sections below are the whole page.
  */
 export default function Home() {
   return (
@@ -28,11 +36,9 @@ export default function Home() {
       <Nav />
       <main id="top">
         <Hero />
-        <ModeRail />
+        <ModesShowcase />
         <HowItWorks />
-        <Features />
-        <Workflows />
-        <Fits />
+        <TrustStrip />
         <Pricing />
         <Faq />
         <FinalCta />

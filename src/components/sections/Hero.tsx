@@ -36,29 +36,30 @@ export function Hero() {
       className="dot-grid relative overflow-hidden border-b border-gray-200"
     >
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-28 md:grid-cols-2 md:pb-28 md:pt-36">
-        {/* Left: copy */}
-        <div className="flex flex-col items-start gap-6">
+        {/* Left: copy. Spacing rhythm: eyebrow -> (tight) headline -> (tight)
+            subhead read as one unit, then GENEROUS air before the CTA. */}
+        <div className="flex flex-col items-start">
           <motion.div {...rise(0)}>
             <EyebrowLabel>{c.eyebrow}</EyebrowLabel>
           </motion.div>
 
           <motion.h1
             {...rise(0.06)}
-            className="text-[clamp(2.25rem,5.6vw,3.75rem)] font-extrabold leading-[1.05] tracking-tight text-ink"
+            className="mt-6 text-[clamp(2.5rem,6.4vw,4.75rem)] font-extrabold leading-[1.02] tracking-tight text-ink"
           >
             {c.headline}
           </motion.h1>
 
           <motion.p
             {...rise(0.12)}
-            className="max-w-xl text-[1.1875rem] leading-relaxed text-ink/70"
+            className="mt-4 max-w-xl text-[1.1875rem] leading-relaxed text-ink/70"
           >
             {c.subhead}
           </motion.p>
 
           <motion.div
             {...rise(0.18)}
-            className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
+            className="mt-10 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center"
           >
             <Button href="#download">{c.primaryCta.label}</Button>
             <Button href="#download" variant="secondary">
@@ -66,7 +67,7 @@ export function Hero() {
             </Button>
           </motion.div>
 
-          <motion.div {...rise(0.24)} className="flex flex-col gap-1.5">
+          <motion.div {...rise(0.24)} className="mt-5 flex flex-col gap-1.5">
             <p className="text-[1rem] text-gray-500">
               {c.primaryCta.note}
             </p>

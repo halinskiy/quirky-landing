@@ -4,11 +4,10 @@ Cross-agent notes the soldier must honour. Researcher / economist / copywriter
 write here; soldier reads before building.
 
 ## Locked, do not re-decide
-- **Accent coral `#FF7059`** (5-step). Banned: forest green / `#217a50`,
-  rec-red `#b7443d`, any second brand colour. (product-truth.md)
-- **Coral is never body text on white** (~2.4:1, fails AA). Use
-  `--color-accent-pressed` (#DB4733 / `text-accent-pressed`) for coral text;
-  white-on-coral fill passes. (quirky-direction.md section 1)
+- **Accent = friendly warm red `#E63E2E`** (5-step, see REDESIGN REFINEMENT below).
+  SUPERSEDES the old coral `#FF7059`. One accent rule still holds. Banned: forest
+  green / `#217a50`, Corder rec-red `#b7443d`, any second brand colour.
+  (Old coral note kept for history only; do not use #FF7059 anymore.)
 - **HEX chip uses a grabbed colour `#3D9DF2`, not coral**, so it reads as "a
   colour you took". (quirky-direction.md section 4, voice.md)
 - **Pricing: one-time unlock, ~$16.99, NO subscription.** Frame: "a friend does
@@ -24,6 +23,83 @@ write here; soldier reads before building.
 ## Section direction
 - Modes-first order. Workflows replace privacy-panic at the high-trust slot.
   (quirky-direction.md section 3-4)
+
+## REDESIGN DIRECTIVE (user, 2026-06-01) — contrast + scale + cut text
+User feedback on the v0.1 live site: "всего слишком много, выглядит несуразно,
+читается тяжело, нужно больше контраста, скучно, много текста, нет масштаба чтоб
+развлечь." The whole page was one flat beige wall, 9 near-identical
+eyebrow+headline+paragraph+grid blocks at one type size. Fix with THREE moves:
+
+1. **Light/dark alternation (chosen).** Warm paper stays the BASE, but 2-3 key
+   sections become near-black full-bleed BREAK sections. Coral + white text fire
+   on black. Rhythm light -> dark -> light gives breathing room and drama.
+   Keep the friendly character (rounded, blobs); dark is for contrast, not a
+   Raycast clone. Candidate dark sections: ModeRail ("five in one"), HowItWorks,
+   and the FinalCTA bookend. Pricing may also go dark to make the Pro card pop.
+   Add dark-surface tokens (e.g. --color-ink-surface near-black, white/80,/60,/40
+   text ramp on dark, coral unchanged). Borders on dark = white/10 hairlines.
+2. **Massive scale (chosen).** Introduce one or two oversize moments per major
+   section: a giant "5" (the five modes), a huge #3D9DF2, a full-width "184 x 48"
+   measurement, display headlines 96-140px. Scale IS the entertainment. Lots of
+   air around the big elements; do not crowd them.
+3. **Cut text HARD (chosen: one line per section).** Each section = ONE big claim
+   line + the visual. REMOVE the descriptive paragraphs and REMOVE the per-card
+   descriptions in Features/ModeRail/Workflows. Details move into FAQ. Copywriter
+   trims copy.json accordingly; keep ASCII-only, no banned words, App-Store
+   honesty stays (it can live as one tight line, not a paragraph).
+
+Hard constraints unchanged: pneumatic easing no bounce, 16px min body (the big
+display text is fine; just no sub-16 body), the morph journey stays (re-time it
+over the new section rhythm). The dark sections must also pass ?motion=0 static
+(no blank). Light text on dark must clear WCAG AA.
+
+## REDESIGN REFINEMENT (user, 2026-06-01, second round)
+The first redesign pass was still not it. Sharper direction:
+
+1. **NEW ACCENT (replaces coral).** Darker and CLOSER TO RED, but still friendly
+   (not aggressive, not Corder's muted brick). New 5-step (one accent rule still
+   holds, this REPLACES #FF7059 everywhere):
+   ```
+   --color-accent:         #E63E2E   /* friendly warm red, darker + redder */
+   --color-accent-hover:   #CF3322
+   --color-accent-pressed: #B82C1D
+   --color-accent-soft:    #FCE6E2
+   --color-accent-subtle:  #FEF3F0
+   ```
+   Banned still: forest green/#217a50, Corder rec-red #b7443d (ours is brighter,
+   more saturated, redder-orange, distinct). Bonus: white text on #E63E2E clears
+   AA at button sizes (coral did not), so coral-text workarounds relax. The HEX
+   demo value stays the grabbed-blue #3D9DF2 (that is sampled data, not brand).
+2. **Darker dark sections.** The near-black break sections go properly dark for
+   real contrast. --color-ink-surface ~ #160C0A (warm near-black). Accent red and
+   white pop hard on it.
+3. **NO chips, NO captions.** Remove the chip UI (ModeRail chips, Fits chips) and
+   remove caption-scale label text under things. Modes communicate via ANIMATION
+   of what they do, not via a text caption beneath a chip. Labels that remain are
+   real headings/body, not tiny captions.
+4. **NO dashes at all.** No em-dash, en-dash, AND no hyphen used as a separator or
+   as a dash. Prefer "menu bar" not "menu-bar", "auto update" not "auto-update",
+   rewrite rather than hyphenate. ASCII sentences with commas/periods only.
+5. **Spacing rhythm.** Tight gap heading -> subheading (they read as one unit),
+   GENEROUS gap before the CTA/button (let the action breathe). Apply this
+   heading->subhead->(air)->button rhythm in every section.
+6. **FEWER SECTIONS.** Consolidate 9 content sections to ~5-6. Suggested:
+   - Hero (keep)
+   - Modes showcase (MERGE ModeRail + Features into ONE big animated section: the
+     5 modes shown by animation, no chips, no captions, oversize)
+   - How it works (keep, 3 steps, animated)
+   - Pricing (keep)
+   - FAQ (keep; holds all detail)
+   - Final CTA (keep)
+   DROP Workflows as its own section (fold one proof line into Modes or cut), and
+   DEMOTE Fits to a thin one-line trust strip (offline, no account, notarized,
+   App Store vs Direct honesty) rather than a 6-card section. App-Store honesty
+   MUST survive somewhere visible.
+7. **MORE animation, all meaningful.** Every animation must SHOW something true
+   about the product (a capture happening, a mode extracting its data, a number
+   measuring). No motion for decoration's sake; no bounce; pneumatic ease. Bigger
+   moments, clearer payoff. The morph journey is the spine; add purposeful
+   in-section motion that demonstrates each mode.
 
 ## Open items for Phase 2 agents
 - Economist to confirm the EXACT Pro price (currently $16.99 in copy.json).

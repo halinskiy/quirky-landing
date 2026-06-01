@@ -1,5 +1,17 @@
 # Quirky — Components
 
+## v0.4 redesign (2026-06-01) — new + changed + promoted
+
+| Component | Path | Purpose | Status |
+|---|---|---|---|
+| `DarkSection` | `src/components/section/DarkSection.tsx` | Full-bleed near-black break section: warm ink surface, `.dark-scope` on-dark text, `.dot-grid-dark`, white/10 hairlines. Token contract: `--color-ink-surface` / `--color-on-dark` / `--color-accent`. | NEW, PROMOTED to `ui-kit/components/section/DarkSection.tsx` (+ INDEX row + index.ts export) same session. |
+| `ModesShowcase` | `src/components/sections/ModesShowcase.tsx` | The dark oversize centerpiece. Merges old ModeRail + Features. Giant red "5" + five oversize panels (verb-phrase heading + an in-view animated demo PER mode: OCR text-resolve, HEX swatch lock, DOM selector pull, SVG lift, SPX caliper measure) + modes.proofLine. No chips, no captions. Each demo renders its resolved final frame under motion-off. | NEW (project-specific, stays local: encodes Quirky's five modes). |
+| `TrustStrip` | `src/components/sections/TrustStrip.tsx` | Thin one-line trust band from copy.json.fits.strip; facts separated by a rendered accent dot (not a typographic bullet). Replaces the 6-card Fits grid. | NEW (project-local). |
+| `FinalCta` | `src/components/sections/FinalCta.tsx` | Rebuilt as a DARK full-bleed bookend (was light dot-grid). Oversize headline, ghost secondary on dark, honest App Store note, reused Capture Fan in the morph-handoff slot. | CHANGED. |
+| `Hero` / `HowItWorks` / `Pricing` | `src/components/sections/*` | Scaled up + spacing rhythm (tight heading->subhead, generous air before CTA). Bigger headline / step numbers / price. | CHANGED. |
+| `tokens.css` | `src/app/tokens.css` | Accent 5-step -> warm red #E63E2E family. Added `--color-ink-surface/-raised`, `--color-on-dark`, `--text-display-2xl`. | CHANGED. |
+| `Workflows` / `Fits` / `ModeRail` / `Features` | `src/components/sections/*` | No longer imported by page.tsx (Workflows/Fits dropped, ModeRail+Features merged into ModesShowcase). Files retained on disk, copy retained in JSON. | RETIRED from page. |
+
 ## Kit reuse vs local
 
 Quirky is a STANDALONE repo (`halinskiy/quirky-landing`), not inside

@@ -1,10 +1,10 @@
 "use client";
 
 /**
- * MorphForms — the seven shapes the single flying block takes as it travels the
- * page. Each form is a self-contained, fixed-size render of that section's
- * signature UI, drawn in the SAME blob/chip/coral vocabulary as the hero Capture
- * Fan so the block reads as one object changing shape, not seven unrelated
+ * MorphForms — the five shapes the single flying block takes as it travels the
+ * v0.4 page. Each form is a self-contained, fixed-size render of that section's
+ * signature UI, drawn in the SAME blob/chip/accent vocabulary as the hero Capture
+ * Fan so the block reads as one object changing shape, not five unrelated
  * graphics.
  *
  * These are PURELY decorative (aria-hidden): the real, readable copy lives in
@@ -33,17 +33,22 @@ export type MorphStage =
   | "hero"
   | "modes"
   | "how"
-  | "features"
-  | "workflows"
   | "pricing"
   | "final";
 
+/**
+ * Stage order re-timed for the v0.4 six-section page (Hero, ModesShowcase,
+ * HowItWorks, TrustStrip, Pricing, FAQ, FinalCta). The flying block visits the
+ * sections that have a genuine right-lane device slot or a payoff to morph into:
+ * hero device -> a cycling mode chip over the dark Modes break -> the steps
+ * window -> the Pro pricing card + CTA -> the final download form. The thin
+ * TrustStrip and the FAQ have no device slot, so the block simply travels past
+ * them between the How and Pricing anchors.
+ */
 export const STAGE_ORDER: MorphStage[] = [
   "hero",
   "modes",
   "how",
-  "features",
-  "workflows",
   "pricing",
   "final",
 ];
@@ -274,97 +279,7 @@ function plainStepTitle(title: string) {
 }
 
 /* --------------------------------------------------------------------------
- * 4. FEATURES — the window unfolds into the 5+1 grid of feature cells; cells
- * settle into place with the pneumatic ease. `settle` 0..1 staggers the cells in.
- * ------------------------------------------------------------------------ */
-const FEATURE_BLOBS = ["ocr", "hex", "dom", "svg", "spx", "tab"] as const;
-
-export function FeaturesForm({ settle }: { settle: number }) {
-  return (
-    <Frame>
-      <div
-        className="absolute left-1/2 top-1/2 grid -translate-x-1/2 -translate-y-1/2 grid-cols-3 grid-rows-2 overflow-hidden rounded-card border border-gray-200 bg-paper shadow-[0_18px_48px_-24px_rgba(26,22,20,0.28)]"
-        style={{ width: 360, height: 240 }}
-      >
-        {FEATURE_BLOBS.map((mode, i) => {
-          const on = settle >= (i + 0.5) / FEATURE_BLOBS.length;
-          const isSwitcher = mode === "tab";
-          return (
-            <div
-              key={mode}
-              className="flex items-center justify-center border-b border-r border-gray-200 transition-opacity duration-200"
-              style={{
-                background: isSwitcher
-                  ? "var(--color-accent-soft)"
-                  : "var(--color-paper)",
-                opacity: on ? 1 : 0.12,
-                transform: on ? "scale(1)" : "scale(0.9)",
-                transitionProperty: "opacity, transform",
-                transitionTimingFunction: "cubic-bezier(0.16,1,0.3,1)",
-              }}
-            >
-              <BlobObject mode={mode} size={48} decorative />
-            </div>
-          );
-        })}
-      </div>
-    </Frame>
-  );
-}
-
-/* --------------------------------------------------------------------------
- * 5. WORKFLOWS — cells reflow into 3 stacked workflow cards (deck-of-cards fan,
- * then settle). `fan` 0..1: 1 = fanned out, settles toward a tidy stack.
- * ------------------------------------------------------------------------ */
-export function WorkflowsForm({ fan }: { fan: number }) {
-  const stories = copy.workflows.stories;
-  // fan eases 0 -> 1 -> tidy: rotation peaks mid-stage then relaxes.
-  const spread = Math.sin(Math.min(1, fan) * Math.PI) * 0.6 + fan * 0.4;
-  return (
-    <Frame>
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        {stories.map((story, i) => {
-          const mid = (stories.length - 1) / 2;
-          const offset = i - mid;
-          const rot = offset * 7 * spread;
-          const tx = offset * 26 * spread;
-          const ty = Math.abs(offset) * 10 * spread;
-          return (
-            <div
-              key={story.segment}
-              className={`absolute flex flex-col gap-2 p-5 ${cardBase}`}
-              style={{
-                width: 300,
-                height: 168,
-                left: -150,
-                top: -84,
-                transform: `translate(${tx}px, ${ty}px) rotate(${rot}deg)`,
-                zIndex: 10 - Math.abs(offset),
-              }}
-            >
-              <span className="text-[0.75rem] font-bold uppercase tracking-[0.062em] text-accent-pressed">
-                {story.segment}
-              </span>
-              <span className="text-[1.125rem] font-bold text-ink">
-                {story.scenario}
-              </span>
-              <span className="text-[1rem] leading-snug text-gray-500">
-                {truncate(story.story, 86)}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-    </Frame>
-  );
-}
-
-function truncate(s: string, n: number) {
-  return s.length > n ? s.slice(0, n).trimEnd() + "..." : s;
-}
-
-/* --------------------------------------------------------------------------
- * 6. PRICING — the block converges into the Pro pricing card with its coral CTA
+ * 4. PRICING — the block converges into the Pro pricing card with its accent CTA
  * button (the "turns into buttons" payoff). `press` 0..1 nudges the button.
  * ------------------------------------------------------------------------ */
 export function PricingForm({ press }: { press: number }) {
@@ -403,7 +318,7 @@ export function PricingForm({ press }: { press: number }) {
             </li>
           ))}
         </ul>
-        {/* the coral CTA button — the payoff */}
+        {/* the accent CTA button, the payoff */}
         <span
           className="inline-flex w-full items-center justify-center rounded-full bg-accent px-6 py-3 text-[1rem] font-semibold text-paper"
           style={{
@@ -435,7 +350,7 @@ function CheckDot() {
 }
 
 /* --------------------------------------------------------------------------
- * 7. FINAL — a last compact form: the capture mark beside dual download buttons.
+ * 5. FINAL — a last compact form: the capture mark beside dual download buttons.
  * ------------------------------------------------------------------------ */
 export function FinalForm() {
   return (

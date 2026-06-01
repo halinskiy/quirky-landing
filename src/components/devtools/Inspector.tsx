@@ -60,7 +60,7 @@ export function Inspector() {
           left: hit.rect.left,
           width: hit.rect.width,
           height: hit.rect.height,
-          border: "2px solid #ff7059",
+          border: "2px solid #e63e2e",
           borderRadius: 6,
           pointerEvents: "none",
           zIndex: 99998,
@@ -83,7 +83,7 @@ export function Inspector() {
           boxShadow: "0 16px 48px -12px rgba(0,0,0,0.5)",
         }}
       >
-        <div style={{ color: "#ff7059", fontWeight: 700, marginBottom: 6 }}>
+        <div style={{ color: "#e63e2e", fontWeight: 700, marginBottom: 6 }}>
           {hit.component}
         </div>
         <div style={{ opacity: 0.8, wordBreak: "break-all" }}>{hit.source}</div>

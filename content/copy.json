@@ -13,15 +13,15 @@
   "hero": {
     "eyebrow": "macOS 13+, v1.0, works offline",
     "headline": "Point at it. Get five kinds of data back.",
-    "subhead": "One hotkey captures a region of your screen. Tab switches between five extraction modes: text, color, DOM element, SVG, or pixel size. The result lands in your clipboard before your hand leaves the keyboard.",
+    "subhead": "One hotkey. Five extraction modes. Lands in your clipboard.",
     "primaryCta": {
       "label": "Download for macOS 13+",
-      "note": "Apple Silicon and Intel. Direct download, DMG",
+      "note": "Apple Silicon and Intel. Direct download, DMG.",
       "modeNote": "All five modes: OCR, HEX, DOM, SVG, SPX"
     },
     "secondaryCta": {
       "label": "Get it on the Mac App Store",
-      "note": "Includes OCR, HEX, and SPX. DOM and SVG are not available in the App Store build."
+      "note": "Includes OCR, HEX, and SPX. DOM and SVG require the direct download."
     },
     "hotkey": "cmd+shift+1",
     "captureDeviceAlt": "Quirky capture fan: one screen region fans out into five data chips showing a text snippet, a hex color, a CSS selector, an SVG icon, and a pixel measurement"
@@ -29,35 +29,39 @@
 
   "modeRail": {
     "eyebrow": "Five modes, one hotkey",
-    "intro": "Drag one region. Tab through what you need. Each mode copies directly to your clipboard.",
+    "intro": "One capture. Tab to the data you need.",
     "modes": [
       {
         "id": "ocr",
         "label": "OCR",
-        "description": "Drag over any text on screen. Apple Vision reads it and copies it. Works offline, no account."
+        "description": "Read text off the screen"
       },
       {
         "id": "hex",
         "label": "HEX",
-        "description": "Hover any pixel. Get its hex value. Copied. No color-picker math, no cross-app eyedropper."
+        "description": "Take any pixel's hex"
       },
       {
         "id": "dom",
         "label": "DOM",
-        "description": "Click a browser element. Quirky reads the live page and hands you the selector and its text. Eight browsers supported."
+        "description": "Pull the live selector"
       },
       {
         "id": "svg",
         "label": "SVG",
-        "description": "See an icon on a page you want. Get the actual SVG source, not a screenshot of it."
+        "description": "Lift the real SVG"
       },
       {
         "id": "spx",
         "label": "SPX",
-        "description": "Measure the gap between two elements. Edge detection finds the neighbours. You get the pixel count."
+        "description": "Measure in pixels"
       }
     ],
-    "switcherNote": "Hit Tab mid-capture to switch modes. Or tap the floating mode button next to your cursor."
+    "switcherNote": ""
+  },
+
+  "modes": {
+    "proofLine": "Clone a pricing card: selector, color, and icon in three captures."
   },
 
   "howItWorks": {
@@ -67,17 +71,17 @@
       {
         "number": "1",
         "title": "Press cmd+shift+1",
-        "description": "Quirky lives in your menu bar. The hotkey wakes it from anywhere on your Mac. No Dock icon, no window to find."
+        "description": "Wakes from your menu bar. No Dock, no window."
       },
       {
         "number": "2",
         "title": "Drag a region",
-        "description": "Draw a box around what you need. It could be a heading, a button, a color swatch, a gap between two cards."
+        "description": "Box around whatever you need."
       },
       {
         "number": "3",
         "title": "Tab to the mode you want",
-        "description": "OCR, HEX, DOM, SVG, or SPX. The result copies to your clipboard the moment you release. Paste it wherever you are."
+        "description": "Copies to clipboard the moment you release."
       }
     ],
     "demoAlt": "Animated demo of Quirky capturing a screen region and extracting a CSS selector via DOM mode"
@@ -90,60 +94,60 @@
       {
         "id": "ocr",
         "title": "Text off anything",
-        "body": "Drag over a screenshot, a PDF rendered in Preview, a slide, a UI tooltip. Apple Vision reads the region and copies the text. It runs on-device, offline, no data leaves your Mac.",
-        "detail": "Uses Apple Vision VNRecognizeTextRequest at .accurate quality with language correction on."
+        "body": "Drag over a screenshot, a PDF, a UI tooltip. Apple Vision reads it offline.",
+        "detail": ""
       },
       {
         "id": "hex",
         "title": "Exact hex, first try",
-        "body": "Hover the pixel you want. You get the hex value, copied. The next time a designer says \"what color is that button\" you have the answer before you finish reading the message.",
-        "detail": "Single-pixel precision. No interpolation, no rounding."
+        "body": "Hover the pixel. Get the hex. Copied.",
+        "detail": ""
       },
       {
         "id": "dom",
         "title": "The selector, live from the page",
-        "body": "Click a button on a Comet, Chrome, or Safari tab. Quirky reads the live DOM via Apple Events and returns the element's selector and its inner text. No DevTools, no copy-pasting from Elements.",
-        "detail": "Works in Safari, Chrome, Arc, Brave, Edge, Comet, Vivaldi, and Opera. Requires Direct download."
+        "body": "Click a browser element. Get the selector and its text. No DevTools.",
+        "detail": ""
       },
       {
         "id": "svg",
         "title": "The SVG, not a PNG of it",
-        "body": "There is an icon on a page you want to reference. Quirky pulls the actual SVG source from the page. You get a clean vector, ready to open in Figma or paste into code.",
-        "detail": "Same browser bridge as DOM mode. Requires the Direct download."
+        "body": "Grab the actual SVG source from the page. Ready to paste into Figma or code.",
+        "detail": ""
       },
       {
         "id": "spx",
         "title": "Pixel sizes with edge detection",
-        "body": "Draw over the space between two elements. SPX's edge detection finds the component boundaries for you and snaps the measurement. The number you get is the number the dev needs.",
-        "detail": "Ghost mode (cmd+shift+1 toggles) lets the overlay pass through clicks so you can measure inside interactive UI."
+        "body": "Draw over the gap. Edge detection finds the boundaries. You get the number.",
+        "detail": ""
       },
       {
         "id": "switcher",
-        "title": "Switch modes without lifting the capture",
-        "body": "Hit Tab while the region is active. Same crop, different data. Or use the floating mode button that parks itself at the nearest screen edge. You do not have to re-draw the region.",
-        "detail": "All five modes can run simultaneously. The floating pill shows only the modes you have enabled."
+        "title": "Switch modes without redrawing",
+        "body": "Tab while capturing. Same region, different data.",
+        "detail": ""
       }
     ]
   },
 
   "workflows": {
     "eyebrow": "Who uses it",
-    "headline": "A few people who stopped doing things the slow way.",
+    "headline": "A few people who stopped doing it the slow way.",
     "stories": [
       {
         "segment": "Frontend developer",
         "scenario": "Cloning a pricing card",
-        "story": "You are rebuilding a pricing card you spotted on a SaaS site. Capture the button with cmd+shift+1. DOM mode gives you the selector and the button text. Tab to HEX, grab the exact background color. Tab to SVG, lift the check icon as a real vector. Three facts, one region. You never opened DevTools."
+        "story": "DOM mode gets the selector. HEX gets the color. SVG lifts the icon. Three facts, one capture."
       },
       {
         "segment": "Product designer",
         "scenario": "Checking a dev build against the spec",
-        "story": "The build just landed. You want to verify the spacing is right before you write a comment. Capture the gap between two cards: SPX says 24 px, edge detection picked the boundaries. Tab to HEX, confirm the heading color shipped as specified. Tab to OCR, pull the copy into a doc for a quick content pass. Done in under a minute."
+        "story": "SPX confirms the gap is 24px. HEX confirms the heading color shipped right. Done in under a minute."
       },
       {
         "segment": "QA engineer",
         "scenario": "Filing a bug report with exact numbers",
-        "story": "A button is off. Capture it. SPX gives the pixel offset to drop into the ticket. OCR grabs the exact error message from the toast so the string in the report matches the code, not your paraphrase. The developer gets numbers and text, not 'it looks a bit off on the right.'"
+        "story": "SPX gives the pixel offset. OCR grabs the exact error string. Numbers and text, not 'looks a bit off'."
       }
     ]
   },
@@ -151,30 +155,31 @@
   "fits": {
     "eyebrow": "Works the way a Mac app should",
     "headline": "Offline. No account. No Dock clutter.",
+    "strip": "Works offline. No account. Notarized by Apple. App Store ships OCR, HEX, SPX. The direct download adds DOM and SVG.",
     "items": [
       {
         "title": "Works offline",
-        "body": "OCR, HEX, and SPX run entirely on your Mac. No request goes out. DOM and SVG need the browser open, not the internet."
+        "body": "OCR, HEX, and SPX run entirely on your Mac."
       },
       {
         "title": "No account, ever",
-        "body": "Download it. Open it. That is it. Quirky does not ask for an email address, does not sync to a server, does not phone home."
+        "body": "Download it. Open it. No email, no server, no phone home."
       },
       {
         "title": "Notarized by Apple",
-        "body": "The Direct download is hardened, signed, and notarized. macOS will not warn you about it."
+        "body": "Hardened, signed, notarized. macOS will not warn you."
       },
       {
         "title": "Menu bar, not Dock",
-        "body": "Quirky sits in your menu bar and stays out of your way. It takes no space in the Dock. It wakes when you press the hotkey."
+        "body": "Lives in the menu bar. Wakes on the hotkey."
       },
       {
         "title": "Two permissions, both explained",
-        "body": "Screen Recording so it can see the region you capture. Automation so DOM and SVG modes can read your browser. Those are the two prompts you will see."
+        "body": "Screen Recording and Automation. macOS prompts you for each."
       },
       {
-        "title": "Mac App Store and Direct",
-        "body": "Download from the App Store to get OCR, HEX, and SPX. Download the DMG directly to get all five modes including DOM and SVG."
+        "title": "App Store or Direct",
+        "body": "App Store: OCR, HEX, SPX. Direct DMG: all five modes including DOM and SVG."
       }
     ]
   },
@@ -189,14 +194,14 @@
         "name": "Quirky",
         "price": "Free",
         "priceSub": "No credit card, no catch",
-        "description": "Three extraction modes and the full hotkey experience. Genuinely complete for most people.",
+        "description": "Three modes. The full hotkey experience.",
         "features": [
           "OCR: text from anything on screen, offline",
           "HEX: exact pixel color, copied",
           "SPX: pixel measurement with edge detection",
           "Floating mode switcher pill",
-          "Menu-bar icon, cmd+shift+1 hotkey",
-          "Sparkle auto-update"
+          "Menu bar icon, cmd+shift+1 hotkey",
+          "Sparkle auto update"
         ],
         "cta": {
           "label": "Download free",
@@ -209,7 +214,7 @@
         "name": "Quirky Pro",
         "price": "$16.99",
         "priceSub": "One time. No subscription.",
-        "description": "All five modes, including DOM and SVG extraction from the browser. For developers who want to stop spelunking in DevTools.",
+        "description": "All five modes. DOM and SVG included.",
         "features": [
           "Everything in Quirky",
           "DOM: live selector and text from any browser element",
@@ -222,13 +227,13 @@
           "label": "Get Quirky Pro",
           "href": "#download"
         },
-        "note": "Direct download only. DOM and SVG require Apple Events, which the App Store sandbox does not allow."
+        "note": "Direct download only. DOM and SVG use Apple Events, which the App Store sandbox does not allow."
       }
     ],
     "footnotes": [
-      "App Store build includes OCR, HEX, and SPX. DOM and SVG extraction require the direct download. Both are free to download.",
-      "One-time purchase. No subscription. Updates included for version 1.x.",
-      "Refund policy: contact hegona3@gmail.com within 30 days if something is broken and I cannot fix it."
+      "App Store build: OCR, HEX, and SPX. DOM and SVG require the direct download.",
+      "One time purchase. No subscription. Updates included for version 1.x.",
+      "Refund policy: email hegona3@gmail.com within 30 days if something is broken and I cannot fix it."
     ],
     "comparisonNote": "TextSniper charges $7.99 for OCR alone. ColorSlurp charges $7.99 for color picking alone. PixelSnap charges $39 for measurement alone. Quirky Pro is $16.99 for all five, including two modes none of them offer."
   },
@@ -239,35 +244,43 @@
     "pairs": [
       {
         "q": "How is this different from CleanShot X?",
-        "a": "CleanShot X is a screenshot and annotation tool. It captures and marks up. Quirky extracts data from what is on your screen: text, color, a DOM selector, an SVG, a pixel size. They do different jobs and work well side by side."
+        "a": "CleanShot X captures and annotates screenshots. Quirky extracts data from what is on your screen: text, color, a DOM selector, an SVG, a pixel size. They do different jobs and work well side by side."
       },
       {
         "q": "Does it need the internet to work?",
-        "a": "OCR, HEX, and SPX run entirely on your Mac. No request goes out. DOM and SVG read from the browser that is already open on your machine. They need the browser, not the internet."
+        "a": "OCR, HEX, and SPX run entirely on your Mac. No request goes out. DOM and SVG read from the browser already open on your machine. They need the browser open, not the internet."
       },
       {
         "q": "Which browsers work with DOM and SVG mode?",
-        "a": "Safari, Google Chrome, Arc, Brave, Microsoft Edge, Comet, Vivaldi, and Opera. These eight browsers expose what Quirky needs via Apple Events. DOM and SVG require the Direct download, not the App Store build."
+        "a": "Safari, Google Chrome, Arc, Brave, Microsoft Edge, Comet, Vivaldi, and Opera. These eight browsers expose what Quirky needs via Apple Events. DOM and SVG require the direct download, not the App Store build."
       },
       {
         "q": "Why does the App Store version not have DOM and SVG?",
-        "a": "The Mac App Store sandbox does not allow Apple Events automation to other apps. DOM and SVG work by reading your browser through that mechanism. Apple does not grant that permission inside the sandbox, so those two modes are only in the Direct download."
+        "a": "The Mac App Store sandbox does not allow Apple Events automation to other apps. DOM and SVG work by reading your browser through that mechanism. Apple does not grant that permission inside the sandbox, so those two modes are only in the direct download."
+      },
+      {
+        "q": "How does OCR work? Does it send my screen to a server?",
+        "a": "OCR uses Apple Vision on your Mac. The text recognition runs locally on your device at high accuracy with language correction. Nothing leaves your machine. It works without a network connection."
+      },
+      {
+        "q": "Can I measure inside interactive UI without clicking through the overlay?",
+        "a": "Yes. SPX has a ghost mode. Press cmd+shift+1 while SPX is active and the overlay lets clicks pass through it. You can hover over real buttons and inputs to measure them."
       },
       {
         "q": "How does Quirky update?",
-        "a": "The Direct download uses Sparkle. Quirky will tell you when there is a new version and offer to install it. The App Store version updates through the App Store automatically."
+        "a": "The direct download uses Sparkle. Quirky will tell you when a new version is ready and offer to install it. The App Store version updates through the App Store automatically."
       },
       {
         "q": "Can I get a refund?",
-        "a": "If something is broken and I cannot fix it, email me at hegona3@gmail.com within 30 days and I will sort it out. For App Store purchases, Apple handles refunds through their standard process."
+        "a": "If something is broken and I cannot fix it, email hegona3@gmail.com within 30 days and I will sort it out. For App Store purchases, Apple handles refunds through their standard process."
       },
       {
         "q": "What permissions does Quirky ask for?",
-        "a": "Two. Screen Recording, so it can see the region you drag over. Automation, so DOM and SVG modes can read your browser. macOS will prompt you for each one the first time you use that mode. Both prompts explain what the permission is for."
+        "a": "Two. Screen Recording, so it can see the region you drag over. Automation, so DOM and SVG modes can read your browser. macOS prompts you for each one the first time. Both prompts explain what the permission is for."
       },
       {
         "q": "Does it work on Apple Silicon and Intel Macs?",
-        "a": "Yes. The Direct download is a universal binary. It runs natively on both."
+        "a": "Yes. The direct download is a universal binary. It runs natively on both."
       }
     ]
   },
@@ -275,7 +288,7 @@
   "finalCta": {
     "eyebrow": "It is already on your screen",
     "headline": "Press cmd+shift+1 and just take it.",
-    "subhead": "Five kinds of data, one hotkey, your clipboard. That is the whole trick.",
+    "subhead": "Five kinds of data. One hotkey. Your clipboard.",
     "primaryCta": {
       "label": "Download for macOS 13+",
       "note": "Direct download, DMG. All five modes: OCR, HEX, DOM, SVG, SPX.",
@@ -334,7 +347,7 @@
 
   "meta": {
     "titleTag": "Quirky: five screen extraction modes, one hotkey.",
-    "metaDescription": "Quirky captures any region of your screen and extracts text, color, DOM elements, SVG icons, or pixel sizes. macOS 13+. Works offline. $16.99 one-time.",
+    "metaDescription": "Quirky captures any region of your screen and extracts text, color, DOM elements, SVG icons, or pixel sizes. macOS 13+. Works offline. $16.99 one time.",
     "ogTitle": "Quirky: point at it, get five kinds of data back.",
     "ogDescription": "One hotkey. Five extraction modes. OCR, HEX, DOM, SVG, SPX. Download free for macOS 13+.",
     "ogImageAlt": "Quirky capture fan: a screen region fanning out into five data chips showing text, hex, selector, SVG, and pixel measurement results",
@@ -361,11 +374,11 @@
         },
         {
           "heading": "Updates",
-          "body": "The Direct download uses Sparkle to check for updates. Sparkle contacts the appcast URL on GitHub to see if a new version exists. No personal data is sent in that request."
+          "body": "The direct download uses Sparkle to check for updates. Sparkle contacts the appcast URL on GitHub to see if a new version exists. No personal data is sent in that request."
         },
         {
           "heading": "Contact",
-          "body": "If you email hegona3@gmail.com, that email is received by Kostya directly. It is not processed by any third-party support platform."
+          "body": "If you email hegona3@gmail.com, that email is received by Kostya directly. It is not processed by any third party support platform."
         },
         {
           "heading": "Changes",
@@ -378,15 +391,15 @@
 
     "terms": {
       "pageTitle": "Terms of use",
-      "intro": "Short version: use Quirky on your own Mac, do not reverse-engineer it, and do not blame me if something goes sideways.",
+      "intro": "Short version: use Quirky on your own Mac, do not take it apart to copy it, and do not blame me if something goes sideways.",
       "sections": [
         {
           "heading": "What you get",
-          "body": "A license to use Quirky on your Mac. One-time purchase for Pro unlocks all five modes on your machine. The free version has no time limit."
+          "body": "A license to use Quirky on your Mac. One time purchase for Pro unlocks all five modes on your machine. The free version has no time limit."
         },
         {
           "heading": "What you may not do",
-          "body": "You may not reverse-engineer, modify, redistribute, or resell Quirky. The app and its code belong to Kostya (halinskiy)."
+          "body": "You may not take Quirky apart to copy it, modify, redistribute, or resell it. The app and its code belong to Kostya (halinskiy)."
         },
         {
           "heading": "What I cannot guarantee",

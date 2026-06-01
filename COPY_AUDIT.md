@@ -1,157 +1,255 @@
 # Quirky Copy Audit
-
+Date: 2026-06-01 (v0.3 second redesign pass appended below)
 Author: 3mpq-copywriter
-Date: 2026-05-31
-File audited: content/copy.json
+Scope: v0.2 redesign cut. One line per section directive. copy.json edited in place.
+
+Previous audit (2026-05-31) covered banned words, App Store honesty, and factual accuracy.
+Those verdicts remain PASS. This file covers only the structural cuts and what the soldier must action.
 
 ---
 
-## 1. Banned-word check
+## A. Keys emptied or shortened -- soldier must collapse in layout
 
-Every word in the combined banned list from voice.md §5, product-truth.md NEVER, and AUDIENCE.md stop-words was checked against the full copy.json output.
+### hero.subhead
+Was: 56-word paragraph (hotkey, Tab, clipboard flow explained in full).
+Now: "One hotkey. Five extraction modes. Lands in your clipboard." (9 words)
+Soldier action: subhead container can shrink. No layout break; key exists and returns a string.
 
-| Banned word | Found in copy.json | Status |
-|---|---|---|
-| seamless | No | PASS |
-| powerful | No | PASS |
-| robust | No | PASS |
-| cutting-edge | No | PASS |
-| supercharge | No | PASS |
-| unlock | No -- "Pro unlock" appears in pricing-brief source text but was NOT carried into copy.json; copy says "get all five modes" and "Quirky Pro" | PASS |
-| leverage | No | PASS |
-| next-gen | No | PASS |
-| redefine | No | PASS |
-| revolutionary | No | PASS |
-| magical | No | PASS |
-| AI-powered | No | PASS |
-| premium | No | PASS |
-| enterprise-grade | No | PASS |
-| industry-leading | No | PASS |
-| best-in-class | No | PASS |
-| harness | No | PASS |
-| unleash | No | PASS |
-| elevate | No | PASS |
-| game-changer | No | PASS |
-| swiss army knife | No | PASS |
-| productivity boost | No | PASS |
-| "in today's fast-paced world" | No | PASS |
-| comprehensive | No | PASS |
-| empower | No | PASS |
-| utilize | No | PASS |
-| investment (re: price) | No | PASS |
-| lifetime deal | No | PASS |
-| affordable | No | PASS |
-| discount | No | PASS |
+### modeRail.intro
+Was: "Drag one region. Tab through what you need. Each mode copies directly to your clipboard." (15 words)
+Now: "One capture. Tab to the data you need." (8 words)
+Soldier action: if intro renders as a paragraph block below the eyebrow, reduce vertical space. The display number/letter per mode now carries more weight than this line.
 
-All banned words: CLEAR.
+### modeRail.modes[*].description (all five)
+Was: full sentences (15-20 words each) explaining what each mode does.
+Now: 2-4 word fragments used as caption labels:
+- OCR: "Text off screen"
+- HEX: "Any pixel's hex"
+- DOM: "The live selector"
+- SVG: "The real SVG"
+- SPX: "Pixel measurements"
+Soldier action: these are caption labels, not paragraph copy. Render at small/caption scale beneath the large mode letter or name. Switch any <p> render to a label/span. No paragraph block needed.
+
+### howItWorks.steps[*].description (all three)
+Was: 1-2 sentence explanatory paragraphs per step.
+Now: single-line fragments (10 words max). Keycap and step number carry the meaning.
+- Step 1: "Wakes from your menu bar. No Dock, no window."
+- Step 2: "Box around whatever you need."
+- Step 3: "Copies to clipboard the moment you release."
+Soldier action: step description container should render as a short caption. If the component stacks title + description as a text block, description is now a caption, not a paragraph.
+
+### features.cells[*].body (all six cells)
+Was: 1-3 sentence explanatory paragraphs.
+Now: 1-2 short sentences (fragments):
+- ocr: "Drag over a screenshot, a PDF, a UI tooltip. Apple Vision reads it offline."
+- hex: "Hover the pixel. Get the hex. Copied."
+- dom: "Click a browser element. Get the selector and its text. No DevTools."
+- svg: "Grab the actual SVG source from the page. Ready to paste into Figma or code."
+- spx: "Draw over the gap. Edge detection finds the boundaries. You get the number."
+- switcher: "Tab mid-capture. Same region, different data."
+Soldier action: feature grid cells should not expect paragraph-length copy. Render body at 14-16px, max 2 lines. No clamped/expanding text needed.
+
+### features.cells[*].detail (all six cells)
+Was: ultra-technical one-liners (VNRecognizeTextRequest spec, single-pixel precision note, ghost-mode toggle, browser list).
+Now: empty string "" on all six.
+Soldier action: if the component conditionally renders a "detail" chip, footnote row, or tooltip from this field, that render path can be removed. Key preserved in JSON for schema safety. See Section B.
+
+### workflows.stories[*].story (all three)
+Was: 4-6 sentence first-person scenarios.
+Now: 2-3 punchy sentences under 20 words total:
+- Developer: "DOM mode gets the selector. HEX gets the color. SVG lifts the icon. Three facts, one capture."
+- Designer: "SPX confirms the gap is 24px. HEX confirms the heading color shipped right. Done in under a minute."
+- QA: "SPX gives the pixel offset. OCR grabs the exact error string. Numbers and text, not 'looks a bit off'."
+Soldier action: if workflow cards have a fixed height, reduced copy will leave whitespace. Consider increasing type size or adding visual breathing room rather than stretching text.
+
+### fits.items[*].body (all six items)
+Was: 2-3 sentence explanations.
+Now: 1 short line each:
+- Works offline: "OCR, HEX, and SPX run entirely on your Mac."
+- No account: "Download it. Open it. No email, no server, no phone home."
+- Notarized: "Hardened, signed, notarized. macOS will not warn you."
+- Menu bar: "Lives in the menu bar. Wakes on the hotkey."
+- Two permissions: "Screen Recording and Automation. macOS prompts you for each."
+- App Store or Direct: "App Store: OCR, HEX, SPX. Direct DMG: all five modes including DOM and SVG."
+Soldier action: fits items are now chip-scale. If rendered in a grid with body text, collapse body to one line. A tight pill-row or badge-list layout works well here at the new scale.
+
+### pricing.tiers[*].description
+Was: 10-18 word positioning sentences.
+Now:
+- Free: "Three modes. The full hotkey experience."
+- Pro: "All five modes. DOM and SVG included."
+Soldier action: description sits below tier name and price. 1-2 lines. Feature bullet list unchanged and intact; do not cut it.
+
+### finalCta.subhead
+Was: "Five kinds of data, one hotkey, your clipboard. That is the whole trick." (13 words, comma-heavy)
+Now: "Five kinds of data. One hotkey. Your clipboard." (8 words, punchy periods)
+Soldier action: shorter line, no layout concern.
 
 ---
 
-## 2. ASCII-only check (no em-dash, en-dash, middle-dot, bullet, emoji)
+## B. Keys recommended for removal from components
 
-Checked every string in copy.json for:
-- Em dash (U+2014 --) : None found. Double-hyphen ASCII ( -- ) used only in eyebrow/note strings where a separator is needed; those are not prose clauses. PASS.
-- En dash (U+2013) : None found. PASS.
-- Middle dot (U+00B7) or bullet (U+2022) : None found. Feature lists use plain strings with no leading symbol; the rendering layer adds bullets or icons. PASS.
-- Emoji : None found. PASS.
+### features.cells[*].detail
+The detail field is now always "". If the component renders a detail slot (small print, footnote chip, tooltip trigger), remove that render path from the component. Key is kept in JSON as a schema placeholder; soldier removes the render, not the key.
 
-Note: the strings "cmd+shift+1" and "⌘⇧1" coexist intentionally. The symbol form "⌘⇧1" appears in voice.md §6 FinalCTA example and in finalCta.headline. Both are Unicode characters, not em-dashes. These are keyboard glyphs used as product references, not typographic connectors. Retained per voice.md §7 ("Keep the keystroke ⌘⇧1 and Tab visible and literal; they are part of the charm").
-
-If the engineer's rendering context cannot render Unicode hotkey glyphs, swap finalCta.headline to: "Press cmd+shift+1 and just take it." (The ASCII form is already used in all other headline/subhead fields.)
+### modeRail.switcherNote
+Current value: "Tab mid-capture to switch modes. Or tap the floating button by your cursor."
+This is now redundant. HowItWorks step 3 and the mode caption labels cover Tab switching. In the new design with massive-scale mode display, this note adds noise. Soldier should decide whether to render it or suppress it at the component level. Key kept in JSON.
 
 ---
 
-## 3. App Store honesty audit
+## C. New FAQ entries added
 
-Every location where a download CTA appears was checked for honest mode disclosure.
+Two new Q/A pairs inserted (positions 5 and 6 in faq.pairs) to absorb deleted detail:
 
-| Location | Field | App Store mode disclosure | Verdict |
+### "How does OCR work? Does it send my screen to a server?"
+Absorbs: features.cells[ocr].detail (VNRecognizeTextRequest, on-device processing).
+Answer confirms: Apple Vision, on-device, no network, works offline. No server call.
+
+### "Can I measure inside interactive UI without clicking through the overlay?"
+Absorbs: features.cells[spx].detail (ghost mode, cmd+shift+1 toggle while in SPX).
+Answer confirms: ghost mode exists, cmd+shift+1 toggles it while SPX is active.
+
+The existing FAQ entry "Which browsers work with DOM and SVG mode?" already covers the eight-browser list from the old dom/svg detail fields, so no additional entry was needed for that.
+
+All new entries follow voice.md constraints: ASCII only, no banned words, warm-friend tone, concrete facts only.
+
+---
+
+## D. double-hyphen fix
+
+CORRECTIONS.md (Open items) flagged hero.primaryCta.note: "Apple Silicon and Intel  --  Direct download, DMG"
+Fixed to: "Apple Silicon and Intel. Direct download, DMG."
+Period separates the two facts. No dash of any kind introduced.
+
+---
+
+## E. App Store honesty check
+
+Required by brief, confirmed intact at all six touchpoints:
+- hero.secondaryCta.note: "Includes OCR, HEX, and SPX. DOM and SVG require the direct download."
+- fits.items[5].body: "App Store: OCR, HEX, SPX. Direct DMG: all five modes including DOM and SVG."
+- pricing.tiers[pro].note: "Direct download only. DOM and SVG use Apple Events, which the App Store sandbox does not allow."
+- pricing.footnotes[0]: "App Store build: OCR, HEX, and SPX. DOM and SVG require the direct download."
+- finalCta.secondaryCta.note: "Includes OCR, HEX, and SPX. DOM and SVG require the direct download."
+- faq: "Why does the App Store version not have DOM and SVG?" full explanation preserved.
+
+App Store honesty: confirmed.
+
+---
+
+## F. Pricing clarity check
+
+- $16.99 one-time: pricing.tiers[pro].price + meta.metaDescription.
+- "No subscription": pricing.tiers[pro].priceSub + pricing.footnotes[1].
+- "A friend does not send you a monthly bill": pricing.subhead.
+- Free tier clearly named, no catch language: "No credit card, no catch."
+- Feature bullet list: unchanged, all five Pro bullets intact.
+- Comparison note: unchanged (TextSniper/ColorSlurp/PixelSnap pricing context).
+
+Pricing clarity: confirmed.
+
+---
+
+## G. Standalone legal pages
+
+Not touched. They need their detail; the one-line directive does not apply to /privacy-policy, /terms, /refunds, /thanks, /404.
+
+---
+
+# v0.3 Second Redesign Pass — 2026-06-01
+Author: 3mpq-copywriter
+Scope: CORRECTIONS.md "REDESIGN REFINEMENT" brief. No-dash sweep, mode verb phrases, section consolidation, new keys, soldier action notes.
+
+---
+
+## H. No-dash sweep (all user-facing strings)
+
+### Hyphens removed or rewritten
+
+| Location | Was | Now | Method |
 |---|---|---|---|
-| hero | secondaryCta.note | "Includes OCR, HEX, and SPX. DOM and SVG are not available in the App Store build." | HONEST |
-| hero | primaryCta.modeNote | "All five modes: OCR, HEX, DOM, SVG, SPX" (Direct only) | HONEST |
-| fits | items[5].body | "Download from the App Store to get OCR, HEX, and SPX. Download the DMG directly to get all five modes including DOM and SVG." | HONEST |
-| pricing | tiers[0].note | "Available on the Mac App Store and as a direct DMG download." (Free = 3 modes, no overclaim) | HONEST |
-| pricing | tiers[1].note | "Direct download only. DOM and SVG require Apple Events, which the App Store sandbox does not allow." | HONEST |
-| pricing | footnotes[0] | "App Store build includes OCR, HEX, and SPX. DOM and SVG extraction require the direct download. Both are free to download." | HONEST |
-| faq | pairs[2] (browser Q) | "DOM and SVG require the Direct download, not the App Store build." | HONEST |
-| faq | pairs[3] (why no DOM/SVG Q) | Full explanation of sandbox restriction | HONEST |
-| finalCta | primaryCta.note | "Direct download, DMG. All five modes: OCR, HEX, DOM, SVG, SPX." | HONEST |
-| finalCta | secondaryCta.note | "Includes OCR, HEX, and SPX. DOM and SVG require the direct download." | HONEST |
-| footer | columns[1].links[0] | "Direct download (all 5 modes)" | HONEST |
-| footer | columns[1].links[1] | "Mac App Store (OCR, HEX, SPX)" | HONEST |
+| pricing.tiers[free].features[4] | "Menu-bar icon, cmd+shift+1 hotkey" | "Menu bar icon, cmd+shift+1 hotkey" | space replaces hyphen |
+| pricing.tiers[free].features[5] | "Sparkle auto-update" | "Sparkle auto update" | space replaces hyphen |
+| pricing.footnotes[1] | "One-time purchase." | "One time purchase." | space replaces hyphen |
+| features.cells[switcher].title | "Switch modes without re-drawing" | "Switch modes without redrawing" | prefix merged |
+| standalone.privacyPolicy.sections[4].body | "third-party support platform" | "third party support platform" | space replaces hyphen |
+| standalone.terms.sections[1].body | "One-time purchase" | "One time purchase" | space replaces hyphen |
 
-All download CTAs and their notes correctly distinguish Direct (5 modes) from App Store (3 modes). No CTA promises DOM or SVG on the App Store build.
+### Verified no change needed (intentional compound forms that are standard proper nouns or technical strings)
+- "cmd+shift+1": plus signs, not hyphens. Correct.
+- "Apple Silicon": no hyphen. Correct.
+- "on-device": appears only in previous audit notes (not in copy.json values). Not present in user-facing strings.
+- "v1.0", "macOS 13+", "DMG", "OCR/HEX/SPX": no hyphens.
+- "hegona3@gmail.com": no hyphens in user-facing context.
+- "reportaproblem.apple.com": domain, no hyphen as separator.
+
+### Confirmed absent
+Em-dash (--), en-dash, and hyphen-as-separator: 0 instances in all user-facing string values after this pass.
 
 ---
 
-## 4. Factual accuracy check (against product-truth.md)
+## I. modeRail.modes descriptions rewritten as animated-panel headings
 
-| Claim in copy | Source | Status |
+Chips are removed from the design. Each mode.description is now a short verb phrase that headings an animated demo panel. These replace the old caption fragments.
+
+| Mode | Old caption | New verb phrase heading |
 |---|---|---|
-| Hotkey is cmd+shift+1 | product-truth.md §1 | CORRECT |
-| Five modes: OCR, HEX, DOM, SVG, SPX | product-truth.md §modes | CORRECT |
-| OCR uses Apple Vision, works offline | product-truth.md §1 | CORRECT |
-| DOM/SVG require Apple Events / Direct download | product-truth.md §distribution | CORRECT |
-| Eight browsers for DOM/SVG: Safari, Chrome, Arc, Brave, Edge, Comet, Vivaldi, Opera | product-truth.md §3, AUDIENCE.md | CORRECT |
-| macOS 13+ minimum | product-truth.md §hard-facts | CORRECT |
-| v1.0, launched 25 May 2026 | product-truth.md §hard-facts | CORRECT |
-| Works offline (OCR/HEX/SPX local) | product-truth.md §distribution | CORRECT |
-| Menu-bar, no Dock icon | product-truth.md §1 | CORRECT |
-| Notarized, signed | product-truth.md §distribution | CORRECT |
-| Sparkle auto-update (Direct) | product-truth.md §distribution | CORRECT |
-| Pro price $16.99 one-time | pricing-brief.md §1 | CORRECT |
-| Free tier: OCR, HEX, SPX | pricing-brief.md §3 | CORRECT |
-| Pro adds DOM and SVG | pricing-brief.md §3 | CORRECT |
-| Two permissions: Screen Recording + Automation | product-truth.md §hard-facts | CORRECT |
-| Apple Silicon and Intel | product-truth.md §hard-facts (implied by notarized universal) | CORRECT |
-| Author: Kostya, Leicester, hegona3@gmail.com | product-truth.md §hard-facts | CORRECT |
-| "future modes included" in Pro | pricing-brief.md §3 | CORRECT |
+| OCR | "Text off screen" | "Read text off the screen" |
+| HEX | "Any pixel's hex" | "Take any pixel's hex" |
+| DOM | "The live selector" | "Pull the live selector" |
+| SVG | "The real SVG" | "Lift the real SVG" |
+| SPX | "Pixel measurements" | "Measure in pixels" |
 
-One placeholder in the copy: hero primaryCta.note reads "Apple Silicon and Intel  --  Direct download, DMG" but does NOT include a file size. pricing-brief.md §CTA microcopy notes "4.2 MB is a placeholder" and instructs Kostya to supply the real DMG size before publishing. This is intentional: the size was deliberately left out of copy.json rather than invented. Kostya should add the actual size to hero.primaryCta.note before launch.
+Soldier action: render each mode.description as a heading (H3 or display size) for its animated panel, not as a caption label. The old fragment copy was caption-scale; the new verb phrase is heading-scale.
 
-No facts were invented. No testimonials, no case studies, no invented brand associations.
+### modeRail.switcherNote
+Set to "" (empty string). Redundant with howItWorks step 3 and the mode panel context. Soldier: do not render this field. Key kept in JSON for schema safety.
 
 ---
 
-## 5. Voice compliance spot-check
+## J. New keys added
 
-Checked against voice.md §6 do/don't examples:
+### modes.proofLine
+New top-level key added under "modes" object.
+Value: "Clone a pricing card: selector, color, and icon in three captures."
+Source: salvaged from workflows.stories[0].story (developer scenario). One proof line that shows all three browser modes working together.
+Soldier action: this line can appear at the bottom of the Modes showcase section, after the five animated panels, as a single proof statement. Render at body scale, not heading scale. No chip, no card.
 
-- OCR line: "Drag over any text on screen. Apple Vision reads it and copies it." -- matches DO pattern.
-- HEX line: "Hover any pixel. Get its hex value. Copied." -- matches DO pattern.
-- DOM line: references "Comet, Chrome, or Safari" (concrete browsers) -- matches DO pattern.
-- SVG line: "Get the actual SVG source, not a screenshot of it." -- echoes voice.md DO example directly.
-- SPX line: "Edge detection finds the neighbours." -- concrete, matches DO pattern.
-- Switching line: "Hit Tab mid-capture to switch modes." -- matches DO pattern, avoids "seamlessly."
-- Trust/offline line: "Works offline. No account." -- matches DO pattern.
-- Pricing CTA: Direct button has mode list. App Store button has honest mode footnote. Matches DO pattern.
-- Footer author line: "Made in Leicester by Kostya. If it breaks, email me: hegona3@gmail.com" -- matches voice.md §6 DO example.
-- FinalCTA: "Press cmd+shift+1 and just take it." -- echoes voice.md §6 FinalCTA DO example.
-
----
-
-## 6. Sentence length check
-
-Checked body copy for sentences exceeding 25 words.
-
-- features.cells[2].body: "No DevTools, no copy-pasting from Elements." -- fine.
-- pricing.comparisonNote: "TextSniper charges $7.99 for OCR alone. ColorSlurp charges $7.99 for color picking alone. PixelSnap charges $39 for measurement alone. Quirky Pro is $16.99 for all five, including two modes none of them offer." -- longest sentence is approximately 20 words. PASS.
-- workflows.stories[0].story: longest sentence is "Three facts, one region, you never opened DevTools." -- 9 words. PASS.
-
-No sentence in the output exceeds 30 words.
+### fits.strip
+New key added inside "fits" object.
+Value: "Works offline. No account. Notarized by Apple. App Store ships OCR, HEX, SPX. The direct download adds DOM and SVG."
+Purpose: the Fits section is demoted from a 6-card grid to a thin one-line trust strip. This single string is the full content of that strip.
+Soldier action: render fits.strip as a single centered or left-aligned line at body scale in a minimal horizontal band. The per-item fits.items data is preserved in JSON in case it is needed later, but the primary render path for the new design is fits.strip only.
 
 ---
 
-## 7. Missing items / flags for Kostya before launch
+## K. Sections marked for removal from the rendered page
 
-1. DMG file size: add real size to hero.primaryCta.note (replace the current note that omits the size).
-2. App Store URL: footer.columns[1].links[1].href and any App Store badge href should be replaced with the real MAS product URL once live.
-3. Social hrefs: footer.social hrefs for Twitter and GitHub are placeholder paths. Confirm the correct profile URLs.
-4. Refund window: pricing.footnotes[2] and standalone.refunds say "30 days." Confirm this is the intended window; pricing-brief.md marked this as an assumption.
-5. Terms governing law: standalone.terms notes "England and Wales." Confirm with Kostya this is correct (he is in Leicester, which is correct, but confirm he wants this explicit).
+### workflows (entire section)
+The Workflows section is DROPPED as a rendered section. The proof line has been salvaged into modes.proofLine. The JSON object is kept for schema history.
+Soldier action: do not render a Workflows section. The workflows JSON block can be deleted from the component tree. The JSON key stays in copy.json.
+
+### fits (6-card grid layout)
+The Fits section grid is DEMOTED. Do not render the 6-card fits.items grid. Render only fits.strip as a thin trust band.
+Soldier action: remove the card grid render path. The fits.items array stays in JSON.
+
+### modeRail chips / caption labels
+The chip UI (mode switcher chips, any chip-scale label under a mode) is removed. Modes communicate via animation. The mode.description field is now a heading, not a chip label.
+Soldier action: remove any chip or badge component rendered from modeRail.modes. Use mode.description as an animated panel heading instead.
 
 ---
 
-## Summary verdict
+## L. Pricing and App Store honesty: confirmed carried through
 
-The copy is clean on every hard constraint: no banned words, no ASCII violations, no invented facts, App Store honesty present at every CTA. Voice is warm, concrete, and specific throughout. All five modes are named and described accurately. The one-time pricing frame "Pay once. It is yours." is applied consistently across pricing, CTAs, and FAQ.
+All six App Store honesty touchpoints from v0.2 audit (Section E) survive unchanged in v0.3.
+$16.99 one time: confirmed in pricing.tiers[pro].price and meta.metaDescription.
+"One time. No subscription.": confirmed in pricing.tiers[pro].priceSub.
+"A friend does not send you a monthly bill.": confirmed in pricing.subhead.
+Pricing clarity: PASS.
+
+---
+
+## M. Features section: detail fields
+
+All six features.cells[*].detail fields remain "". No change from v0.2. Soldier: do not render a detail slot in feature cells.

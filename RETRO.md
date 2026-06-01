@@ -149,6 +149,56 @@ Pre-applied successfully from template-design RETRO:
 
 ---
 
+## 2026-06-01 — 3mpq-soldier — v0.4 redesign (accent swap + light/dark + fewer/bigger)
+
+### What took longer than it should have?
+Almost nothing this time, because I read EVERY current file before touching one,
+and I pre-built the CDP harness (ws + the assertions: reduced-motion emulation
+flag, sub-16 sweep, scrollWidth==clientWidth, dark-section text-length, morph
+presence + handoff opacity) in one script BEFORE the first capture, exactly as the
+prior morph RETRO told me to. First motion=0 run came back clean (overflow 0, 0
+sub-16, both darks with content, morph absent) on the first try; first motion-ON
+run showed morph present opacity 1 + handoff [0,0] on the first try. The
+`Emulation.setEmulatedMedia` prefers-reduced-motion flag (not a launch arg) was
+applied per-page from the start, so the "headless reports reduced-motion" trap
+from last session never bit.
+
+### What did I do right by pre-applying prior RETROs?
+- The accent swap is the "hardcoded hex anti-pattern" lesson in action: I grepped
+  the WHOLE src for every old coral step (#FF7059/#F25742/#DB4733/#FFE9E4/#FFF4F1
+  + the word coral) FIRST, found the non-comment hexes (icon.svg, global-error,
+  Inspector, ::selection), swapped them, then re-grepped to prove zero remain.
+  One command found all of them; no judge cycle needed to discover a stray hex.
+- New dark sections got the motion-off branch BUILT IN from the first write:
+  ModesShowcase's per-mode demos take a `still` prop that forces the resolved
+  final frame, and its local Reveal short-circuits on reduced || data-motion=off.
+  So the dark sections rendered full content under ?motion=0 on the first capture
+  (the exact failure mode the Phase-2 RETRO warned about, pre-empted).
+- DarkSection promoted to the kit in the SAME session it was built (doctrine),
+  with a token contract so the kit stays theme-agnostic.
+
+### What will I do differently next time?
+- When a redesign drops sections that the morph references (features/workflows
+  forms here), update the morph's STAGE_ORDER **union type** first and let tsc
+  drive the cleanup of the now-impossible switch cases + ANCHORS keys. tsc caught
+  the dangling references immediately; that is faster than eyeballing. Keep doing
+  it type-first.
+- Keep the "split-on-period, join-with-a-rendered-dot" trick for any one-line
+  fact strip under the no-bullet copy rule. It satisfies both the rhythm need and
+  the ASCII-only / no-typographic-separator rule without a hyphen or bullet.
+
+### Note for the judge (v0.4)
+- Two dark sections: ModesShowcase (#modes) and FinalCTA (#download). Both must
+  read full + AA-contrast under ?motion=0 (verified: white headline + on-dark/70
+  body on #160C0A). The morph overlay stays ABSENT on motion-off (desktop-only).
+- Screenshots in the project dir: redesign-desktop-motionoff.png (full page),
+  redesign-desktop-motionon.png, redesign-mobile-390.png, redesign-dark-modes.png,
+  redesign-dark-finalcta.png.
+- One accent only (#E63E2E); the only non-accent colour values are the grabbed
+  #3D9DF2 (deliberate "a colour you took" data) and the neutral paper/ink ramp.
+- copy.json untouched (already trimmed + dash-free by the copywriter). The new
+  keys modes.proofLine and fits.strip are both rendered.
+
 ## 2026-06-01 — 3mpq-soldier — signature scroll-morph block
 
 ### What took longer than it should have?

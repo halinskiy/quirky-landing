@@ -1,5 +1,39 @@
 # Quirky — Decisions log
 
+## 2026-06-01 — v0.4 redesign (3mpq-soldier)
+
+- **Two dark breaks, not three.** Brief recommended Modes + FinalCTA, optionally
+  How it works and/or Pricing. Chose ONLY Modes (the centerpiece) + FinalCTA (the
+  closer) dark. Rationale: cleanest light -> dark -> light bookend rhythm with the
+  dark exactly at the highest-energy moment (the modes payoff) and the conversion
+  moment (the final CTA), without the page feeling like a stripe pattern. How it
+  works and Pricing stay light so the big red numbers / big price read as accents
+  on paper, not a third dark band. Rejected: dark Pricing (would split the two
+  light sections between the two darks and muddy the rhythm).
+
+- **Modes communicate by animated demo, not chips/captions.** Each of the five
+  modes is an oversize panel: a verb-phrase heading + a demo that shows the mode
+  DOING its job. No chip UI, no caption-scale label under anything, per the
+  brief's explicit "NO chips, NO captions". Rejected: the old ModeRail tab-row of
+  chips and the old Features per-cell caption text.
+
+- **DarkSection promoted to the kit with a token contract, not baked colours.**
+  The kit stays monochrome/theme-agnostic; the project supplies
+  `--color-ink-surface` / `--color-on-dark` / `--color-accent` and the
+  `.dark-scope` + `.dot-grid-dark` classes. quirky-landing is the reference impl.
+  Rejected: hardcoding #160C0A into the kit (would couple the kit to one project).
+
+- **TrustStrip splits on the sentence period, joins with a rendered accent dot.**
+  The no-dash / no-bullet copy rule bans typographic separators in text, so the
+  facts are split on "." (kept) and the gap between them is a 6px accent <span>
+  element, not a bullet glyph.
+
+- **Morph retimed to 5 stages over 6 sections.** Dropped the features-grid and
+  workflow-deck forms with their sections; STAGE_ORDER is now
+  hero/modes/how/pricing/final. The Modes anchor flies far-right (x=0.8) so the
+  light morph chip floats cleanly over the dark break. The bookend
+  opacity-1-at-extremes fix (hero at j=0, final at j=1) is preserved unchanged.
+
 ## 2026-05-31 — Phase 1 scaffold (3mpq-soldier)
 
 - **Standalone repo, vendored kit.** Quirky lives at `~/quirky-landing`, not in

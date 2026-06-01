@@ -1,5 +1,68 @@
 # Quirky — Changelog
 
+## 2026-06-01 — Fix redesign Issue #1: hyphen-as-dash compounds in visible prose
+
+Judge V0.4 REDESIGN REVIEW: one blocking ISSUE. The no-dash rule (no hyphen used
+as a dash/separator in visible prose) was violated by 5 compounds: "on-device"
+and "click-through" (FAQ answers), "reverse-engineer" x2 (/terms intro + body),
+and "mid-capture" (Features switcher body). Reworded all in copy.json without
+hyphens: on-device -> "locally on your device", click-through -> "lets clicks
+pass through it", reverse-engineer -> "take it apart to copy it" / "take Quirky
+apart to copy it", mid-capture -> "while capturing". Verified: visible-text
+hyphen-compound sweep across all 7 rendered routes returns ZERO; the only
+remaining copy.json hyphens are href slugs (how-it-works, privacy-policy) and
+metadata. JSON valid, clean build green. Clears the redesign's only blocker.
+
+## 2026-06-01 — v0.4 REDESIGN: new accent, light/dark rhythm, fewer + bigger sections
+
+Major visual overhaul per CORRECTIONS.md "REDESIGN REFINEMENT" (contrast, scale,
+fewer sections, meaningful animation). Not a tweak.
+
+- **New accent (replaces coral).** `tokens.css` accent 5-step swapped to the
+  friendly warm red: `--color-accent #E63E2E / hover #CF3322 / pressed #B82C1D /
+  soft #FCE6E2 / subtle #FEF3F0`. Swept ALL old coral hexes from src: `icon.svg`,
+  `global-error.tsx`, the Inspector devtool chrome, and the `::selection` wash.
+  Grep confirms zero `#FF7059` (and the old steps) remain in any rendered code.
+  The HEX demo value stays grabbed-blue `#3D9DF2` (sampled data, not brand). One
+  accent rule still holds.
+- **Light/dark alternation.** New dark tokens: `--color-ink-surface #160C0A`
+  (warm near-black), `--color-ink-raised #221513`, `--color-on-dark #FDFCFA`,
+  plus `.dark-scope` + `.dot-grid-dark` in globals.css and an on-dark selection
+  wash. Page rhythm is now light -> DARK -> light -> light -> light -> light -> DARK.
+- **New DarkSection wrapper** (`src/components/section/DarkSection.tsx`), promoted
+  to `ui-kit/components/section/DarkSection.tsx` + INDEX row + index.ts export.
+- **ModesShowcase (new centerpiece, DARK).** Merges old ModeRail + Features into
+  ONE oversize animated section. Giant red "5", five oversize panels each headed
+  by its verb phrase (copy.json modeRail.modes[*].description) with a demo that
+  ANIMATES what the mode does (OCR reads blurred text into a clean copied string;
+  HEX locks in #3D9DF2; DOM pulls button.cta out of a highlighted element; SVG
+  lifts the real star off the page; SPX extends calipers into 184 x 48). No
+  chips, no captions. Closes with copy.json modes.proofLine at body scale.
+- **TrustStrip (new).** Thin one-line band rendering copy.json fits.strip
+  (offline, no account, notarized, App Store vs Direct honesty). Replaces the
+  6-card Fits grid. App Store honesty stays visible.
+- **FinalCta -> DARK.** Full-bleed near-black, oversize headline, ghost secondary
+  on dark, honest App Store note, reused Capture Fan in the morph-handoff slot.
+- **Hero / HowItWorks / Pricing scaled up** + spacing rhythm applied (tight
+  heading->subhead read as one unit, generous air before the CTA). Hero headline
+  clamp raised to 4.75rem; How-it-works step numbers now clamp(3rem,5vw,4.5rem);
+  Pro price clamp(2.75rem,5vw,4rem).
+- **Sections dropped from the page:** Workflows (proof line salvaged into Modes),
+  Fits 6-card grid (demoted to TrustStrip), ModeRail chips + Features grid (merged
+  into Modes). Their JSON stays in copy.json; the section files remain on disk,
+  unimported.
+- **Morph re-timed** over the new six-section rhythm. STAGE_ORDER trimmed to
+  hero/modes/how/pricing/final (dropped features + workflows forms). Anchors
+  retuned (modes flies far-right x=0.8 over the dark break). The bookend
+  opacity-1-at-extremes fix is preserved.
+- **Verification (CDP):** clean build x2 green, tsc clean, all 10 routes export
+  incl /404. motion=0 @ 1440 and @ 390: overflow 0, 0 sub-16 body, both dark
+  sections render full content, morph absent, both Capture Fans visible. motion
+  ON @ 1440: morph present opacity 1, both handoff devices hidden (bookend
+  takeover intact). Screenshots: redesign-desktop-motionoff.png,
+  redesign-desktop-motionon.png, redesign-mobile-390.png, redesign-dark-modes.png,
+  redesign-dark-finalcta.png.
+
 ## 2026-06-01 — Fix morph M1: bookend forms opened as 0.32-opacity ghosts
 
 Judge MORPH REVIEW found one blocking FAIL: the hero and final-CTA morph forms

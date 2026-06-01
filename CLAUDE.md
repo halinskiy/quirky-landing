@@ -18,18 +18,22 @@ inside `Aisoldier/projects/`. The ui-kit is therefore vendored, not symlinked.
 Quirky is a FRIEND. Toy-like, soft, blobby, rounded everything. Push toward
 playfulness / softness / blob-shapes ONLY. KEEP rigor: perf budget, pneumatic
 easing (NO bounce/overshoot), borders as separators, pill CTAs only,
-body >= 16px, ONE accent (coral), honest voice, ASCII only.
+body >= 16px, ONE accent (warm red), honest voice, ASCII only.
 
-## Accent (LOCKED 2026-05-31)
-- **Base:** `#FF7059` (warm coral). **Hover:** `#F25742`. **Pressed:** `#DB4733`.
-- **Soft:** `#FFE9E4`. **Subtle:** `#FFF4F1`.
+## Accent (friendly warm red, replaced coral 2026-06-01)
+- **Base:** `#E63E2E` (friendly warm red). **Hover:** `#CF3322`. **Pressed:** `#B82C1D`.
+- **Soft:** `#FCE6E2`. **Subtle:** `#FEF3F0`.
 - **Banned colours:** forest green / any `#217a50` (Corder), rec-red `#b7443d`.
-- **WCAG caveat:** coral on white is ~2.4:1 and FAILS as body text. Use coral
-  for fills, dots, chip chrome, CTA backgrounds, and LARGE display accents only.
-  For coral-coloured text use `--color-accent-pressed`. White on coral passes.
+- **WCAG:** white on `#E63E2E` PASSES AA at button sizes. Accent as small body
+  text on white still fails; use `--color-accent-pressed` for accent text. Use
+  the accent for fills, dots, CTA backgrounds, and LARGE display accents.
+- The HEX demo value stays grabbed-blue `#3D9DF2` (sampled data, not brand).
 
 ## Theme
 - **Default:** light, warm off-white `#fdfcfa` (`--color-paper`, NOT pure white).
+- **Dark break sections** (Modes, FinalCTA): warm near-black `--color-ink-surface
+  #160C0A` with paper-white text `--color-on-dark`, via `.dark-scope`. The page
+  rhythm is light -> dark -> light.
   Text `#1a1614` (`--color-ink`). Dark theme not built.
 
 ## Token naming

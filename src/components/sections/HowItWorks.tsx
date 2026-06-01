@@ -25,20 +25,21 @@ export function HowItWorks() {
         <SectionHeader eyebrow={c.eyebrow} headline={c.headline} />
       </Reveal>
 
-      <ol className="mt-12 grid gap-4 md:grid-cols-3">
+      <ol className="mt-14 grid gap-4 md:grid-cols-3">
         {c.steps.map((step, i) => (
           <Reveal key={step.number} index={i}>
-            <li className="flex h-full flex-col gap-4 rounded-card border border-gray-200 bg-paper p-6">
+            <li className="flex h-full flex-col gap-5 rounded-card border border-gray-200 bg-paper p-7">
               <span
                 aria-hidden="true"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent text-[1.0625rem] font-bold text-paper"
+                className="font-extrabold leading-none text-accent"
+                style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)" }}
               >
                 {step.number}
               </span>
-              <h3 className="flex flex-wrap items-center gap-1.5 text-[1.1875rem] font-bold tracking-tight text-ink">
+              <h3 className="flex flex-wrap items-center gap-1.5 text-[1.25rem] font-bold tracking-tight text-ink">
                 {renderTitleWithKeycaps(step.title)}
               </h3>
-              <p className="text-[1rem] leading-relaxed text-gray-500">
+              <p className="text-[1.0625rem] leading-relaxed text-gray-500">
                 {step.description}
               </p>
             </li>

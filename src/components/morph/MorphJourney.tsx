@@ -35,8 +35,6 @@ import {
   HeroForm,
   ModesForm,
   HowForm,
-  FeaturesForm,
-  WorkflowsForm,
   PricingForm,
   FinalForm,
   STAGE_ORDER,
@@ -62,11 +60,9 @@ type Anchor = { x: number; y: number; scale: number };
  */
 const ANCHORS: Record<(typeof STAGE_ORDER)[number], Anchor> = {
   hero: { x: 0.5, y: 0.0, scale: 1.0 }, // right column, beside the headline
-  modes: { x: 0.78, y: 0.0, scale: 0.58 }, // collapses + flies to the far right
+  modes: { x: 0.8, y: 0.0, scale: 0.56 }, // collapses + flies to the far right over the dark break
   how: { x: 0.66, y: 0.0, scale: 0.62 }, // grows into the steps window, right lane
-  features: { x: 0.66, y: 0.0, scale: 0.6 }, // unfolds into the grid, right lane
-  workflows: { x: 0.72, y: 0.0, scale: 0.56 }, // deck fans, right lane
-  pricing: { x: 0.72, y: 0.0, scale: 0.6 }, // Pro card + coral CTA, right lane
+  pricing: { x: 0.72, y: 0.0, scale: 0.62 }, // Pro card + accent CTA, right lane
   final: { x: 0.5, y: 0.0, scale: 1.0 }, // compact form, right column of the closer
 };
 
@@ -250,10 +246,6 @@ function FormFor({
       return <ModesForm cycle={v} />;
     case "how":
       return <HowForm assemble={v} />;
-    case "features":
-      return <FeaturesForm settle={v} />;
-    case "workflows":
-      return <WorkflowsForm fan={v} />;
     case "pricing":
       return <PricingForm press={v} />;
     case "final":

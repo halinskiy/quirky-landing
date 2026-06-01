@@ -53,7 +53,7 @@ export function Pricing() {
                     {tier.name}
                   </h3>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-[clamp(2.25rem,4vw,3rem)] font-extrabold tracking-tight text-ink">
+                    <span className="text-[clamp(2.75rem,5vw,4rem)] font-extrabold leading-none tracking-tight text-ink">
                       {tier.price}
                     </span>
                     <span className="text-[1rem] text-gray-500">

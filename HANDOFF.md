@@ -6,26 +6,48 @@ order, native-vs-custom flags, and animation notes. Use the dev-only Inspector
 
 ## Stack
 - Next.js 15 App Router, static export (trailingSlash). Tailwind v4 tokens.
-  Framer Motion + Lenis. Single coral accent `#FF7059`. Warm paper bg `#FDFCFA`.
-  Manrope (the only font; mono only inside keycaps / code-like detail lines).
+  Framer Motion + Lenis. Single accent = friendly warm red `#E63E2E` (was coral
+  `#FF7059`, fully replaced 2026-06-01). Warm paper bg `#FDFCFA`. Dark break
+  surface = warm near-black `#160C0A` with paper-white text `#FDFCFA`. Manrope
+  (the only font; mono only inside keycaps / code-like values).
 
-## Section order (home, top to bottom)
+## Section order (home, top to bottom) — v0.4 redesign, light/dark rhythm
 1. Nav — sticky, transparent to paper/85 + blur at scrollY > 8. Mobile: a
-   disclosure panel under the bar (not a fixed overlay).
-2. Hero — Capture Fan device, dual download CTA, honest App-Store note.
-3. ModeRail (#modes) — five mode blob-chips + a Tab switcher cell.
-4. HowItWorks (#how-it-works) — 3 steps, literal keycaps.
-5. Features (#features) — 5+1 hairline grid, one blob per cell.
-6. Workflows — 3 audience stories.
-7. Fits — trust row + Direct/App-Store honesty.
-8. Pricing (#pricing) — 2 tiers, Pro highlighted, one-time.
-9. FAQ (#faq) — accordion.
-10. FinalCTA (#download) — dual download bookend + mini Capture Fan.
-11. Footer — 4-col, inline newsletter, cookie-preferences re-open, author line.
+   disclosure panel under the bar (not a fixed overlay). LIGHT.
+2. Hero (#top) — Capture Fan device, dual download CTA, honest App-Store note.
+   LIGHT, dot-grid.
+3. ModesShowcase (#modes) — DARK full-bleed centerpiece. Giant red "5" + five
+   oversize panels (verb-phrase heading + an animated demo of each mode) + the
+   modes.proofLine. NO chips, NO captions. Merges the old ModeRail + Features.
+4. HowItWorks (#how-it-works) — LIGHT. 3 steps, big red step numbers, literal
+   keycaps (cmd+shift+1 / Tab).
+5. TrustStrip — LIGHT thin one-line band (fits.strip): offline / no account /
+   notarized / App Store vs Direct honesty. Replaces the old 6-card Fits grid.
+6. Pricing (#pricing) — LIGHT. 2 tiers, Pro highlighted, one-time $16.99.
+7. FAQ (#faq) — LIGHT accordion (holds all the detail trimmed from sections).
+8. FinalCTA (#download) — DARK full-bleed bookend. Oversize headline, dual
+   download, ghost secondary on dark, reused Capture Fan device.
+9. Footer — LIGHT, 4-col, inline newsletter, cookie-preferences re-open, author.
 
-Nav anchors (source of truth = copy.json.nav): #how-it-works, #features,
-#pricing, #faq, plus #modes (ModeRail) and #download (FinalCTA). scroll-mt-24 on
-sections offsets the fixed nav; Lenis applies an 88px scrollTo offset.
+DROPPED from the page in v0.4 (JSON + files retained, just not rendered):
+Workflows (proof line moved into Modes), the Fits 6-card grid (demoted to the
+TrustStrip), and the standalone ModeRail / Features sections (merged into Modes).
+
+Nav anchors (source of truth = copy.json.nav): #how-it-works, #features (now
+points into the Modes section context), #pricing, #faq, plus #modes (Modes) and
+#download (FinalCTA). scroll-mt-24 on sections offsets the fixed nav; Lenis
+applies an 88px scrollTo offset.
+
+## Dark break sections (Webflow rebuild notes)
+- ModesShowcase + FinalCTA are full-bleed `--color-ink-surface #160C0A` bands
+  with a faint white dot-grid (`.dot-grid-dark`, white at 8% alpha), top+bottom
+  white/10 hairlines, and paper-white text via the `.dark-scope` class. The
+  accent red is used at LARGE display sizes (the giant "5", the demo accents) and
+  on the primary CTA fill. Body text on dark uses on-dark at 70%/60% opacity
+  (clears WCAG AA on #160C0A). Reusable wrapper promoted to the kit as
+  `DarkSection` (token contract documented in INDEX.md). In Webflow: a section
+  with the near-black bg + a white text colour swatch on all children + an accent
+  swatch reused from the light sections (same hex).
 
 ## Animation notes (one easing everywhere: cubic-bezier(0.16,1,0.3,1), NO bounce)
 - Section enter: `Reveal` = opacity 0->1, y 16->0, blur 8->0, 0.5s, whileInView
@@ -47,10 +69,12 @@ static sections (the content backbone) and treat the morph as a custom React
 embed or omit it. The rest of this HANDOFF still applies to the static sections.
 
 What it is: ONE fixed-overlay Quirky block that tracks whole-page scroll and
-morphs through 7 forms as it flies the right-side lane:
-hero Capture Fan -> single mode chip cycling OCR/HEX/DOM/SVG/SPX -> how-it-works
-steps window (keycaps) -> 5+1 features grid -> workflow deck -> Pro pricing card
-with its coral CTA (the "turns into buttons" beat) -> final dual-download form.
+morphs through 5 forms (re-timed for the v0.4 six-section page) as it flies the
+right-side lane: hero Capture Fan -> single mode chip cycling OCR/HEX/DOM/SVG/SPX
+(far-right over the dark Modes break) -> how-it-works steps window (keycaps) ->
+Pro pricing card with its accent CTA (the "turns into buttons" beat) -> final
+dual-download form. (The old features-grid and workflow-deck forms were retired
+with their sections.)
 Files: `src/components/morph/{MorphMount,MorphJourney,MorphForms,useMorphEnabled}`.
 
 Hard guarantees (judge + CDP verified):
@@ -78,7 +102,8 @@ Hard guarantees (judge + CDP verified):
 ## App-Store honesty (must survive the rebuild — present at EVERY download CTA)
 - Hero: primary note = all five modes (Direct); secondary note = OCR/HEX/SPX
   only on App Store.
-- Fits: item 6 states the Direct-vs-App-Store split explicitly.
+- TrustStrip: the single line states the Direct-vs-App-Store split explicitly
+  ("App Store ships OCR, HEX, SPX. The direct download adds DOM and SVG.").
 - Pricing: Pro note (Direct only, sandbox blocks Apple Events) + footnote 1.
 - FinalCTA: primary + secondary notes repeat the split.
 - Footer Download column: "Direct download (all 5 modes)" / "Mac App Store
